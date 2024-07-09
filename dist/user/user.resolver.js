@@ -1,0 +1,85 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserResolver = void 0;
+const common_1 = require("@nestjs/common");
+const graphql_1 = require("@nestjs/graphql");
+const decorator_1 = require("../auth/decorator");
+const guard_1 = require("../auth/guard");
+const dto_1 = require("./dto");
+const dto_2 = require("../company/dto");
+const company_service_1 = require("../company/company.service");
+const user_service_1 = require("./user.service");
+let UserResolver = class UserResolver {
+    constructor(companyService, userService) {
+        this.companyService = companyService;
+        this.userService = userService;
+    }
+    createUserStore(userId, data) {
+        return this.userService.createUserStore(userId, data);
+    }
+    async user(user) {
+        return user;
+    }
+    async getUser(id) {
+        return this.userService.getUser(id);
+    }
+    async companies(_, user) {
+        return this.companyService.getCompanies(user.id);
+    }
+};
+exports.UserResolver = UserResolver;
+__decorate([
+    (0, graphql_1.Mutation)(() => dto_1.UserType),
+    __param(0, (0, decorator_1.GetUser)({
+        data: 'id',
+        access: ['OWNER'],
+    })),
+    __param(1, (0, graphql_1.Args)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, dto_1.CreateUserStoreArgs]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "createUserStore", null);
+__decorate([
+    (0, graphql_1.Query)(() => dto_1.UserType),
+    __param(0, (0, decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "user", null);
+__decorate([
+    (0, graphql_1.Query)(() => dto_1.UserType),
+    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "getUser", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => [dto_2.CompanyType]),
+    __param(0, (0, decorator_1.GetUser)({
+        data: 'id',
+        access: ['OWNER'],
+    })),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, dto_1.UserType]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "companies", null);
+exports.UserResolver = UserResolver = __decorate([
+    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
+    (0, graphql_1.Resolver)(() => dto_1.UserType),
+    __metadata("design:paramtypes", [company_service_1.CompanyService,
+        user_service_1.UserService])
+], UserResolver);
+//# sourceMappingURL=user.resolver.js.map

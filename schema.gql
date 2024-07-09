@@ -1,0 +1,226 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserType {
+  id: ID!
+  fullName: String!
+  username: String!
+  phone: String!
+  email: String!
+  access: AccessEnumType!
+  storeId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  companies: [CompanyType!]!
+}
+
+enum AccessEnumType {
+  SELLER
+  OWNER
+  MANAGER
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type StoreType {
+  id: ID!
+  address: String!
+  designation: String!
+  phone: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  products: [ProductType!]!
+  sellers: [UserType!]!
+  sales: [SaleType!]!
+}
+
+type OrderType {
+  id: ID!
+  saleId: ID!
+  productId: ID!
+  serviceId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  products: [ProductType!]!
+  services: [ServiceType!]!
+}
+
+type SaleType {
+  id: ID!
+  change: Float
+  cash: Float
+  bankCard: Float
+  totalPrice: Float
+  sellerId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  orders: [OrderType!]!
+  seller: UserType
+}
+
+type ReportStoreType {
+  totalSales: Float
+  sales: [SaleType!]
+  totalSalesBalance: Float
+}
+
+type CompanyType {
+  id: ID!
+  nif: String!
+  name: String!
+  address: String!
+  logo: String!
+  caeId: ID!
+  stores: [StoreType!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  cae: CAEType!
+}
+
+type AuthTokenType {
+  access_token: String!
+}
+
+type CAEType {
+  id: ID!
+  name: String!
+  code: Int!
+  sectorId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ProductType {
+  id: ID!
+  name: String!
+  description: String
+  image: String
+  price: Float!
+  stock: Int
+  expiresOn: DateTime!
+  categoryId: ID!
+  storeId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: CategoryType!
+}
+
+type CategoryType {
+  id: ID!
+  name: String!
+  description: String
+  type: CategoryEnumType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum CategoryEnumType {
+  PRODUCT
+  SERVICE
+}
+
+type ServiceType {
+  id: ID!
+  name: String!
+  description: String
+  image: String
+  price: Float!
+  categoryId: ID!
+  storeId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: CategoryType!
+}
+
+type SectorType {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  user: UserType!
+  getUser(id: ID!): UserType!
+  getCompanies: [CompanyType!]!
+  getCompany(id: ID!): CompanyType
+  getStores(companyId: ID!): [StoreType!]!
+  getStore(id: ID!): StoreType
+  getStoreReport(id: ID!, options: ReportStoreOptionsInput): ReportStoreType
+  getCategories: [CAEType!]!
+  getCategory(id: ID!): CategoryType
+  getCategoriesByStore(storeId: ID!): [CategoryType!]
+  getProducts(storeId: ID!, filter: FilterProductInput): [ProductType!]!
+  getProduct(id: ID!): ProductType
+  getServices(storeId: ID!, filter: FilterServiceInput): [ServiceType!]!
+  getService(id: ID!): ServiceType
+  getSales(storeId: ID!): [SaleType!]!
+  getSale(id: ID!): SaleType
+  getOrders(saleId: ID!): [OrderType!]!
+  getOrder(id: ID!): OrderType
+  getSectors: [SectorType!]!
+  getSector(id: ID!): SectorType
+  getCAE(id: ID!): CAEType
+}
+
+input ReportStoreOptionsInput {
+  period: PeriodReportStoreOptionsEnumType
+  from: DateTime = "2024-07-08T22:54:14.017Z"
+  sellerId: ID
+}
+
+enum PeriodReportStoreOptionsEnumType {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
+input FilterProductInput {
+  name: String
+  categoryId: ID
+  paginate: FilterProductPaginateInput
+}
+
+input FilterProductPaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
+input FilterServiceInput {
+  name: String
+  categoryId: ID
+  paginate: FilterServicePaginateInput
+}
+
+input FilterServicePaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
+type Mutation {
+  signUp(fullName: String!, username: String, email: String!, phone: String, password: String!): AuthTokenType!
+  signIn(email: String!, password: String!): AuthTokenType!
+  signInWithPhoneNumber(phone: String!, password: String!): AuthTokenType!
+  createUserStore(fullName: String!, username: String, email: String!, phone: String, storeId: ID!, password: String!): UserType!
+  createCompany(nif: String!, name: String!, address: String!, logo: String, caeId: ID!): CompanyType!
+  createStore(address: String!, designation: String!, phone: String!, companyId: ID!): StoreType!
+  createCategory(name: String!, description: String, type: CategoryEnumType!): CategoryType!
+  createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, storeId: ID!): ProductType!
+  editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, storeId: ID): ProductType!
+  createService(name: String!, description: String, image: String, price: Float!, categoryId: ID!, storeId: ID!): ServiceType!
+  editService(id: ID!, name: String, description: String, image: String, price: Float, categoryId: ID, storeId: ID): ServiceType!
+  createSale(change: Float, cash: Float, bankCard: Float, totalPrice: Float, orders: [CreateOrderSaleInput!]!): SaleType!
+  createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
+  createSector(name: String!): SectorType!
+  createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
+}
+
+input CreateOrderSaleInput {
+  productId: ID
+  serviceId: ID
+}
