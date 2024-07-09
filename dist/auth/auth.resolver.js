@@ -21,36 +21,39 @@ let AuthResolver = class AuthResolver {
     constructor(authService) {
         this.authService = authService;
     }
-    signUp(data) {
-        return this.authService.signUp(data);
+    signUp(req, data) {
+        return this.authService.signUp(req.client, data);
     }
-    signIn(data) {
-        return this.authService.signIn(data);
+    signIn(req, data) {
+        return this.authService.signIn(req.client, data);
     }
-    signInWithPhoneNumber(data) {
-        return this.authService.signInWithPhone(data);
+    signInWithPhoneNumber(req, data) {
+        return this.authService.signInWithPhone(req.client, data);
     }
 };
 exports.AuthResolver = AuthResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.AuthTokenType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.SignUpArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.SignUpArgs]),
     __metadata("design:returntype", void 0)
 ], AuthResolver.prototype, "signUp", null);
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.AuthTokenType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.SignInArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.SignInArgs]),
     __metadata("design:returntype", void 0)
 ], AuthResolver.prototype, "signIn", null);
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.AuthTokenType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sign_in_with_phone_args_1.SignInWithPhoneArgs]),
+    __metadata("design:paramtypes", [Object, sign_in_with_phone_args_1.SignInWithPhoneArgs]),
     __metadata("design:returntype", void 0)
 ], AuthResolver.prototype, "signInWithPhoneNumber", null);
 exports.AuthResolver = AuthResolver = __decorate([

@@ -1,21 +1,22 @@
 import {
   Args,
+  Context,
   ID,
   Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
-} from '@nestjs/graphql';
-import { CreateSaleArgs, SaleType } from './dto';
-import { GqlAuthGuard } from 'src/auth/guard';
-import { UseGuards } from '@nestjs/common';
-import { SaleService } from './sale.service';
-import { UserService } from 'src/user/user.service';
-import { OrderService } from 'src/order/order.service';
-import { UserType } from 'src/user/dto';
-import { OrderType } from 'src/order/dto';
-import { GetUser } from 'src/auth/decorator';
+} from "@nestjs/graphql";
+import { CreateSaleArgs, SaleType } from "./dto";
+import { GqlAuthGuard } from "src/auth/guard";
+import { UseGuards } from "@nestjs/common";
+import { SaleService } from "./sale.service";
+import { UserService } from "src/user/user.service";
+import { OrderService } from "src/order/order.service";
+import { UserType } from "src/user/dto";
+import { OrderType } from "src/order/dto";
+import { GetUser } from "src/auth/decorator";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => SaleType)
@@ -23,34 +24,41 @@ export class SaleResolver {
   constructor(
     private saleService: SaleService,
     private orderService: OrderService,
-    private sellerService: UserService,
+    private sellerService: UserService
   ) {}
   @Mutation(() => SaleType)
   async createSale(
-    @GetUser('id')
+    @Context("req") req,
+    @GetUser("id")
     sellerId: string,
-    @Args() data: CreateSaleArgs,
+    @Args() data: CreateSaleArgs
   ) {
-    return this.saleService.createSale(sellerId, data);
+    return this.saleService.createSale(req.client, sellerId, data);
   }
   @Query(() => [SaleType])
-  async getSales(@Args('storeId', { type: () => ID }) storeId: string) {
-    return this.saleService.getSales(storeId);
+  async getSales(
+    @Context("req") req,
+    @Args("storeId", { type: () => ID }) storeId: string
+  ) {
+    return this.saleService.getSales(req.client, storeId);
   }
   @Query(() => SaleType, {
     nullable: true,
   })
-  async getSale(@Args('id', { type: () => ID }) id: string) {
-    return this.saleService.getSale(id);
+  async getSale(
+    @Context("req") req,
+    @Args("id", { type: () => ID }) id: string
+  ) {
+    return this.saleService.getSale(req.client, id);
   }
   @ResolveField(() => [OrderType])
-  async orders(@Parent() sale: SaleType) {
-    return this.orderService.getOrders(sale.id);
+  async orders(@Context("req") req, @Parent() sale: SaleType) {
+    return this.orderService.getOrders(req.client, sale.id);
   }
   @ResolveField(() => UserType, {
     nullable: true,
   })
-  async seller(@Parent() sale: SaleType) {
-    return this.sellerService.getUser(sale.sellerId);
+  async seller(@Context("req") req, @Parent() sale: SaleType) {
+    return this.sellerService.getUser(req.client, sale.sellerId);
   }
 }

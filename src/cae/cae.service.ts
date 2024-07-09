@@ -1,22 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CAEType, CreateCAEArgs } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { CAEType, CreateCAEArgs } from "./dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CaeService {
-  constructor(private prisma: PrismaService) {}
-  async createCAE(dto: CreateCAEArgs): Promise<CAEType> {
-    return await this.prisma.cAE.create({
+  async createCAE(prisma: PrismaService, dto: CreateCAEArgs): Promise<CAEType> {
+    return await prisma.cAE.create({
       data: {
         ...dto,
       },
     });
   }
-  async getCategories(): Promise<CAEType[]> {
-    return await this.prisma.cAE.findMany();
+  async getCategories(prisma: PrismaService): Promise<CAEType[]> {
+    return await prisma.cAE.findMany();
   }
-  async getCAE(id: string): Promise<CAEType> {
-    return await this.prisma.cAE.findUnique({
+  async getCAE(prisma: PrismaService, id: string): Promise<CAEType> {
+    return await prisma.cAE.findUnique({
       where: {
         id,
       },

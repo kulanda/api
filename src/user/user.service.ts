@@ -1,19 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserStoreArgs, UserType } from './dto';
-import * as argon from 'argon2';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
+import { CreateUserStoreArgs, UserType } from "./dto";
+import * as argon from "argon2";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
-
   async createUserStore(
+    prisma: PrismaService,
     userId: string,
-    { password, ...dto }: CreateUserStoreArgs,
-  ): Promise<Omit<UserType, 'companies'>> {
+    { password, ...dto }: CreateUserStoreArgs
+  ): Promise<Omit<UserType, "companies">> {
     const hash = await argon.hash(password);
 
-    const store = await this.prisma.store.findUnique({
+    const store = await prisma.store.findUnique({
       where: {
         id: dto.storeId,
         AND: {
@@ -28,25 +27,29 @@ export class UserService {
 
     if (!store.id) throw new NotFoundException();
 
-    return await this.prisma.user.create({
+    return await prisma.user.create({
       data: {
         ...dto,
         hash,
-        access: 'SELLER',
+        access: "SELLER",
       },
     });
   }
-  async getUser(id: string): Promise<Omit<UserType, 'companies'>> {
-    return await this.prisma.user.findUnique({
+  async getUser(
+    prisma: PrismaService,
+    id: string
+  ): Promise<Omit<UserType, "companies">> {
+    return await prisma.user.findUnique({
       where: {
         id,
       },
     });
   }
   async getUsersByStory(
-    storeId: string,
-  ): Promise<Omit<UserType, 'companies'>[]> {
-    return await this.prisma.user.findMany({
+    prisma: PrismaService,
+    storeId: string
+  ): Promise<Omit<UserType, "companies">[]> {
+    return await prisma.user.findMany({
       where: {
         storeId,
       },

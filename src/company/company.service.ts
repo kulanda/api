@@ -4,12 +4,12 @@ import { CompanyType, CreateCompanyArgs } from './dto';
 
 @Injectable()
 export class CompanyService {
-  constructor(private prisma: PrismaService) {}
   async createCompany(
+    prisma: PrismaService,
     userId: string,
     { caeId, ...dto }: CreateCompanyArgs,
   ): Promise<CompanyType> {
-    return await this.prisma.company.create({
+    return await prisma.company.create({
       data: {
         ...dto,
         cae: {
@@ -25,15 +25,15 @@ export class CompanyService {
       },
     });
   }
-  async getCompanies(userId: string): Promise<CompanyType[]> {
-    return await this.prisma.company.findMany({
+  async getCompanies(prisma: PrismaService, userId: string): Promise<CompanyType[]> {
+    return await prisma.company.findMany({
       where: {
         userId,
       },
     });
   }
-  async getCompany(id: string): Promise<CompanyType> {
-    return await this.prisma.company.findUnique({
+  async getCompany(prisma: PrismaService, id: string): Promise<CompanyType> {
+    return await prisma.company.findUnique({
       where: {
         id,
       },

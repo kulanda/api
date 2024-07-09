@@ -28,58 +28,63 @@ let OrderResolver = class OrderResolver {
         this.productService = productService;
         this.serviceService = serviceService;
     }
-    async createOrder(data) {
-        return this.orderService.createOrder(data);
+    async createOrder(req, data) {
+        return this.orderService.createOrder(req.client, data);
     }
-    async getOrders(saleId) {
-        return this.orderService.getOrders(saleId);
+    async getOrders(req, saleId) {
+        return this.orderService.getOrders(req.client, saleId);
     }
-    async getOrder(id) {
-        return this.orderService.getOrder(id);
+    async getOrder(req, id) {
+        return this.orderService.getOrder(req.client, id);
     }
-    async products(order) {
-        return this.productService.getProductsByOrder(order.id);
+    async products(req, order) {
+        return this.productService.getProductsByOrder(req.client, order.id);
     }
-    async services(order) {
-        return this.serviceService.getServicesByOrder(order.id);
+    async services(req, order) {
+        return this.serviceService.getServicesByOrder(req.client, order.id);
     }
 };
 exports.OrderResolver = OrderResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.OrderType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CreateOrderArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.CreateOrderArgs]),
     __metadata("design:returntype", Promise)
 ], OrderResolver.prototype, "createOrder", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.OrderType]),
-    __param(0, (0, graphql_1.Args)('saleId', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("saleId", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], OrderResolver.prototype, "getOrders", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.OrderType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], OrderResolver.prototype, "getOrder", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_2.ProductType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.OrderType]),
+    __metadata("design:paramtypes", [Object, dto_1.OrderType]),
     __metadata("design:returntype", Promise)
 ], OrderResolver.prototype, "products", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_3.ServiceType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.OrderType]),
+    __metadata("design:paramtypes", [Object, dto_1.OrderType]),
     __metadata("design:returntype", Promise)
 ], OrderResolver.prototype, "services", null);
 exports.OrderResolver = OrderResolver = __decorate([

@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { CreateSaleArgs, SaleType } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { CreateSaleArgs, SaleType } from "./dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class SaleService {
-  constructor(private prisma: PrismaService) {}
   async createSale(
+    prisma: PrismaService,
     sellerId: string,
-    { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs,
-  ): Promise<Omit<SaleType, 'order'>> {
-    return await this.prisma.sale.create({
+    { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs
+  ): Promise<Omit<SaleType, "order">> {
+    return await prisma.sale.create({
       data: {
         cash,
         bankCard,
@@ -28,8 +28,11 @@ export class SaleService {
       },
     });
   }
-  async getSales(storeId: string): Promise<Omit<SaleType, 'order'>[]> {
-    return await this.prisma.sale.findMany({
+  async getSales(
+    prisma: PrismaService,
+    storeId: string
+  ): Promise<Omit<SaleType, "order">[]> {
+    return await prisma.sale.findMany({
       where: {
         seller: {
           storeId,
@@ -37,8 +40,11 @@ export class SaleService {
       },
     });
   }
-  async getSale(id: string): Promise<Omit<SaleType, 'order'>> {
-    return await this.prisma.sale.findUnique({
+  async getSale(
+    prisma: PrismaService,
+    id: string
+  ): Promise<Omit<SaleType, "order">> {
+    return await prisma.sale.findUnique({
       where: {
         id,
       },

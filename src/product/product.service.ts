@@ -1,22 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
 import {
   CreateProductArgs,
   EditProductArgs,
   FilterProductInput,
   ProductType,
-} from './dto';
-import { Prisma } from '@prisma/client';
+} from "./dto";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: PrismaService) {}
-  async createProduct({
-    categoryId,
-    storeId,
-    ...dto
-  }: CreateProductArgs): Promise<ProductType> {
-    return await this.prisma.product.create({
+  async createProduct(
+    prisma: PrismaService,
+    { categoryId, storeId, ...dto }: CreateProductArgs
+  ): Promise<ProductType> {
+    return await prisma.product.create({
       data: {
         ...dto,
         store: {
@@ -32,8 +30,12 @@ export class ProductService {
       },
     });
   }
-  async editProduct(id: string, dto: EditProductArgs): Promise<ProductType> {
-    return await this.prisma.product.update({
+  async editProduct(
+    prisma: PrismaService,
+    id: string,
+    dto: EditProductArgs
+  ): Promise<ProductType> {
+    return await prisma.product.update({
       data: {
         ...dto,
       },
@@ -43,31 +45,35 @@ export class ProductService {
     });
   }
   async getProducts(
+    prisma: PrismaService,
     storeId: string,
-    filter?: FilterProductInput,
+    filter?: FilterProductInput
   ): Promise<ProductType[]> {
     const where: Prisma.ProductScalarWhereInput = {
       storeId,
       categoryId: filter?.categoryId,
       name: {
         contains: filter?.name,
-        mode: 'insensitive',
+        mode: "insensitive",
       },
     };
 
     if (filter?.paginate)
-      return await this.prisma.product.findMany({
+      return await prisma.product.findMany({
         skip: (filter.paginate.page - 1) * filter.paginate.limit,
         take: filter.paginate.limit,
         where,
       });
     else
-      return await this.prisma.product.findMany({
+      return await prisma.product.findMany({
         where,
       });
   }
-  async getProductsByOrder(orderId: string): Promise<ProductType[]> {
-    return await this.prisma.product.findMany({
+  async getProductsByOrder(
+    prisma: PrismaService,
+    orderId: string
+  ): Promise<ProductType[]> {
+    return await prisma.product.findMany({
       where: {
         Order: {
           some: {
@@ -77,8 +83,8 @@ export class ProductService {
       },
     });
   }
-  async getProduct(id: string): Promise<ProductType> {
-    return await this.prisma.product.findUnique({
+  async getProduct(prisma: PrismaService, id: string): Promise<ProductType> {
+    return await prisma.product.findUnique({
       where: {
         id,
       },

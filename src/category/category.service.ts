@@ -4,26 +4,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private prisma: PrismaService) {}
-  async createCategory(dto: CreateCategoryArgs): Promise<CategoryType> {
-    return await this.prisma.category.create({
+  async createCategory(prisma: PrismaService, dto: CreateCategoryArgs): Promise<CategoryType> {
+    return await prisma.category.create({
       data: {
         ...dto,
       },
     });
   }
-  async getCategories(): Promise<CategoryType[]> {
-    return await this.prisma.category.findMany();
+  async getCategories(prisma: PrismaService): Promise<CategoryType[]> {
+    return await prisma.category.findMany();
   }
-  async getCategory(id: string): Promise<CategoryType> {
-    return await this.prisma.category.findUnique({
+  async getCategory(prisma: PrismaService, id: string): Promise<CategoryType> {
+    return await prisma.category.findUnique({
       where: {
         id,
       },
     });
   }
-  async getCategoriesByStore(storeId: string): Promise<CategoryType[]> {
-    return await this.prisma.category.findMany({
+  async getCategoriesByStore(prisma: PrismaService, storeId: string): Promise<CategoryType[]> {
+    return await prisma.category.findMany({
       where: {
         Service: {
           every: {

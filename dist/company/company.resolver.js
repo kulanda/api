@@ -29,65 +29,70 @@ let CompanyResolver = class CompanyResolver {
         this.storeService = storeService;
         this.caeService = caeService;
     }
-    async createCompany(userId, data) {
-        return this.companyService.createCompany(userId, data);
+    async createCompany(req, userId, data) {
+        return this.companyService.createCompany(req.client, userId, data);
     }
-    async getCompanies(userId) {
-        return this.companyService.getCompanies(userId);
+    async getCompanies(req, userId) {
+        return this.companyService.getCompanies(req.client, userId);
     }
-    async getCompany(id) {
-        return this.companyService.getCompany(id);
+    async getCompany(req, id) {
+        return this.companyService.getCompany(req.client, id);
     }
-    async stores(company) {
-        return this.storeService.getStores(company.id);
+    async stores(req, company) {
+        return this.storeService.getStores(req.client, company.id);
     }
-    async cae(company) {
-        return this.caeService.getCAE(company.caeId);
+    async cae(req, company) {
+        return this.caeService.getCAE(req.client, company.caeId);
     }
 };
 exports.CompanyResolver = CompanyResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.CompanyType),
-    __param(0, (0, decorator_1.GetUser)({
-        data: 'id',
-        access: ['OWNER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        data: "id",
+        access: ["OWNER"],
     })),
-    __param(1, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.CreateCompanyArgs]),
+    __metadata("design:paramtypes", [Object, String, dto_1.CreateCompanyArgs]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "createCompany", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CompanyType]),
-    __param(0, (0, decorator_1.GetUser)({
-        data: 'id',
-        access: ['OWNER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        data: "id",
+        access: ["OWNER"],
     })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "getCompanies", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.CompanyType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "getCompany", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_2.StoreType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CompanyType]),
+    __metadata("design:paramtypes", [Object, dto_1.CompanyType]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "stores", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => dto_3.CAEType),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CompanyType]),
+    __metadata("design:paramtypes", [Object, dto_1.CompanyType]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "cae", null);
 exports.CompanyResolver = CompanyResolver = __decorate([

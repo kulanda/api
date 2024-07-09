@@ -22,49 +22,53 @@ let CategoryResolver = class CategoryResolver {
     constructor(categoryService) {
         this.categoryService = categoryService;
     }
-    async createCategory(data) {
-        return this.categoryService.createCategory(data);
+    async createCategory(req, data) {
+        return this.categoryService.createCategory(req.client, data);
     }
-    async getCategories() {
-        return this.categoryService.getCategories();
+    async getCategories(req) {
+        return this.categoryService.getCategories(req.client);
     }
-    async getCategory(id) {
-        return this.categoryService.getCategory(id);
+    async getCategory(req, id) {
+        return this.categoryService.getCategory(req.client, id);
     }
-    async getCategoriesByStore(storeId) {
-        return this.categoryService.getCategoriesByStore(storeId);
+    async getCategoriesByStore(req, storeId) {
+        return this.categoryService.getCategoriesByStore(req.client, storeId);
     }
 };
 exports.CategoryResolver = CategoryResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.CategoryType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CreateCategoryArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.CreateCategoryArgs]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "createCategory", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CategoryType]),
+    __param(0, (0, graphql_1.Context)("req")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "getCategories", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.CategoryType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "getCategory", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CategoryType], {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('storeId', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("storeId", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "getCategoriesByStore", null);
 exports.CategoryResolver = CategoryResolver = __decorate([

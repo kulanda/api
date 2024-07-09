@@ -1,10 +1,8 @@
 import { CategoryType, CreateCategoryArgs } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 export declare class CategoryService {
-    private prisma;
-    constructor(prisma: PrismaService);
-    createCategory(dto: CreateCategoryArgs): Promise<CategoryType>;
-    getCategories(): Promise<CategoryType[]>;
-    getCategory(id: string): Promise<CategoryType>;
-    getCategoriesByStore(storeId: string): Promise<CategoryType[]>;
+    createCategory(prisma: PrismaService, dto: CreateCategoryArgs): Promise<CategoryType>;
+    getCategories(prisma: PrismaService): Promise<CategoryType[]>;
+    getCategory(prisma: PrismaService, id: string): Promise<CategoryType>;
+    getCategoriesByStore(prisma: PrismaService, storeId: string): Promise<CategoryType[]>;
 }

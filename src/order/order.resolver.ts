@@ -1,20 +1,21 @@
 import {
   Args,
+  Context,
   ID,
   Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
-} from '@nestjs/graphql';
-import { CreateOrderArgs, OrderType } from './dto';
-import { GqlAuthGuard } from 'src/auth/guard';
-import { UseGuards } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { ProductService } from 'src/product/product.service';
-import { ServiceService } from 'src/service/service.service';
-import { ProductType } from 'src/product/dto';
-import { ServiceType } from 'src/service/dto';
+} from "@nestjs/graphql";
+import { CreateOrderArgs, OrderType } from "./dto";
+import { GqlAuthGuard } from "src/auth/guard";
+import { UseGuards } from "@nestjs/common";
+import { OrderService } from "./order.service";
+import { ProductService } from "src/product/product.service";
+import { ServiceService } from "src/service/service.service";
+import { ProductType } from "src/product/dto";
+import { ServiceType } from "src/service/dto";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => OrderType)
@@ -22,29 +23,35 @@ export class OrderResolver {
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
-    private serviceService: ServiceService,
+    private serviceService: ServiceService
   ) {}
   @Mutation(() => OrderType)
-  async createOrder(@Args() data: CreateOrderArgs) {
-    return this.orderService.createOrder(data);
+  async createOrder(@Context("req") req, @Args() data: CreateOrderArgs) {
+    return this.orderService.createOrder(req.client, data);
   }
 
   @Query(() => [OrderType])
-  async getOrders(@Args('saleId', { type: () => ID }) saleId: string) {
-    return this.orderService.getOrders(saleId);
+  async getOrders(
+    @Context("req") req,
+    @Args("saleId", { type: () => ID }) saleId: string
+  ) {
+    return this.orderService.getOrders(req.client, saleId);
   }
   @Query(() => OrderType, {
     nullable: true,
   })
-  async getOrder(@Args('id', { type: () => ID }) id: string) {
-    return this.orderService.getOrder(id);
+  async getOrder(
+    @Context("req") req,
+    @Args("id", { type: () => ID }) id: string
+  ) {
+    return this.orderService.getOrder(req.client, id);
   }
   @ResolveField(() => [ProductType])
-  async products(@Parent() order: OrderType) {
-    return this.productService.getProductsByOrder(order.id);
+  async products(@Context("req") req, @Parent() order: OrderType) {
+    return this.productService.getProductsByOrder(req.client, order.id);
   }
   @ResolveField(() => [ServiceType])
-  async services(@Parent() order: OrderType) {
-    return this.serviceService.getServicesByOrder(order.id);
+  async services(@Context("req") req, @Parent() order: OrderType) {
+    return this.serviceService.getServicesByOrder(req.client, order.id);
   }
 }

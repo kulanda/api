@@ -26,54 +26,58 @@ let UserResolver = class UserResolver {
         this.companyService = companyService;
         this.userService = userService;
     }
-    createUserStore(userId, data) {
-        return this.userService.createUserStore(userId, data);
+    createUserStore(req, userId, data) {
+        return this.userService.createUserStore(req.client, userId, data);
     }
-    async user(user) {
-        return user;
+    async user(req, user) {
+        return this.userService.getUser(req.client, user.id);
     }
-    async getUser(id) {
-        return this.userService.getUser(id);
+    async getUser(req, id) {
+        return this.userService.getUser(req.client, id);
     }
-    async companies(_, user) {
-        return this.companyService.getCompanies(user.id);
+    async companies(req, _, user) {
+        return this.companyService.getCompanies(req.client, user.id);
     }
 };
 exports.UserResolver = UserResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.UserType),
-    __param(0, (0, decorator_1.GetUser)({
-        data: 'id',
-        access: ['OWNER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        data: "id",
+        access: ["OWNER"],
     })),
-    __param(1, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.CreateUserStoreArgs]),
+    __metadata("design:paramtypes", [Object, String, dto_1.CreateUserStoreArgs]),
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "createUserStore", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.UserType),
-    __param(0, (0, decorator_1.GetUser)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "user", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.UserType),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "getUser", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_2.CompanyType]),
-    __param(0, (0, decorator_1.GetUser)({
-        data: 'id',
-        access: ['OWNER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        data: "id",
+        access: ["OWNER"],
     })),
-    __param(1, (0, graphql_1.Parent)()),
+    __param(2, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.UserType]),
+    __metadata("design:paramtypes", [Object, String, dto_1.UserType]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "companies", null);
 exports.UserResolver = UserResolver = __decorate([

@@ -26,66 +26,71 @@ let ProductResolver = class ProductResolver {
         this.productService = productService;
         this.categoryService = categoryService;
     }
-    async createProduct(_, data) {
-        return this.productService.createProduct(data);
+    async createProduct(req, _, data) {
+        return this.productService.createProduct(req.client, data);
     }
-    async editProduct(_, id, data) {
-        return this.productService.editProduct(id, data);
+    async editProduct(req, _, id, data) {
+        return this.productService.editProduct(req.client, id, data);
     }
-    async getProducts(storeId, filter) {
-        return this.productService.getProducts(storeId, filter);
+    async getProducts(req, storeId, filter) {
+        return this.productService.getProducts(req.client, storeId, filter);
     }
-    async getProduct(id) {
-        return this.productService.getProduct(id);
+    async getProduct(req, id) {
+        return this.productService.getProduct(req.client, id);
     }
-    async category(product) {
-        return this.categoryService.getCategory(product.categoryId);
+    async category(req, product) {
+        return this.categoryService.getCategory(req.client, product.categoryId);
     }
 };
 exports.ProductResolver = ProductResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.ProductType),
-    __param(0, (0, decorator_1.GetUser)({
-        access: ['OWNER', 'MANAGER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        access: ["OWNER", "MANAGER"],
     })),
-    __param(1, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.CreateProductArgs]),
+    __metadata("design:paramtypes", [Object, String, dto_1.CreateProductArgs]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "createProduct", null);
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.ProductType),
-    __param(0, (0, decorator_1.GetUser)({
-        access: ['OWNER', 'MANAGER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        access: ["OWNER", "MANAGER"],
     })),
-    __param(1, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
-    __param(2, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
+    __param(3, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, dto_1.EditProductArgs]),
+    __metadata("design:paramtypes", [Object, String, String, dto_1.EditProductArgs]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "editProduct", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.ProductType]),
-    __param(0, (0, graphql_1.Args)('storeId', { type: () => graphql_1.ID })),
-    __param(1, (0, graphql_1.Args)('filter', { type: () => dto_1.FilterProductInput, nullable: true })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("storeId", { type: () => graphql_1.ID })),
+    __param(2, (0, graphql_1.Args)("filter", { type: () => dto_1.FilterProductInput, nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.FilterProductInput]),
+    __metadata("design:paramtypes", [Object, String, dto_1.FilterProductInput]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProducts", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.ProductType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProduct", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => dto_2.CategoryType),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.ProductType]),
+    __metadata("design:paramtypes", [Object, dto_1.ProductType]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "category", null);
 exports.ProductResolver = ProductResolver = __decorate([

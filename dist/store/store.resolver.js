@@ -33,85 +33,92 @@ let StoreResolver = class StoreResolver {
         this.userService = userService;
         this.saleService = saleService;
     }
-    async createStore(userId, data) {
-        return this.storeService.createStore(userId, data);
+    async createStore(req, userId, data) {
+        return this.storeService.createStore(req.client, userId, data);
     }
-    async getStores(companyId) {
-        return this.storeService.getStores(companyId);
+    async getStores(req, companyId) {
+        return this.storeService.getStores(req.client, companyId);
     }
-    async getStore(id) {
-        return this.storeService.getStore(id);
+    async getStore(req, id) {
+        return this.storeService.getStore(req.client, id);
     }
-    async getStoreReport(id, options) {
-        return this.storeService.getStoreReport(id, options);
+    async getStoreReport(req, id, options) {
+        return this.storeService.getStoreReport(req.client, id, options);
     }
-    async products(store) {
-        return this.productService.getProducts(store.id);
+    async products(req, store) {
+        return this.productService.getProducts(req.client, store.id);
     }
-    async sellers(store) {
-        return this.userService.getUsersByStory(store.id);
+    async sellers(req, store) {
+        return this.userService.getUsersByStory(req.client, store.id);
     }
-    async sales(store) {
-        return this.saleService.getSales(store.id);
+    async sales(req, store) {
+        return this.saleService.getSales(req.client, store.id);
     }
 };
 exports.StoreResolver = StoreResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.StoreType),
-    __param(0, (0, decorator_1.GetUser)({
-        data: 'id',
-        access: ['OWNER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        data: "id",
+        access: ["OWNER"],
     })),
-    __param(1, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.CreateStoreArgs]),
+    __metadata("design:paramtypes", [Object, String, dto_1.CreateStoreArgs]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "createStore", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.StoreType]),
-    __param(0, (0, graphql_1.Args)('companyId', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("companyId", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "getStores", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.StoreType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "getStore", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.ReportStoreType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
-    __param(1, (0, graphql_1.Args)('options', { type: () => report_store_options_input_1.ReportStoreOptionsInput, nullable: true })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
+    __param(2, (0, graphql_1.Args)("options", { type: () => report_store_options_input_1.ReportStoreOptionsInput, nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, report_store_options_input_1.ReportStoreOptionsInput]),
+    __metadata("design:paramtypes", [Object, String, report_store_options_input_1.ReportStoreOptionsInput]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "getStoreReport", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_2.ProductType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.StoreType]),
+    __metadata("design:paramtypes", [Object, dto_1.StoreType]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "products", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_3.UserType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.StoreType]),
+    __metadata("design:paramtypes", [Object, dto_1.StoreType]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "sellers", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => [dto_4.SaleType]),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.StoreType]),
+    __metadata("design:paramtypes", [Object, dto_1.StoreType]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "sales", null);
 exports.StoreResolver = StoreResolver = __decorate([

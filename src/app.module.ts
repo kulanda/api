@@ -1,5 +1,5 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
@@ -14,12 +14,14 @@ import { SaleModule } from './sale/sale.module';
 import { OrderModule } from './order/order.module';
 import { SectorModule } from './sector/sector.module';
 import { CaeModule } from './cae/cae.module';
+import { TenantMiddleware } from './tenant.middleware';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
+      context: ({ req }) => ({ req })
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -38,4 +40,10 @@ import { CaeModule } from './cae/cae.module';
     CaeModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TenantMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

@@ -27,66 +27,71 @@ let ServiceResolver = class ServiceResolver {
         this.serviceService = serviceService;
         this.categoryService = categoryService;
     }
-    async createService(_, data) {
-        return this.serviceService.createService(data);
+    async createService(req, _, data) {
+        return this.serviceService.createService(req.client, data);
     }
-    async editService(_, id, data) {
-        return this.serviceService.editService(id, data);
+    async editService(req, _, id, data) {
+        return this.serviceService.editService(req.client, id, data);
     }
-    async getServices(storeId, filter) {
-        return this.serviceService.getServices(storeId, filter);
+    async getServices(req, storeId, filter) {
+        return this.serviceService.getServices(req.client, storeId, filter);
     }
-    async getService(id) {
-        return this.serviceService.getService(id);
+    async getService(req, id) {
+        return this.serviceService.getService(req.client, id);
     }
-    async category(service) {
-        return this.categoryService.getCategory(service.categoryId);
+    async category(req, service) {
+        return this.categoryService.getCategory(req.client, service.categoryId);
     }
 };
 exports.ServiceResolver = ServiceResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.ServiceType),
-    __param(0, (0, decorator_1.GetUser)({
-        access: ['OWNER', 'MANAGER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        access: ["OWNER", "MANAGER"],
     })),
-    __param(1, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, dto_1.CreateServiceArgs]),
+    __metadata("design:paramtypes", [Object, String, dto_1.CreateServiceArgs]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "createService", null);
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.ServiceType),
-    __param(0, (0, decorator_1.GetUser)({
-        access: ['OWNER', 'MANAGER'],
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, decorator_1.GetUser)({
+        access: ["OWNER", "MANAGER"],
     })),
-    __param(1, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
-    __param(2, (0, graphql_1.Args)()),
+    __param(2, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
+    __param(3, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, dto_1.EditServiceArgs]),
+    __metadata("design:paramtypes", [Object, String, String, dto_1.EditServiceArgs]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "editService", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.ServiceType]),
-    __param(0, (0, graphql_1.Args)('storeId', { type: () => graphql_1.ID })),
-    __param(1, (0, graphql_1.Args)('filter', { type: () => filter_service_input_1.FilterServiceInput, nullable: true })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("storeId", { type: () => graphql_1.ID })),
+    __param(2, (0, graphql_1.Args)("filter", { type: () => filter_service_input_1.FilterServiceInput, nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, filter_service_input_1.FilterServiceInput]),
+    __metadata("design:paramtypes", [Object, String, filter_service_input_1.FilterServiceInput]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "getServices", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.ServiceType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "getService", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => dto_2.CategoryType),
-    __param(0, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.ServiceType]),
+    __metadata("design:paramtypes", [Object, dto_1.ServiceType]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "category", null);
 exports.ServiceResolver = ServiceResolver = __decorate([

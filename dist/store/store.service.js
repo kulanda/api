@@ -5,19 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../prisma/prisma.service");
 let StoreService = class StoreService {
-    constructor(prisma) {
-        this.prisma = prisma;
-    }
-    async createStore(userId, dto) {
-        return await this.prisma.store.create({
+    async createStore(prisma, userId, dto) {
+        return await prisma.store.create({
             data: {
                 address: dto.address,
                 designation: dto.designation,
@@ -31,21 +24,21 @@ let StoreService = class StoreService {
             },
         });
     }
-    async getStores(companyId) {
-        return await this.prisma.store.findMany({
+    async getStores(prisma, companyId) {
+        return await prisma.store.findMany({
             where: {
                 companyId,
             },
         });
     }
-    async getStore(id) {
-        return await this.prisma.store.findUnique({
+    async getStore(prisma, id) {
+        return await prisma.store.findUnique({
             where: {
                 id,
             },
         });
     }
-    async getStoreReport(id, options) {
+    async getStoreReport(prisma, id, options) {
         let dateFilter = {};
         let totalSalesBalance = 0;
         const currentDate = new Date(options.from);
@@ -94,7 +87,7 @@ let StoreService = class StoreService {
             sellerId: options.sellerId,
             createdAt: dateFilter,
         };
-        const sales = await this.prisma.sale.findMany({
+        const sales = await prisma.sale.findMany({
             where,
         });
         sales.forEach((sale) => (totalSalesBalance += Number(sale.totalPrice)));
@@ -107,7 +100,6 @@ let StoreService = class StoreService {
 };
 exports.StoreService = StoreService;
 exports.StoreService = StoreService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    (0, common_1.Injectable)()
 ], StoreService);
 //# sourceMappingURL=store.service.js.map

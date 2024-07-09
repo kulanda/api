@@ -5,19 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SaleService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../prisma/prisma.service");
 let SaleService = class SaleService {
-    constructor(prisma) {
-        this.prisma = prisma;
-    }
-    async createSale(sellerId, { orders, bankCard, cash, change, totalPrice }) {
-        return await this.prisma.sale.create({
+    async createSale(prisma, sellerId, { orders, bankCard, cash, change, totalPrice }) {
+        return await prisma.sale.create({
             data: {
                 cash,
                 bankCard,
@@ -36,8 +29,8 @@ let SaleService = class SaleService {
             },
         });
     }
-    async getSales(storeId) {
-        return await this.prisma.sale.findMany({
+    async getSales(prisma, storeId) {
+        return await prisma.sale.findMany({
             where: {
                 seller: {
                     storeId,
@@ -45,8 +38,8 @@ let SaleService = class SaleService {
             },
         });
     }
-    async getSale(id) {
-        return await this.prisma.sale.findUnique({
+    async getSale(prisma, id) {
+        return await prisma.sale.findUnique({
             where: {
                 id,
             },
@@ -55,7 +48,6 @@ let SaleService = class SaleService {
 };
 exports.SaleService = SaleService;
 exports.SaleService = SaleService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    (0, common_1.Injectable)()
 ], SaleService);
 //# sourceMappingURL=sale.service.js.map

@@ -6,9 +6,8 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class StoreService {
-  constructor(private prisma: PrismaService) {}
-  async createStore(userId: string, dto: CreateStoreArgs): Promise<StoreType> {
-    return await this.prisma.store.create({
+  async createStore(prisma: PrismaService,userId: string, dto: CreateStoreArgs): Promise<StoreType> {
+    return await prisma.store.create({
       data: {
         address: dto.address,
         designation: dto.designation,
@@ -22,21 +21,22 @@ export class StoreService {
       },
     });
   }
-  async getStores(companyId: string): Promise<StoreType[]> {
-    return await this.prisma.store.findMany({
+  async getStores(prisma: PrismaService,companyId: string): Promise<StoreType[]> {
+    return await prisma.store.findMany({
       where: {
         companyId,
       },
     });
   }
-  async getStore(id: string): Promise<StoreType> {
-    return await this.prisma.store.findUnique({
+  async getStore(prisma: PrismaService, id: string): Promise<StoreType> {
+    return await prisma.store.findUnique({
       where: {
         id,
       },
     });
   }
   async getStoreReport(
+    prisma: PrismaService,
     id: string,
     options?: ReportStoreOptionsInput,
   ): Promise<ReportStoreType> {
@@ -101,7 +101,7 @@ export class StoreService {
       createdAt: dateFilter,
     };
 
-    const sales = await this.prisma.sale.findMany({
+    const sales = await prisma.sale.findMany({
       where,
     });
 

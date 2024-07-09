@@ -1,18 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateServiceArgs, EditServiceArgs, ServiceType } from './dto';
-import { FilterServiceInput } from './dto/filter-service.input';
-import { Prisma } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
+import { CreateServiceArgs, EditServiceArgs, ServiceType } from "./dto";
+import { FilterServiceInput } from "./dto/filter-service.input";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class ServiceService {
-  constructor(private prisma: PrismaService) {}
-  async createService({
-    categoryId,
-    storeId,
-    ...dto
-  }: CreateServiceArgs): Promise<ServiceType> {
-    return await this.prisma.service.create({
+  async createService(
+    prisma: PrismaService,
+    { categoryId, storeId, ...dto }: CreateServiceArgs
+  ): Promise<ServiceType> {
+    return await prisma.service.create({
       data: {
         ...dto,
         store: {
@@ -28,8 +26,12 @@ export class ServiceService {
       },
     });
   }
-  async editService(id: string, dto: EditServiceArgs): Promise<ServiceType> {
-    return await this.prisma.service.update({
+  async editService(
+    prisma: PrismaService,
+    id: string,
+    dto: EditServiceArgs
+  ): Promise<ServiceType> {
+    return await prisma.service.update({
       data: {
         ...dto,
       },
@@ -39,8 +41,9 @@ export class ServiceService {
     });
   }
   async getServices(
+    prisma: PrismaService,
     storeId: string,
-    filter?: FilterServiceInput,
+    filter?: FilterServiceInput
   ): Promise<ServiceType[]> {
     const where: Prisma.ServiceWhereInput = {
       storeId,
@@ -51,18 +54,21 @@ export class ServiceService {
     };
 
     if (filter.paginate)
-      return await this.prisma.service.findMany({
+      return await prisma.service.findMany({
         skip: (filter.paginate.page - 1) * filter.paginate.limit,
         take: filter.paginate.limit,
         where,
       });
     else
-      return await this.prisma.service.findMany({
+      return await prisma.service.findMany({
         where,
       });
   }
-  async getServicesByOrder(orderId: string): Promise<ServiceType[]> {
-    return await this.prisma.service.findMany({
+  async getServicesByOrder(
+    prisma: PrismaService,
+    orderId: string
+  ): Promise<ServiceType[]> {
+    return await prisma.service.findMany({
       where: {
         Order: {
           some: {
@@ -72,8 +78,8 @@ export class ServiceService {
       },
     });
   }
-  async getService(id: string): Promise<ServiceType> {
-    return await this.prisma.service.findUnique({
+  async getService(prisma: PrismaService, id: string): Promise<ServiceType> {
+    return await prisma.service.findUnique({
       where: {
         id,
       },

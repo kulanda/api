@@ -23,7 +23,13 @@ const sale_module_1 = require("./sale/sale.module");
 const order_module_1 = require("./order/order.module");
 const sector_module_1 = require("./sector/sector.module");
 const cae_module_1 = require("./cae/cae.module");
+const tenant_middleware_1 = require("./tenant.middleware");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer
+            .apply(tenant_middleware_1.TenantMiddleware)
+            .forRoutes({ path: '*', method: common_1.RequestMethod.ALL });
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
@@ -32,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             graphql_1.GraphQLModule.forRoot({
                 driver: apollo_1.ApolloDriver,
                 autoSchemaFile: 'schema.gql',
+                context: ({ req }) => ({ req })
             }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,

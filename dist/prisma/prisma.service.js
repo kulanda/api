@@ -14,14 +14,36 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const client_1 = require("@prisma/client");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
-    constructor(config) {
-        super({
-            datasources: {
-                db: {
-                    url: config.get('DATABASE_URL'),
+    constructor(configService) {
+        super();
+        this.configService = configService;
+        this.clients = {};
+    }
+    async getClient(request) {
+        const tenantId = this.extractTenantIdFromRequest(request);
+        let client = this.clients[tenantId];
+        if (!client) {
+            const databaseUrl = this.configService
+                .get("DATABASE_URL")
+                .replace("public", tenantId);
+            client = new client_1.PrismaClient({
+                datasources: {
+                    db: {
+                        url: databaseUrl,
+                    },
                 },
-            },
-        });
+            });
+            this.clients[tenantId] = client;
+        }
+        return client;
+    }
+    extractTenantIdFromRequest(request) {
+        return request.headers["x-tenant-id"] || "public";
+    }
+    async onModuleDestroy() {
+        for (const client of Object.values(this.clients)) {
+            await client.$disconnect();
+        }
     }
 };
 exports.PrismaService = PrismaService;

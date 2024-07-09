@@ -22,37 +22,40 @@ let CaeResolver = class CaeResolver {
     constructor(cAEService) {
         this.cAEService = cAEService;
     }
-    async createCAE(data) {
-        return this.cAEService.createCAE(data);
+    async createCAE(req, data) {
+        return this.cAEService.createCAE(req.client, data);
     }
-    async getCategories() {
-        return this.cAEService.getCategories();
+    async getCategories(req) {
+        return this.cAEService.getCategories(req.client);
     }
-    async getCAE(id) {
-        return this.cAEService.getCAE(id);
+    async getCAE(req, id) {
+        return this.cAEService.getCAE(req.client, id);
     }
 };
 exports.CaeResolver = CaeResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.CAEType),
-    __param(0, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.CreateCAEArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.CreateCAEArgs]),
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "createCAE", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CAEType]),
+    __param(0, (0, graphql_1.Context)("req")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "getCategories", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.CAEType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "getCAE", null);
 exports.CaeResolver = CaeResolver = __decorate([

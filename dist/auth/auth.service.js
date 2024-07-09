@@ -22,10 +22,10 @@ let AuthService = class AuthService {
         this.jwt = jwt;
         this.config = config;
     }
-    async signUp(dto) {
+    async signUp(prisma, dto) {
         const hash = await argon.hash(dto.password);
         try {
-            const user = await this.prisma.user.create({
+            const user = await prisma.user.create({
                 data: {
                     email: dto.email,
                     fullName: dto.fullName,
@@ -38,37 +38,37 @@ let AuthService = class AuthService {
         }
         catch (error) {
             if (error instanceof library_1.PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new common_1.ForbiddenException('Credentias taken');
+                if (error.code === "P2002") {
+                    throw new common_1.ForbiddenException("Credentias taken");
                 }
             }
             throw error;
         }
     }
-    async signIn(dto) {
-        const user = await this.prisma.user.findUnique({
+    async signIn(prisma, dto) {
+        const user = await prisma.user.findUnique({
             where: {
                 email: dto.email,
             },
         });
         if (!user)
-            throw new common_1.ForbiddenException('Credrentials incorrect');
+            throw new common_1.ForbiddenException("Credrentials incorrect");
         const pwMacthes = await argon.verify(user.hash, dto.password);
         if (!pwMacthes)
-            throw new common_1.ForbiddenException('Credrentials incorrect');
+            throw new common_1.ForbiddenException("Credrentials incorrect");
         return this.signToken(user.id, user.email);
     }
-    async signInWithPhone(dto) {
-        const user = await this.prisma.user.findUnique({
+    async signInWithPhone(prisma, dto) {
+        const user = await prisma.user.findUnique({
             where: {
                 phone: dto.phone,
             },
         });
         if (!user)
-            throw new common_1.ForbiddenException('Credrentials incorrect');
+            throw new common_1.ForbiddenException("Credrentials incorrect");
         const pwMacthes = await argon.verify(user.hash, dto.password);
         if (!pwMacthes)
-            throw new common_1.ForbiddenException('Credrentials incorrect');
+            throw new common_1.ForbiddenException("Credrentials incorrect");
         return this.signToken(user.id, user.email);
     }
     async signToken(userId, email) {
@@ -76,9 +76,9 @@ let AuthService = class AuthService {
             sub: userId,
             email,
         };
-        const secret = this.config.get('JWT_SECRET');
+        const secret = this.config.get("JWT_SECRET");
         const token = await this.jwt.signAsync(payload, {
-            expiresIn: '1d',
+            expiresIn: "1d",
             secret: secret,
         });
         return {
@@ -88,7 +88,7 @@ let AuthService = class AuthService {
     async validateToken(token) {
         try {
             const decoded = this.jwt.verify(token, {
-                secret: this.config.get('JWT_SECRET'),
+                secret: this.config.get("JWT_SECRET"),
             });
             const user = await this.prisma.user.findUnique({
                 where: { id: decoded.sub },
