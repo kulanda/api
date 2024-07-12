@@ -4,7 +4,6 @@ import { SectorService } from "./sector.service";
 import { UseGuards } from "@nestjs/common";
 import { GqlAuthGuard } from "src/auth/guard";
 
-@UseGuards(GqlAuthGuard)
 @Resolver(() => SectorType)
 export class SectorResolver {
   constructor(private sectorService: SectorService) {}

@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CompanyType, CreateCompanyArgs } from './dto';
+import { Injectable } from "@nestjs/common";
+import { CompanyType, CreateCompanyArgs } from "./dto";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class CompanyService {
   async createCompany(
-    prisma: PrismaService,
-    userId: string,
-    { caeId, ...dto }: CreateCompanyArgs,
+    prisma: PrismaClient,
+    { caeId, tenantId, ...dto }: CreateCompanyArgs
   ): Promise<CompanyType> {
     return await prisma.company.create({
       data: {
@@ -17,25 +16,40 @@ export class CompanyService {
             id: caeId,
           },
         },
-        user: {
+        tenant: {
           connect: {
-            id: userId,
+            id: tenantId,
           },
         },
       },
     });
   }
-  async getCompanies(prisma: PrismaService, userId: string): Promise<CompanyType[]> {
+  async getCompanies(
+    prisma: PrismaClient,
+    tenantId: string
+  ): Promise<CompanyType[]> {
     return await prisma.company.findMany({
       where: {
-        userId,
+        tenantId,
       },
     });
   }
-  async getCompany(prisma: PrismaService, id: string): Promise<CompanyType> {
+  async getCompany(prisma: PrismaClient, id: string): Promise<CompanyType> {
     return await prisma.company.findUnique({
       where: {
         id,
+      },
+    });
+  }
+  async getCompanyByTenant(
+    prisma: PrismaClient,
+    tenantId: string
+  ): Promise<CompanyType> {
+    return await prisma.company.findFirst({
+      where: {
+        tenant: {
+          id: tenantId,
+        },
       },
     });
   }

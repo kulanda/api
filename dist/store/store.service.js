@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreService = void 0;
 const common_1 = require("@nestjs/common");
 let StoreService = class StoreService {
-    async createStore(prisma, userId, dto) {
+    async createStore(prisma, tenantId, dto) {
         return await prisma.store.create({
             data: {
                 address: dto.address,
@@ -18,7 +18,7 @@ let StoreService = class StoreService {
                 company: {
                     connect: {
                         id: dto.companyId,
-                        userId,
+                        tenantId,
                     },
                 },
             },
@@ -44,13 +44,13 @@ let StoreService = class StoreService {
         const currentDate = new Date(options.from);
         if (options) {
             switch (options.period) {
-                case 'DAY':
+                case "DAY":
                     dateFilter = {
                         gte: new Date(currentDate.setUTCHours(0, 0, 0, 0)),
                         lt: new Date(currentDate.setUTCHours(24, 0, 0, 0)),
                     };
                     break;
-                case 'WEEK':
+                case "WEEK":
                     const startOfWeek = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
                     startOfWeek.setUTCHours(0, 0, 0, 0);
                     const endOfWeek = new Date(startOfWeek);
@@ -60,7 +60,7 @@ let StoreService = class StoreService {
                         lt: endOfWeek,
                     };
                     break;
-                case 'MONTH':
+                case "MONTH":
                     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
                     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
                     dateFilter = {
@@ -68,7 +68,7 @@ let StoreService = class StoreService {
                         lt: endOfMonth,
                     };
                     break;
-                case 'YEAR':
+                case "YEAR":
                     const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
                     const endOfYear = new Date(currentDate.getFullYear() + 1, 0, 1);
                     dateFilter = {

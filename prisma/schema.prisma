@@ -2,12 +2,27 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["base", "public"]
+}
+
+model Tenant {
+  id String @id @default(uuid())
+
+  name String @unique
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Company   Company[]
+
+  @@map("tenants")
+  @@schema("base")
 }
 
 model User {
@@ -25,18 +40,20 @@ model User {
   storeId String?
   store   Store?  @relation(fields: [storeId], references: [id])
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Company   Company[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Sale      Sale[]
 
   @@map("users")
+  @@schema("public")
 }
 
 enum Access {
   SELLER
   OWNER
   MANAGER
+
+  @@schema("public")
 }
 
 model Company {
@@ -48,8 +65,8 @@ model Company {
   address String
   logo    String
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
 
   caeId String?
   cae   CAE?    @relation(fields: [caeId], references: [id])
@@ -59,6 +76,7 @@ model Company {
   store     Store[]
 
   @@map("companies")
+  @@schema("base")
 }
 
 model Store {
@@ -78,6 +96,7 @@ model Store {
   User      User[]
 
   @@map("stores")
+  @@schema("public")
 }
 
 model Category {
@@ -91,13 +110,17 @@ model Category {
   updatedAt DateTime  @updatedAt
   Product   Product[]
   Service   Service[]
+  Charge    Charge[]
 
   @@map("categories")
+  @@schema("public")
 }
 
 enum CategoryType {
   PRODUCT
   SERVICE
+
+  @@schema("public")
 }
 
 model Product {
@@ -119,8 +142,10 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Order     Order[]
+  Charge    Charge[]
 
   @@map("products")
+  @@schema("public")
 }
 
 model Service {
@@ -140,12 +165,16 @@ model Service {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Order     Order[]
+  Charge    Charge[]
 
   @@map("services")
+  @@schema("public")
 }
 
 model Sale {
   id String @id @default(uuid())
+
+  code Int? @unique @default(autoincrement())
 
   change   Decimal? @default(0)
   cash     Decimal?
@@ -161,6 +190,7 @@ model Sale {
   Order     Order[]
 
   @@map("sales")
+  @@schema("public")
 }
 
 model Order {
@@ -179,6 +209,7 @@ model Order {
   updatedAt DateTime @updatedAt
 
   @@map("orders")
+  @@schema("public")
 }
 
 model Sector {
@@ -191,6 +222,7 @@ model Sector {
   CAE       CAE[]
 
   @@map("sectors")
+  @@schema("base")
 }
 
 model CAE {
@@ -207,6 +239,7 @@ model CAE {
   Company   Company[]
 
   @@map("CAEs")
+  @@schema("base")
 }
 
 model Charge {
@@ -217,14 +250,26 @@ model Charge {
   percentage Decimal
   type       ChargeType
 
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("charges")
+  @@schema("public")
 }
 
 enum ChargeType {
   TAX
   FEE
   DISCOUNT
+
+  @@schema("public")
 }

@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const decorator_1 = require("../auth/decorator");
 const guard_1 = require("../auth/guard");
 const dto_1 = require("./dto");
 const store_service_1 = require("./store.service");
@@ -33,8 +32,8 @@ let StoreResolver = class StoreResolver {
         this.userService = userService;
         this.saleService = saleService;
     }
-    async createStore(req, userId, data) {
-        return this.storeService.createStore(req.client, userId, data);
+    async createStore(req, tenantId, data) {
+        return this.storeService.createStore(req.client, tenantId, data);
     }
     async getStores(req, companyId) {
         return this.storeService.getStores(req.client, companyId);
@@ -59,10 +58,7 @@ exports.StoreResolver = StoreResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.StoreType),
     __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, decorator_1.GetUser)({
-        data: "id",
-        access: ["OWNER"],
-    })),
+    __param(1, (0, graphql_1.Args)("tenantId")),
     __param(2, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, dto_1.CreateStoreArgs]),

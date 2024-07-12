@@ -13,19 +13,20 @@ exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const client_1 = require("@prisma/client");
-let PrismaService = class PrismaService extends client_1.PrismaClient {
+let PrismaService = class PrismaService {
     constructor(configService) {
-        super();
         this.configService = configService;
         this.clients = {};
     }
-    async getClient(request) {
-        const tenantId = this.extractTenantIdFromRequest(request);
-        let client = this.clients[tenantId];
+    async getClient(request, intern = false) {
+        const tenant = this.extractTenantFromRequest(request);
+        let databaseUrl = "";
+        if (!tenant?.id || (!tenant?.key && intern !== false))
+            databaseUrl = this.configService.get("DATABASE_URL");
+        else
+            databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
+        let client = this.clients[tenant?.id ?? "intern"];
         if (!client) {
-            const databaseUrl = this.configService
-                .get("DATABASE_URL")
-                .replace("public", tenantId);
             client = new client_1.PrismaClient({
                 datasources: {
                     db: {
@@ -33,12 +34,17 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
                     },
                 },
             });
-            this.clients[tenantId] = client;
+            this.clients[tenant?.id ?? "intern"] = client;
         }
         return client;
     }
-    extractTenantIdFromRequest(request) {
-        return request.headers["x-tenant-id"] || "public";
+    extractTenantFromRequest(request) {
+        if (!request)
+            return;
+        return {
+            id: request.headers["x-tenant-id"],
+            key: request.headers["x-tenant-key"],
+        };
     }
     async onModuleDestroy() {
         for (const client of Object.values(this.clients)) {

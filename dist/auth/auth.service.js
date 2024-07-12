@@ -15,10 +15,8 @@ const argon = require("argon2");
 const library_1 = require("@prisma/client/runtime/library");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
-const prisma_service_1 = require("../prisma/prisma.service");
 let AuthService = class AuthService {
-    constructor(prisma, jwt, config) {
-        this.prisma = prisma;
+    constructor(jwt, config) {
         this.jwt = jwt;
         this.config = config;
     }
@@ -37,6 +35,7 @@ let AuthService = class AuthService {
             return this.signToken(user.id, user.email);
         }
         catch (error) {
+            console.log(error);
             if (error instanceof library_1.PrismaClientKnownRequestError) {
                 if (error.code === "P2002") {
                     throw new common_1.ForbiddenException("Credentias taken");
@@ -85,12 +84,12 @@ let AuthService = class AuthService {
             access_token: token,
         };
     }
-    async validateToken(token) {
+    async validateToken(prisma, token) {
         try {
             const decoded = this.jwt.verify(token, {
                 secret: this.config.get("JWT_SECRET"),
             });
-            const user = await this.prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: { id: decoded.sub },
             });
             return user;
@@ -103,8 +102,7 @@ let AuthService = class AuthService {
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService,
+    __metadata("design:paramtypes", [jwt_1.JwtService,
         config_1.ConfigService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

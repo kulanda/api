@@ -1,7 +1,7 @@
 import { CAEType, CreateCAEArgs } from "./dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaClient } from "@prisma/client";
 export declare class CaeService {
-    createCAE(prisma: PrismaService, dto: CreateCAEArgs): Promise<CAEType>;
-    getCategories(prisma: PrismaService): Promise<CAEType[]>;
-    getCAE(prisma: PrismaService, id: string): Promise<CAEType>;
+    createCAE(prisma: PrismaClient, dto: CreateCAEArgs): Promise<CAEType>;
+    getCategories(prisma: PrismaClient): Promise<CAEType[]>;
+    getCAE(prisma: PrismaClient, id: string): Promise<CAEType>;
 }

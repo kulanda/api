@@ -24,18 +24,6 @@ export class UserResolver {
     private userService: UserService
   ) {}
 
-  @Mutation(() => UserType)
-  createUserStore(
-    @Context("req") req,
-    @GetUser({
-      data: "id",
-      access: ["OWNER"],
-    })
-    userId: string,
-    @Args() data: CreateUserStoreArgs
-  ) {
-    return this.userService.createUserStore(req.client, userId, data);
-  }
   @Query(() => UserType)
   async user(@Context("req") req, @GetUser() user) {
     return this.userService.getUser(req.client, user.id);

@@ -26,9 +26,6 @@ let UserResolver = class UserResolver {
         this.companyService = companyService;
         this.userService = userService;
     }
-    createUserStore(req, userId, data) {
-        return this.userService.createUserStore(req.client, userId, data);
-    }
     async user(req, user) {
         return this.userService.getUser(req.client, user.id);
     }
@@ -40,18 +37,6 @@ let UserResolver = class UserResolver {
     }
 };
 exports.UserResolver = UserResolver;
-__decorate([
-    (0, graphql_1.Mutation)(() => dto_1.UserType),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, decorator_1.GetUser)({
-        data: "id",
-        access: ["OWNER"],
-    })),
-    __param(2, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, dto_1.CreateUserStoreArgs]),
-    __metadata("design:returntype", void 0)
-], UserResolver.prototype, "createUserStore", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.UserType),
     __param(0, (0, graphql_1.Context)("req")),

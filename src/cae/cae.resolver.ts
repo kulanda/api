@@ -1,10 +1,7 @@
 import { Args, Context, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { CAEType, CreateCAEArgs } from "./dto";
 import { CaeService } from "./CAE.service";
-import { UseGuards } from "@nestjs/common";
-import { GqlAuthGuard } from "src/auth/guard";
 
-@UseGuards(GqlAuthGuard)
 @Resolver(() => CAEType)
 export class CaeResolver {
   constructor(private cAEService: CaeService) {}

@@ -1,6 +1,7 @@
-import { Company } from '@prisma/client';
-import { StoreType } from 'src/store/dto';
-export declare class CompanyType implements Omit<Company, 'userId' | 'Store'> {
+import { Company } from "@prisma/client";
+import { StoreType } from "src/store/dto";
+export declare class CompanyType implements Omit<Company, "userId" | "Store"> {
+    tenantId: string;
     id: string;
     nif: string;
     name: string;

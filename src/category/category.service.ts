@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CategoryType, CreateCategoryArgs } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class CategoryService {
-  async createCategory(prisma: PrismaService, dto: CreateCategoryArgs): Promise<CategoryType> {
+  async createCategory(prisma: PrismaClient, dto: CreateCategoryArgs): Promise<CategoryType> {
     return await prisma.category.create({
       data: {
         ...dto,
       },
     });
   }
-  async getCategories(prisma: PrismaService): Promise<CategoryType[]> {
+  async getCategories(prisma: PrismaClient): Promise<CategoryType[]> {
     return await prisma.category.findMany();
   }
-  async getCategory(prisma: PrismaService, id: string): Promise<CategoryType> {
+  async getCategory(prisma: PrismaClient, id: string): Promise<CategoryType> {
     return await prisma.category.findUnique({
       where: {
         id,
       },
     });
   }
-  async getCategoriesByStore(prisma: PrismaService, storeId: string): Promise<CategoryType[]> {
+  async getCategoriesByStore(prisma: PrismaClient, storeId: string): Promise<CategoryType[]> {
     return await prisma.category.findMany({
       where: {
         Service: {

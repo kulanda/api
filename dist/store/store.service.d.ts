@@ -1,9 +1,9 @@
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateStoreArgs, ReportStoreType, StoreType } from './dto';
-import { ReportStoreOptionsInput } from './dto/report-store-options.input';
+import { CreateStoreArgs, ReportStoreType, StoreType } from "./dto";
+import { ReportStoreOptionsInput } from "./dto/report-store-options.input";
+import { PrismaClient } from "@prisma/client";
 export declare class StoreService {
-    createStore(prisma: PrismaService, userId: string, dto: CreateStoreArgs): Promise<StoreType>;
-    getStores(prisma: PrismaService, companyId: string): Promise<StoreType[]>;
-    getStore(prisma: PrismaService, id: string): Promise<StoreType>;
-    getStoreReport(prisma: PrismaService, id: string, options?: ReportStoreOptionsInput): Promise<ReportStoreType>;
+    createStore(prisma: PrismaClient, tenantId: string, dto: CreateStoreArgs): Promise<StoreType>;
+    getStores(prisma: PrismaClient, companyId: string): Promise<StoreType[]>;
+    getStore(prisma: PrismaClient, id: string): Promise<StoreType>;
+    getStoreReport(prisma: PrismaClient, id: string, options?: ReportStoreOptionsInput): Promise<ReportStoreType>;
 }

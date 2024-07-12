@@ -69,6 +69,7 @@ type ReportStoreType {
 }
 
 type CompanyType {
+  tenantId: ID!
   id: ID!
   nif: String!
   name: String!
@@ -143,11 +144,18 @@ type SectorType {
   updatedAt: DateTime!
 }
 
+type TenantType {
+  id: ID!
+  name: String!
+  key: String!
+  company: CompanyType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   user: UserType!
   getUser(id: ID!): UserType!
-  getCompanies: [CompanyType!]!
-  getCompany(id: ID!): CompanyType
   getStores(companyId: ID!): [StoreType!]!
   getStore(id: ID!): StoreType
   getStoreReport(id: ID!, options: ReportStoreOptionsInput): ReportStoreType
@@ -165,11 +173,12 @@ type Query {
   getSectors: [SectorType!]!
   getSector(id: ID!): SectorType
   getCAE(id: ID!): CAEType
+  test: String!
 }
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-09T15:47:09.332Z"
+  from: DateTime = "2024-07-12T14:14:42.713Z"
   sellerId: ID
 }
 
@@ -206,9 +215,8 @@ type Mutation {
   signUp(fullName: String!, username: String, email: String!, phone: String, password: String!): AuthTokenType!
   signIn(email: String!, password: String!): AuthTokenType!
   signInWithPhoneNumber(phone: String!, password: String!): AuthTokenType!
-  createUserStore(fullName: String!, username: String, email: String!, phone: String, storeId: ID!, password: String!): UserType!
-  createCompany(nif: String!, name: String!, address: String!, logo: String, caeId: ID!): CompanyType!
-  createStore(address: String!, designation: String!, phone: String!, companyId: ID!): StoreType!
+  createCompany(tenantId: ID!, nif: String!, name: String!, address: String!, logo: String, caeId: ID!): CompanyType!
+  createStore(tenantId: String!, address: String!, designation: String!, phone: String!, companyId: ID!): StoreType!
   createCategory(name: String!, description: String, type: CategoryEnumType!): CategoryType!
   createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, storeId: ID!): ProductType!
   editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, storeId: ID): ProductType!
@@ -218,9 +226,19 @@ type Mutation {
   createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
+  createTenant(name: String!, company: CreateCompanyInput!): TenantType!
+  company: TenantType
 }
 
 input CreateOrderSaleInput {
   productId: ID
   serviceId: ID
+}
+
+input CreateCompanyInput {
+  nif: String!
+  name: String!
+  address: String!
+  logo: String
+  caeId: ID!
 }

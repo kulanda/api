@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyService = void 0;
 const common_1 = require("@nestjs/common");
 let CompanyService = class CompanyService {
-    async createCompany(prisma, userId, { caeId, ...dto }) {
+    async createCompany(prisma, { caeId, tenantId, ...dto }) {
         return await prisma.company.create({
             data: {
                 ...dto,
@@ -18,18 +18,18 @@ let CompanyService = class CompanyService {
                         id: caeId,
                     },
                 },
-                user: {
+                tenant: {
                     connect: {
-                        id: userId,
+                        id: tenantId,
                     },
                 },
             },
         });
     }
-    async getCompanies(prisma, userId) {
+    async getCompanies(prisma, tenantId) {
         return await prisma.company.findMany({
             where: {
-                userId,
+                tenantId,
             },
         });
     }
@@ -37,6 +37,15 @@ let CompanyService = class CompanyService {
         return await prisma.company.findUnique({
             where: {
                 id,
+            },
+        });
+    }
+    async getCompanyByTenant(prisma, tenantId) {
+        return await prisma.company.findFirst({
+            where: {
+                tenant: {
+                    id: tenantId,
+                },
             },
         });
     }

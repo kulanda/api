@@ -16,8 +16,6 @@ exports.SectorResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const dto_1 = require("./dto");
 const sector_service_1 = require("./sector.service");
-const common_1 = require("@nestjs/common");
-const guard_1 = require("../auth/guard");
 let SectorResolver = class SectorResolver {
     constructor(sectorService) {
         this.sectorService = sectorService;
@@ -59,7 +57,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SectorResolver.prototype, "getSector", null);
 exports.SectorResolver = SectorResolver = __decorate([
-    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.SectorType),
     __metadata("design:paramtypes", [sector_service_1.SectorService])
 ], SectorResolver);

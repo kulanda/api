@@ -18,6 +18,10 @@ exports.CompanyType = CompanyType;
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     __metadata("design:type", String)
+], CompanyType.prototype, "tenantId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID),
+    __metadata("design:type", String)
 ], CompanyType.prototype, "id", void 0);
 __decorate([
     (0, graphql_1.Field)(() => String),

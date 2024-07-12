@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { CreateSaleArgs, SaleType } from "./dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class SaleService {
   async createSale(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     sellerId: string,
     { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs
   ): Promise<Omit<SaleType, "order">> {
@@ -29,7 +29,7 @@ export class SaleService {
     });
   }
   async getSales(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     storeId: string
   ): Promise<Omit<SaleType, "order">[]> {
     return await prisma.sale.findMany({
@@ -41,7 +41,7 @@ export class SaleService {
     });
   }
   async getSale(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     id: string
   ): Promise<Omit<SaleType, "order">> {
     return await prisma.sale.findUnique({

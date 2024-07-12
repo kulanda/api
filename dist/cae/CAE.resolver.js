@@ -16,8 +16,6 @@ exports.CaeResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const dto_1 = require("./dto");
 const CAE_service_1 = require("./CAE.service");
-const common_1 = require("@nestjs/common");
-const guard_1 = require("../auth/guard");
 let CaeResolver = class CaeResolver {
     constructor(cAEService) {
         this.cAEService = cAEService;
@@ -59,7 +57,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "getCAE", null);
 exports.CaeResolver = CaeResolver = __decorate([
-    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.CAEType),
     __metadata("design:paramtypes", [CAE_service_1.CaeService])
 ], CaeResolver);

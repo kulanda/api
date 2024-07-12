@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { CreateOrderArgs, OrderType } from "./dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class OrderService {
   async createOrder(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     { ...dto }: CreateOrderArgs
   ): Promise<OrderType> {
     return await prisma.order.create({
@@ -15,14 +15,14 @@ export class OrderService {
     });
   }
 
-  async getOrders(prisma: PrismaService, saleId: string): Promise<OrderType[]> {
+  async getOrders(prisma: PrismaClient, saleId: string): Promise<OrderType[]> {
     return await prisma.order.findMany({
       where: {
         saleId,
       },
     });
   }
-  async getOrder(prisma: PrismaService, id: string): Promise<OrderType> {
+  async getOrder(prisma: PrismaClient, id: string): Promise<OrderType> {
     return await prisma.order.findUnique({
       where: {
         id,

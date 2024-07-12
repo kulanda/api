@@ -13,7 +13,7 @@ export declare class StoreResolver {
     private userService;
     private saleService;
     constructor(storeService: StoreService, productService: ProductService, userService: UserService, saleService: SaleService);
-    createStore(req: any, userId: string, data: CreateStoreArgs): Promise<StoreType>;
+    createStore(req: any, tenantId: string, data: CreateStoreArgs): Promise<StoreType>;
     getStores(req: any, companyId: string): Promise<StoreType[]>;
     getStore(req: any, id: string): Promise<StoreType>;
     getStoreReport(req: any, id: string, options: ReportStoreOptionsInput): Promise<ReportStoreType>;

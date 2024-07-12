@@ -13,20 +13,23 @@ exports.GqlAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
 const auth_service_1 = require("../auth.service");
+const prisma_service_1 = require("../../prisma/prisma.service");
 let GqlAuthGuard = class GqlAuthGuard {
-    constructor(authService) {
+    constructor(authService, prismaService) {
         this.authService = authService;
+        this.prismaService = prismaService;
     }
     async canActivate(context) {
         const ctx = graphql_1.GqlExecutionContext.create(context);
         const { req } = ctx.getContext();
+        const client = await this.prismaService.getClient(req);
         const authHeader = req.headers.authorization;
         if (!authHeader)
             return false;
-        const token = authHeader.split(' ')[1];
+        const token = authHeader.split(" ")[1];
         if (!token)
             return false;
-        const user = await this.authService.validateToken(token);
+        const user = await this.authService.validateToken(client, token);
         if (!user)
             return false;
         delete user.hash;
@@ -37,6 +40,7 @@ let GqlAuthGuard = class GqlAuthGuard {
 exports.GqlAuthGuard = GqlAuthGuard;
 exports.GqlAuthGuard = GqlAuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        prisma_service_1.PrismaService])
 ], GqlAuthGuard);
 //# sourceMappingURL=jwt.guard.js.map

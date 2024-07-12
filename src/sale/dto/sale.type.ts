@@ -3,7 +3,7 @@ import { Prisma, Sale } from '@prisma/client';
 import { IsNumber, IsOptional, IsUUID } from 'class-validator';
 
 @ObjectType()
-export class SaleType implements Omit<Sale, 'SaleId' | 'order'> {
+export class SaleType implements Omit<Sale, 'SaleId' | 'order' | 'code'> {
   @Field(() => ID)
   id: string;
 
