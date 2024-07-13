@@ -16,29 +16,33 @@ exports.CaeResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const dto_1 = require("./dto");
 const CAE_service_1 = require("./CAE.service");
-const common_1 = require("@nestjs/common");
-const guard_1 = require("../auth/guard");
+const dto_2 = require("../sector/dto");
+const sector_service_1 = require("../sector/sector.service");
 let CaeResolver = class CaeResolver {
-    constructor(cAEService) {
+    constructor(cAEService, sectorService) {
         this.cAEService = cAEService;
+        this.sectorService = sectorService;
     }
-    async createCAE(req, data) {
-        return this.cAEService.createCAE(req.client, data);
+    async createCAE(data) {
+        return this.cAEService.createCAE(data);
     }
     async getCategories(req) {
         return this.cAEService.getCategories(req.client);
     }
-    async getCAE(req, id) {
-        return this.cAEService.getCAE(req.client, id);
+    async getCAE(id) {
+        return this.cAEService.getCAE(id);
+    }
+    async sector(cae) {
+        console.log(cae);
+        return this.sectorService.getSector(cae.sectorId);
     }
 };
 exports.CaeResolver = CaeResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.CAEType),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)()),
+    __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, dto_1.CreateCAEArgs]),
+    __metadata("design:paramtypes", [dto_1.CreateCAEArgs]),
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "createCAE", null);
 __decorate([
@@ -52,15 +56,21 @@ __decorate([
     (0, graphql_1.Query)(() => dto_1.CAEType, {
         nullable: true,
     }),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
+    __param(0, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], CaeResolver.prototype, "getCAE", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => dto_2.SectorType),
+    __param(0, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.CAEType]),
+    __metadata("design:returntype", Promise)
+], CaeResolver.prototype, "sector", null);
 exports.CaeResolver = CaeResolver = __decorate([
-    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.CAEType),
-    __metadata("design:paramtypes", [CAE_service_1.CaeService])
+    __metadata("design:paramtypes", [CAE_service_1.CaeService,
+        sector_service_1.SectorService])
 ], CaeResolver);
 //# sourceMappingURL=CAE.resolver.js.map

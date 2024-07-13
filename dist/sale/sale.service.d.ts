@@ -1,7 +1,7 @@
 import { CreateSaleArgs, SaleType } from "./dto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaClient } from "@prisma/client";
 export declare class SaleService {
-    createSale(prisma: PrismaService, sellerId: string, { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs): Promise<Omit<SaleType, "order">>;
-    getSales(prisma: PrismaService, storeId: string): Promise<Omit<SaleType, "order">[]>;
-    getSale(prisma: PrismaService, id: string): Promise<Omit<SaleType, "order">>;
+    createSale(prisma: PrismaClient, sellerId: string, { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs): Promise<Omit<SaleType, "order">>;
+    getSales(prisma: PrismaClient, storeId: string): Promise<Omit<SaleType, "order">[]>;
+    getSale(prisma: PrismaClient, id: string): Promise<Omit<SaleType, "order">>;
 }

@@ -6,7 +6,6 @@ import { SignInWithPhoneArgs } from "./dto/sign-in-with-phone.args";
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
-
   @Mutation(() => AuthTokenType)
   signUp(@Context("req") req, @Args() data: SignUpArgs) {
     return this.authService.signUp(req.client, data);

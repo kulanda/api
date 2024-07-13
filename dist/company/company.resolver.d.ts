@@ -1,4 +1,4 @@
-import { CompanyType, CreateCompanyArgs } from "./dto";
+import { CompanyType } from "./dto";
 import { CompanyService } from "./company.service";
 import { StoreType } from "src/store/dto";
 import { StoreService } from "src/store/store.service";
@@ -9,9 +9,7 @@ export declare class CompanyResolver {
     private storeService;
     private caeService;
     constructor(companyService: CompanyService, storeService: StoreService, caeService: CaeService);
-    createCompany(req: any, userId: string, data: CreateCompanyArgs): Promise<CompanyType>;
-    getCompanies(req: any, userId: string): Promise<CompanyType[]>;
-    getCompany(req: any, id: string): Promise<CompanyType>;
+    getCompany(req: any): Promise<CompanyType>;
     stores(req: any, company: CompanyType): Promise<StoreType[]>;
-    cae(req: any, company: CompanyType): Promise<CAEType>;
+    cae(company: CompanyType): Promise<CAEType>;
 }

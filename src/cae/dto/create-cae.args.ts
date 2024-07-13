@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import { CAE } from '@prisma/client';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 @ArgsType()
 export class CreateCAEArgs
@@ -15,5 +15,6 @@ export class CreateCAEArgs
   code: number;
 
   @Field(() => ID)
+  @IsUUID()
   sectorId: string;
 }

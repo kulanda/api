@@ -10,6 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tenant {
+  id String @id @default(uuid())
+
+  fullName String
+  username String  @unique
+  phone    String  @unique
+  email    String? @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Company   Company[]
+
+  @@map("tenants")
+}
+
+enum Access {
+  SELLER
+  OWNER
+  MANAGER
+}
+
 model User {
   id String @id @default(uuid())
 
@@ -20,23 +41,16 @@ model User {
   email    String  @unique
   hash     String
 
-  access Access? @default(SELLER)
+  access String?
 
   storeId String?
   store   Store?  @relation(fields: [storeId], references: [id])
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Company   Company[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Sale      Sale[]
 
   @@map("users")
-}
-
-enum Access {
-  SELLER
-  OWNER
-  MANAGER
 }
 
 model Company {
@@ -48,8 +62,8 @@ model Company {
   address String
   logo    String
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
 
   caeId String?
   cae   CAE?    @relation(fields: [caeId], references: [id])
@@ -80,24 +94,25 @@ model Store {
   @@map("stores")
 }
 
+enum CategoryType {
+  PRODUCT
+  SERVICE
+}
+
 model Category {
   id String @id @default(uuid())
 
   name        String
   description String?
-  type        CategoryType
+  type        String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Product   Product[]
   Service   Service[]
+  Charge    Charge[]
 
   @@map("categories")
-}
-
-enum CategoryType {
-  PRODUCT
-  SERVICE
 }
 
 model Product {
@@ -119,6 +134,7 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Order     Order[]
+  Charge    Charge[]
 
   @@map("products")
 }
@@ -140,12 +156,15 @@ model Service {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Order     Order[]
+  Charge    Charge[]
 
   @@map("services")
 }
 
 model Sale {
   id String @id @default(uuid())
+
+  code Int? @unique @default(autoincrement())
 
   change   Decimal? @default(0)
   cash     Decimal?
@@ -209,22 +228,31 @@ model CAE {
   @@map("CAEs")
 }
 
+enum ChargeType {
+  TAX
+  FEE
+  DISCOUNT
+}
+
 model Charge {
   id String @id @default(uuid())
 
   name       String
   acronym    String
   percentage Decimal
-  type       ChargeType
+  type       String
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("charges")
-}
-
-enum ChargeType {
-  TAX
-  FEE
-  DISCOUNT
 }

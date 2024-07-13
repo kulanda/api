@@ -14,18 +14,22 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const client_1 = require("@prisma/client");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
-    constructor(configService) {
-        super();
-        this.configService = configService;
+    constructor(config) {
+        super({
+            datasourceUrl: config.get("DATABASE_URL"),
+        });
+        this.config = config;
         this.clients = {};
     }
-    async getClient(request) {
-        const tenantId = this.extractTenantIdFromRequest(request);
-        let client = this.clients[tenantId];
+    async getClient(request, manster = false) {
+        const tenant = this.extractTenantFromRequest(request);
+        let databaseUrl = "";
+        if (!tenant?.id || (!tenant?.key && manster !== false))
+            databaseUrl = this.config.get("DATABASE_URL");
+        else
+            databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
+        let client = this.clients[tenant?.id ?? "manster"];
         if (!client) {
-            const databaseUrl = this.configService
-                .get("DATABASE_URL")
-                .replace("public", tenantId);
             client = new client_1.PrismaClient({
                 datasources: {
                     db: {
@@ -33,12 +37,17 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
                     },
                 },
             });
-            this.clients[tenantId] = client;
+            this.clients[tenant?.id ?? "manster"] = client;
         }
         return client;
     }
-    extractTenantIdFromRequest(request) {
-        return request.headers["x-tenant-id"] || "public";
+    extractTenantFromRequest(request) {
+        if (!request)
+            return;
+        return {
+            id: request.headers["x-tenant-username"],
+            key: request.headers["x-tenant-key"],
+        };
     }
     async onModuleDestroy() {
         for (const client of Object.values(this.clients)) {

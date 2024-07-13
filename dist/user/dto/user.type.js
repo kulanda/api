@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserType = exports.AccessEnumType = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const client_1 = require("@prisma/client");
 var AccessEnumType;
 (function (AccessEnumType) {
     AccessEnumType["SELLER"] = "SELLER";

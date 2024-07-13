@@ -6,7 +6,7 @@ import { CreateOrderSaleInput, OrderType } from 'src/order/dto';
 @ArgsType()
 export class CreateSaleArgs
   implements
-    Omit<Sale, 'id' | 'createdAt' | 'updatedAt' | 'sellerId' | 'totalPrice'>
+    Omit<Sale, 'id' | 'createdAt' | 'updatedAt' | 'sellerId' | 'totalPrice' | 'code'>
 {
   @Field(() => Number, {
     nullable: true,

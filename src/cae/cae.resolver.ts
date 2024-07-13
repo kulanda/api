@@ -1,16 +1,27 @@
-import { Args, Context, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Context,
+  ID,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { CAEType, CreateCAEArgs } from "./dto";
 import { CaeService } from "./CAE.service";
-import { UseGuards } from "@nestjs/common";
-import { GqlAuthGuard } from "src/auth/guard";
+import { SectorType } from "src/sector/dto";
+import { SectorService } from "src/sector/sector.service";
 
-@UseGuards(GqlAuthGuard)
 @Resolver(() => CAEType)
 export class CaeResolver {
-  constructor(private cAEService: CaeService) {}
+  constructor(
+    private cAEService: CaeService,
+    private sectorService: SectorService
+  ) {}
   @Mutation(() => CAEType)
-  async createCAE(@Context("req") req, @Args() data: CreateCAEArgs) {
-    return this.cAEService.createCAE(req.client, data);
+  async createCAE(@Args() data: CreateCAEArgs) {
+    return this.cAEService.createCAE(data);
   }
   @Query(() => [CAEType])
   async getCategories(@Context("req") req) {
@@ -19,10 +30,12 @@ export class CaeResolver {
   @Query(() => CAEType, {
     nullable: true,
   })
-  async getCAE(
-    @Context("req") req,
-    @Args("id", { type: () => ID }) id: string
-  ) {
-    return this.cAEService.getCAE(req.client, id);
+  async getCAE(@Args("id", { type: () => ID }) id: string) {
+    return this.cAEService.getCAE(id);
+  }
+  @ResolveField(() => SectorType)
+  async sector(@Parent() cae: CAEType) {
+    console.log(cae)
+    return this.sectorService.getSector(cae.sectorId);
   }
 }

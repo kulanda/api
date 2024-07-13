@@ -8,32 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
-const argon = require("argon2");
 let UserService = class UserService {
-    async createUserStore(prisma, userId, { password, ...dto }) {
-        const hash = await argon.hash(password);
-        const store = await prisma.store.findUnique({
-            where: {
-                id: dto.storeId,
-                AND: {
-                    company: {
-                        AND: {
-                            userId,
-                        },
-                    },
-                },
-            },
-        });
-        if (!store.id)
-            throw new common_1.NotFoundException();
-        return await prisma.user.create({
-            data: {
-                ...dto,
-                hash,
-                access: "SELLER",
-            },
-        });
-    }
     async getUser(prisma, id) {
         return await prisma.user.findUnique({
             where: {

@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryType = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
 const create_category_args_1 = require("./create-category.args");
 let CategoryType = class CategoryType {

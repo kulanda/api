@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { $Enums, User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 export enum AccessEnumType {
   SELLER = 'SELLER',
@@ -29,7 +29,7 @@ export class UserType implements Omit<User, 'hash' | 'companies'> {
   email: string;
 
   @Field(() => AccessEnumType)
-  access: $Enums.Access;
+  access: string;
 
   @Field(() => ID, {
     nullable: true,

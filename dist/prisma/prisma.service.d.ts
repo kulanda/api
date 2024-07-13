@@ -3,10 +3,10 @@ import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
 import { Request } from "express";
 export declare class PrismaService extends PrismaClient implements OnModuleDestroy {
-    private configService;
+    private config;
     private clients;
-    constructor(configService: ConfigService);
-    getClient(request: Request): Promise<PrismaClient>;
-    private extractTenantIdFromRequest;
+    constructor(config: ConfigService);
+    getClient(request?: Request, manster?: boolean): Promise<PrismaClient>;
+    private extractTenantFromRequest;
     onModuleDestroy(): Promise<void>;
 }

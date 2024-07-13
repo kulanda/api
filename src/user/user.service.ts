@@ -2,41 +2,12 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserStoreArgs, UserType } from "./dto";
 import * as argon from "argon2";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class UserService {
-  async createUserStore(
-    prisma: PrismaService,
-    userId: string,
-    { password, ...dto }: CreateUserStoreArgs
-  ): Promise<Omit<UserType, "companies">> {
-    const hash = await argon.hash(password);
-
-    const store = await prisma.store.findUnique({
-      where: {
-        id: dto.storeId,
-        AND: {
-          company: {
-            AND: {
-              userId,
-            },
-          },
-        },
-      },
-    });
-
-    if (!store.id) throw new NotFoundException();
-
-    return await prisma.user.create({
-      data: {
-        ...dto,
-        hash,
-        access: "SELLER",
-      },
-    });
-  }
   async getUser(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     id: string
   ): Promise<Omit<UserType, "companies">> {
     return await prisma.user.findUnique({
@@ -46,7 +17,7 @@ export class UserService {
     });
   }
   async getUsersByStory(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     storeId: string
   ): Promise<Omit<UserType, "companies">[]> {
     return await prisma.user.findMany({

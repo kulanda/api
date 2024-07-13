@@ -1,13 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
 import { CreateServiceArgs, EditServiceArgs, ServiceType } from "./dto";
 import { FilterServiceInput } from "./dto/filter-service.input";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class ServiceService {
   async createService(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     { categoryId, storeId, ...dto }: CreateServiceArgs
   ): Promise<ServiceType> {
     return await prisma.service.create({
@@ -27,7 +26,7 @@ export class ServiceService {
     });
   }
   async editService(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     id: string,
     dto: EditServiceArgs
   ): Promise<ServiceType> {
@@ -41,7 +40,7 @@ export class ServiceService {
     });
   }
   async getServices(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     storeId: string,
     filter?: FilterServiceInput
   ): Promise<ServiceType[]> {
@@ -65,7 +64,7 @@ export class ServiceService {
       });
   }
   async getServicesByOrder(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     orderId: string
   ): Promise<ServiceType[]> {
     return await prisma.service.findMany({
@@ -78,7 +77,7 @@ export class ServiceService {
       },
     });
   }
-  async getService(prisma: PrismaService, id: string): Promise<ServiceType> {
+  async getService(prisma: PrismaClient, id: string): Promise<ServiceType> {
     return await prisma.service.findUnique({
       where: {
         id,

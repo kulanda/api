@@ -1,4 +1,4 @@
-import { $Enums, User } from '@prisma/client';
+import { User } from '@prisma/client';
 export declare enum AccessEnumType {
     SELLER = "SELLER",
     OWNER = "OWNER",
@@ -10,7 +10,7 @@ export declare class UserType implements Omit<User, 'hash' | 'companies'> {
     username: string;
     phone: string;
     email: string;
-    access: $Enums.Access;
+    access: string;
     storeId: string;
     createdAt: Date;
     updatedAt: Date;

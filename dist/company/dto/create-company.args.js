@@ -16,6 +16,11 @@ let CreateCompanyArgs = class CreateCompanyArgs {
 };
 exports.CreateCompanyArgs = CreateCompanyArgs;
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], CreateCompanyArgs.prototype, "tenantId", void 0);
+__decorate([
     (0, graphql_1.Field)(() => String),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

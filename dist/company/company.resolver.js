@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyResolver = void 0;
 const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
-const decorator_1 = require("../auth/decorator");
 const guard_1 = require("../auth/guard");
 const dto_1 = require("./dto");
 const company_service_1 = require("./company.service");
@@ -29,54 +28,24 @@ let CompanyResolver = class CompanyResolver {
         this.storeService = storeService;
         this.caeService = caeService;
     }
-    async createCompany(req, userId, data) {
-        return this.companyService.createCompany(req.client, userId, data);
-    }
-    async getCompanies(req, userId) {
-        return this.companyService.getCompanies(req.client, userId);
-    }
-    async getCompany(req, id) {
-        return this.companyService.getCompany(req.client, id);
+    async getCompany(req) {
+        return this.companyService.getCompany(req);
     }
     async stores(req, company) {
         return this.storeService.getStores(req.client, company.id);
     }
-    async cae(req, company) {
-        return this.caeService.getCAE(req.client, company.caeId);
+    async cae(company) {
+        return this.caeService.getCAE(company.caeId);
     }
 };
 exports.CompanyResolver = CompanyResolver;
-__decorate([
-    (0, graphql_1.Mutation)(() => dto_1.CompanyType),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, decorator_1.GetUser)({
-        data: "id",
-        access: ["OWNER"],
-    })),
-    __param(2, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, dto_1.CreateCompanyArgs]),
-    __metadata("design:returntype", Promise)
-], CompanyResolver.prototype, "createCompany", null);
-__decorate([
-    (0, graphql_1.Query)(() => [dto_1.CompanyType]),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, decorator_1.GetUser)({
-        data: "id",
-        access: ["OWNER"],
-    })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", Promise)
-], CompanyResolver.prototype, "getCompanies", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.CompanyType, {
         nullable: true,
     }),
     __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)("id", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "getCompany", null);
 __decorate([
@@ -89,10 +58,9 @@ __decorate([
 ], CompanyResolver.prototype, "stores", null);
 __decorate([
     (0, graphql_1.ResolveField)(() => dto_3.CAEType),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Parent)()),
+    __param(0, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, dto_1.CompanyType]),
+    __metadata("design:paramtypes", [dto_1.CompanyType]),
     __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "cae", null);
 exports.CompanyResolver = CompanyResolver = __decorate([

@@ -1,17 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
 import {
   CreateProductArgs,
   EditProductArgs,
   FilterProductInput,
   ProductType,
 } from "./dto";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class ProductService {
   async createProduct(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     { categoryId, storeId, ...dto }: CreateProductArgs
   ): Promise<ProductType> {
     return await prisma.product.create({
@@ -31,7 +30,7 @@ export class ProductService {
     });
   }
   async editProduct(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     id: string,
     dto: EditProductArgs
   ): Promise<ProductType> {
@@ -45,7 +44,7 @@ export class ProductService {
     });
   }
   async getProducts(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     storeId: string,
     filter?: FilterProductInput
   ): Promise<ProductType[]> {
@@ -70,7 +69,7 @@ export class ProductService {
       });
   }
   async getProductsByOrder(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     orderId: string
   ): Promise<ProductType[]> {
     return await prisma.product.findMany({
@@ -83,7 +82,7 @@ export class ProductService {
       },
     });
   }
-  async getProduct(prisma: PrismaService, id: string): Promise<ProductType> {
+  async getProduct(prisma: PrismaClient, id: string): Promise<ProductType> {
     return await prisma.product.findUnique({
       where: {
         id,

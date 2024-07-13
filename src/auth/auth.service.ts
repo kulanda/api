@@ -4,17 +4,17 @@ import * as argon from "argon2";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "src/prisma/prisma.service";
 import { SignInWithPhoneArgs } from "./dto/sign-in-with-phone.args";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService
   ) {}
-  async signUp(prisma: PrismaService, dto: SignUpArgs): Promise<AuthTokenType> {
+
+  async signUp(prisma: PrismaClient, dto: SignUpArgs): Promise<AuthTokenType> {
     const hash = await argon.hash(dto.password);
 
     try {
@@ -24,9 +24,10 @@ export class AuthService {
           fullName: dto.fullName,
           username: dto.username,
           phone: dto.phone,
+          access: dto.access,
           hash,
         },
-      });
+      })
 
       return this.signToken(user.id, user.email);
     } catch (error) {
@@ -39,7 +40,7 @@ export class AuthService {
     }
   }
 
-  async signIn(prisma: PrismaService, dto: SignInArgs): Promise<AuthTokenType> {
+  async signIn(prisma: PrismaClient, dto: SignInArgs): Promise<AuthTokenType> {
     const user = await prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -55,7 +56,7 @@ export class AuthService {
   }
 
   async signInWithPhone(
-    prisma: PrismaService,
+    prisma: PrismaClient,
     dto: SignInWithPhoneArgs
   ): Promise<AuthTokenType> {
     const user = await prisma.user.findUnique({
@@ -93,12 +94,12 @@ export class AuthService {
     };
   }
 
-  async validateToken(token: string): Promise<any> {
+  async validateToken(prisma: PrismaClient, token: string): Promise<any> {
     try {
       const decoded = this.jwt.verify(token, {
         secret: this.config.get("JWT_SECRET"),
       });
-      const user = await this.prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: decoded.sub },
       });
       return user;

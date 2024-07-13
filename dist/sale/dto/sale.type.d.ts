@@ -1,5 +1,5 @@
 import { Prisma, Sale } from '@prisma/client';
-export declare class SaleType implements Omit<Sale, 'SaleId' | 'order'> {
+export declare class SaleType implements Omit<Sale, 'SaleId' | 'order' | 'code'> {
     id: string;
     change: Prisma.Decimal;
     cash: Prisma.Decimal;
