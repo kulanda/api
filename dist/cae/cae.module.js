@@ -13,13 +13,20 @@ const CAE_resolver_1 = require("./CAE.resolver");
 const prisma_service_1 = require("../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const auth_service_1 = require("../auth/auth.service");
+const sector_service_1 = require("../sector/sector.service");
 let CaeModule = class CaeModule {
 };
 exports.CaeModule = CaeModule;
 exports.CaeModule = CaeModule = __decorate([
     (0, common_1.Module)({
         imports: [jwt_1.JwtModule.register({})],
-        providers: [CAE_service_1.CaeService, CAE_resolver_1.CaeResolver, prisma_service_1.PrismaService, auth_service_1.AuthService],
+        providers: [
+            CAE_service_1.CaeService,
+            CAE_resolver_1.CaeResolver,
+            prisma_service_1.PrismaService,
+            auth_service_1.AuthService,
+            sector_service_1.SectorService,
+        ],
     })
 ], CaeModule);
 //# sourceMappingURL=cae.module.js.map

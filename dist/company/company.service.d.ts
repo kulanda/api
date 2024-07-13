@@ -1,8 +1,8 @@
-import { CompanyType, CreateCompanyArgs } from "./dto";
-import { PrismaClient } from "@prisma/client";
+import { CompanyType } from "./dto";
+import { PrismaService } from "src/prisma/prisma.service";
+import { Request } from "express";
 export declare class CompanyService {
-    createCompany(prisma: PrismaClient, { caeId, tenantId, ...dto }: CreateCompanyArgs): Promise<CompanyType>;
-    getCompanies(prisma: PrismaClient, tenantId: string): Promise<CompanyType[]>;
-    getCompany(prisma: PrismaClient, id: string): Promise<CompanyType>;
-    getCompanyByTenant(prisma: PrismaClient, tenantId: string): Promise<CompanyType>;
+    private prismaService;
+    constructor(prismaService: PrismaService);
+    getCompany(req: Request): Promise<CompanyType>;
 }

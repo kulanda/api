@@ -13,43 +13,61 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyResolver = void 0;
+const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
+const guard_1 = require("../auth/guard");
 const dto_1 = require("./dto");
 const company_service_1 = require("./company.service");
-const dto_2 = require("../cae/dto");
+const dto_2 = require("../store/dto");
+const store_service_1 = require("../store/store.service");
+const dto_3 = require("../cae/dto");
 const CAE_service_1 = require("../cae/CAE.service");
 let CompanyResolver = class CompanyResolver {
-    constructor(companyService, caeService) {
+    constructor(companyService, storeService, caeService) {
         this.companyService = companyService;
+        this.storeService = storeService;
         this.caeService = caeService;
     }
-    async createCompany(req, data) {
-        return this.companyService.createCompany(req.clien, data);
+    async getCompany(req) {
+        return this.companyService.getCompany(req);
     }
-    async cae(req, company) {
-        return this.caeService.getCAE(req.client, company.caeId);
+    async stores(req, company) {
+        return this.storeService.getStores(req.client, company.id);
+    }
+    async cae(company) {
+        return this.caeService.getCAE(company.caeId);
     }
 };
 exports.CompanyResolver = CompanyResolver;
 __decorate([
-    (0, graphql_1.Mutation)(() => dto_1.CompanyType),
+    (0, graphql_1.Query)(() => dto_1.CompanyType, {
+        nullable: true,
+    }),
     __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, dto_1.CreateCompanyArgs]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], CompanyResolver.prototype, "createCompany", null);
+], CompanyResolver.prototype, "getCompany", null);
 __decorate([
-    (0, graphql_1.ResolveField)(() => dto_2.CAEType),
+    (0, graphql_1.ResolveField)(() => [dto_2.StoreType]),
     __param(0, (0, graphql_1.Context)("req")),
     __param(1, (0, graphql_1.Parent)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, dto_1.CompanyType]),
     __metadata("design:returntype", Promise)
+], CompanyResolver.prototype, "stores", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => dto_3.CAEType),
+    __param(0, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [dto_1.CompanyType]),
+    __metadata("design:returntype", Promise)
 ], CompanyResolver.prototype, "cae", null);
 exports.CompanyResolver = CompanyResolver = __decorate([
+    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.CompanyType),
     __metadata("design:paramtypes", [company_service_1.CompanyService,
+        store_service_1.StoreService,
         CAE_service_1.CaeService])
 ], CompanyResolver);
 //# sourceMappingURL=company.resolver.js.map

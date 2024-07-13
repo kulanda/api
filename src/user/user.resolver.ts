@@ -35,16 +35,4 @@ export class UserResolver {
   ) {
     return this.userService.getUser(req.client, id);
   }
-  @ResolveField(() => [CompanyType])
-  async companies(
-    @Context("req") req,
-    @GetUser({
-      data: "id",
-      access: ["OWNER"],
-    })
-    _: string,
-    @Parent() user: UserType
-  ) {
-    return this.companyService.getCompanies(req.client, user.id);
-  }
 }

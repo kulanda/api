@@ -27,6 +27,7 @@ __decorate([
 ], CreateCAEArgs.prototype, "code", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
+    (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
 ], CreateCAEArgs.prototype, "sectorId", void 0);
 exports.CreateCAEArgs = CreateCAEArgs = __decorate([

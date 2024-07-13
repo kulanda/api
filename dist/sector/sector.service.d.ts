@@ -1,7 +1,9 @@
 import { SectorType, CreateSectorArgs } from "./dto";
-import { PrismaClient } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
 export declare class SectorService {
-    createSector(prisma: PrismaClient, dto: CreateSectorArgs): Promise<SectorType>;
-    getCategories(prisma: PrismaClient): Promise<SectorType[]>;
-    getSector(prisma: PrismaClient, id: string): Promise<SectorType>;
+    private prismaService;
+    constructor(prismaService: PrismaService);
+    createSector(dto: CreateSectorArgs): Promise<SectorType>;
+    getCategories(): Promise<SectorType[]>;
+    getSector(id: string): Promise<SectorType>;
 }

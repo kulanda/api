@@ -8,20 +8,19 @@ import { GqlAuthGuard } from "src/auth/guard";
 export class SectorResolver {
   constructor(private sectorService: SectorService) {}
   @Mutation(() => SectorType)
-  async createSector(@Context("req") req, @Args() data: CreateSectorArgs) {
-    return this.sectorService.createSector(req.client, data);
+  async createSector(@Args() data: CreateSectorArgs) {
+    return this.sectorService.createSector(data);
   }
   @Query(() => [SectorType])
-  async getSectors(@Context("req") req) {
-    return this.sectorService.getCategories(req.client);
+  async getSectors() {
+    return this.sectorService.getCategories();
   }
   @Query(() => SectorType, {
     nullable: true,
   })
   async getSector(
-    @Context("req") req,
     @Args("id", { type: () => ID }) id: string
   ) {
-    return this.sectorService.getSector(req.client, id);
+    return this.sectorService.getSector( id);
   }
 }
