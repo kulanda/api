@@ -10,7 +10,10 @@ CREATE TYPE "ChargeType" AS ENUM ('TAX', 'FEE', 'DISCOUNT');
 -- CreateTable
 CREATE TABLE "tenants" (
     "id" TEXT NOT NULL,
+    "fullName" TEXT NOT NULL,
     "username" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "email" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -172,6 +175,12 @@ CREATE TABLE "charges" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tenants_username_key" ON "tenants"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tenants_phone_key" ON "tenants"("phone");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tenants_email_key" ON "tenants"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");

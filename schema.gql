@@ -144,12 +144,8 @@ type SectorType {
   updatedAt: DateTime!
 }
 
-type TenantType {
-  id: ID!
-  username: String!
-  key: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+type TenantCredentialsType {
+  access_key: String!
 }
 
 type Query {
@@ -176,7 +172,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-13T07:15:18.708Z"
+  from: DateTime = "2024-07-13T08:26:58.498Z"
   sellerId: ID
 }
 
@@ -224,7 +220,7 @@ type Mutation {
   createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
-  createTenant(username: String!, company: CreateCompanyInput!): TenantType!
+  createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!): TenantCredentialsType!
 }
 
 input CreateOrderSaleInput {

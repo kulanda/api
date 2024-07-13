@@ -7,7 +7,7 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
   private clients: { [key: string]: PrismaClient } = {};
   constructor(private config: ConfigService) {
     super({
-      datasourceUrl: config.get("DATABASE_URL")
+      datasourceUrl: config.get("DATABASE_URL"),
     });
   }
   async getClient(
@@ -42,7 +42,7 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
     if (!request) return;
     // Substitua essa lógica com a lógica correta para extrair o tenantId do request
     return {
-      id: request.headers["x-tenant-id"] as string,
+      id: request.headers["x-tenant-username"] as string,
       key: request.headers["x-tenant-key"] as string,
     };
   }

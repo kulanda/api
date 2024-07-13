@@ -7,9 +7,7 @@ import { randomUUID } from "crypto";
 @Injectable()
 export class TenantService {
   constructor(private prismaService: PrismaService) {}
-  async createTenant(credentials: CreateTenantArgs) {
-    const { company, username } = credentials;
-
+  async createTenant({ company, ...dto }: CreateTenantArgs) {
     const client = await this.prismaService.getClient(null, true);
 
     try {
@@ -17,24 +15,23 @@ export class TenantService {
 
       await this.buildSchema(client, {
         hash,
+        ...dto,
         company,
-        username,
-      });
-
-      const res = await client.tenant.create({
-        data: {
-          username,
-          Company: {
-            create: {
-              ...company,
+      }).then(async () => {
+        await client.tenant.create({
+          data: {
+            ...dto,
+            Company: {
+              create: {
+                ...company,
+              },
             },
           },
-        },
+        });
       });
 
       return {
-        ...res,
-        key: hash,
+        access_key: hash,
       };
     } catch (error) {
       throw error;
@@ -44,7 +41,7 @@ export class TenantService {
     client: PrismaClient,
     credentials: CreateTenantArgs & { hash: string }
   ) {
-    const target_schema = credentials.company.name;
+    const target_schema = credentials.username;
     const source_schema = "public";
 
     const role = credentials.username;
@@ -97,12 +94,9 @@ export class TenantService {
             "sectors",
           ].includes(table.tablename)
         ) {
-          await client
-            .$executeRawUnsafe(
-              `CREATE TABLE ${target_schema}.${table.tablename} (LIKE ${source_schema}.${table.tablename} INCLUDING ALL);`
-            )
-            .then((res) => console.log(res))
-            .catch((error) => console.log(error));
+          await client.$executeRawUnsafe(
+            `CREATE TABLE ${target_schema}.${table.tablename} (LIKE ${source_schema}.${table.tablename} INCLUDING ALL);`
+          );
         }
       }
     } catch (error) {

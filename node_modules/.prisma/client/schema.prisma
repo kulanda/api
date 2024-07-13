@@ -13,7 +13,10 @@ datasource db {
 model Tenant {
   id String @id @default(uuid())
 
-  username String @unique
+  fullName String
+  username String  @unique
+  phone    String  @unique
+  email    String? @unique
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

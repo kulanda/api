@@ -16,7 +16,7 @@ const client_1 = require("@prisma/client");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor(config) {
         super({
-            datasourceUrl: config.get("DATABASE_URL")
+            datasourceUrl: config.get("DATABASE_URL"),
         });
         this.config = config;
         this.clients = {};
@@ -45,7 +45,7 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         if (!request)
             return;
         return {
-            id: request.headers["x-tenant-id"],
+            id: request.headers["x-tenant-username"],
             key: request.headers["x-tenant-key"],
         };
     }

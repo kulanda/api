@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Tenant } from "@prisma/client";
-import { IsNotEmpty, IsString } from "class-validator";
 
 @ObjectType()
 export class TenantType implements Tenant {
@@ -8,13 +7,16 @@ export class TenantType implements Tenant {
   id: string;
 
   @Field(() => String)
-  @IsString()
-  @IsNotEmpty()
+  fullName: string;
+
+  @Field(() => String)
   username: string;
 
   @Field(() => String)
-  @IsString()
-  key: string;
+  phone: string;
+
+  @Field(() => String)
+  email: string;
 
   @Field(() => Date)
   createdAt: Date;
