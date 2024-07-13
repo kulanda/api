@@ -17,24 +17,8 @@ export class TenantResolver {
     private tenantService: TenantService,
     private companyService: CompanyService
   ) {}
-
-  @Query(() => String)
-  async test(@Context("req") req) {
-    const client: PrismaClient = req.client;
-    
-    console.log(await client.user.findMany());
-    
-    return "ola";
-  }
-
   @Mutation(() => TenantType)
   async createTenant(@Args() data: CreateTenantArgs) {
     return await this.tenantService.createTenant(data);
-  }
-  @Mutation(() => TenantType, {
-    nullable: true,
-  })
-  company(@Context("req") req, @Parent() tenant: TenantType) {
-    return this.companyService.getCompanyByTenant(req.client, tenant.id);
   }
 }

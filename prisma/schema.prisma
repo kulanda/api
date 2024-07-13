@@ -13,13 +13,19 @@ datasource db {
 model Tenant {
   id String @id @default(uuid())
 
-  name String @unique
-  
+  username String @unique
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Company   Company[]
 
   @@map("tenants")
+}
+
+enum Access {
+  SELLER
+  OWNER
+  MANAGER
 }
 
 model User {
@@ -32,7 +38,7 @@ model User {
   email    String  @unique
   hash     String
 
-  access Access? @default(SELLER)
+  access String?
 
   storeId String?
   store   Store?  @relation(fields: [storeId], references: [id])
@@ -42,13 +48,6 @@ model User {
   Sale      Sale[]
 
   @@map("users")
-}
-
-enum Access {
-  SELLER
-  OWNER
-  MANAGER
-
 }
 
 model Company {
@@ -92,12 +91,17 @@ model Store {
   @@map("stores")
 }
 
+enum CategoryType {
+  PRODUCT
+  SERVICE
+}
+
 model Category {
   id String @id @default(uuid())
 
   name        String
   description String?
-  type        CategoryType
+  type        String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -106,11 +110,6 @@ model Category {
   Charge    Charge[]
 
   @@map("categories")
-}
-
-enum CategoryType {
-  PRODUCT
-  SERVICE
 }
 
 model Product {
@@ -226,13 +225,19 @@ model CAE {
   @@map("CAEs")
 }
 
+enum ChargeType {
+  TAX
+  FEE
+  DISCOUNT
+}
+
 model Charge {
   id String @id @default(uuid())
 
   name       String
   acronym    String
   percentage Decimal
-  type       ChargeType
+  type       String
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
@@ -247,10 +252,4 @@ model Charge {
   updatedAt DateTime @updatedAt
 
   @@map("charges")
-}
-
-enum ChargeType {
-  TAX
-  FEE
-  DISCOUNT
 }

@@ -1,5 +1,5 @@
 import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
-import { $Enums, Category } from '@prisma/client';
+import { Category } from '@prisma/client';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export enum CategoryEnumType {
@@ -28,5 +28,5 @@ export class CreateCategoryArgs
 
   @Field(() => CategoryEnumType)
   @IsEnum(['PRODUCT', 'SERVICE'])
-  type: $Enums.CategoryType;
+  type: keyof typeof CategoryEnumType;
 }

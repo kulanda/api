@@ -1,7 +1,6 @@
-import { ArgsType, Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Tenant } from "@prisma/client";
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
-import { CompanyType, CreateCompanyInput } from "src/company/dto";
+import { IsNotEmpty, IsString } from "class-validator";
 
 @ObjectType()
 export class TenantType implements Tenant {
@@ -11,15 +10,11 @@ export class TenantType implements Tenant {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
-  name: string;
+  username: string;
 
   @Field(() => String)
   @IsString()
   key: string;
-
-  @Field(() => CompanyType)
-  @IsObject()
-  company: CompanyType;
 
   @Field(() => Date)
   createdAt: Date;

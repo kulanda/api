@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
+const dto_1 = require("../../user/dto");
 let SignUpArgs = class SignUpArgs {
 };
 exports.SignUpArgs = SignUpArgs;
@@ -37,9 +38,17 @@ __decorate([
     (0, graphql_1.Field)({
         nullable: true,
     }),
-    (0, class_validator_1.IsPhoneNumber)('AO'),
+    (0, class_validator_1.IsPhoneNumber)("AO"),
     __metadata("design:type", String)
 ], SignUpArgs.prototype, "phone", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => dto_1.AccessEnumType, {
+        nullable: true,
+        defaultValue: "SELLER",
+    }),
+    (0, class_validator_1.IsEnum)(["SELLER", "OWNER", "MANAGER"]),
+    __metadata("design:type", Object)
+], SignUpArgs.prototype, "access", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     (0, class_validator_1.IsStrongPassword)(),

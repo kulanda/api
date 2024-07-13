@@ -1,14 +1,17 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field } from "@nestjs/graphql";
+import { User } from "@prisma/client";
 import {
   IsEmail,
+  IsEnum,
   IsOptional,
   IsPhoneNumber,
   IsString,
   IsStrongPassword,
-} from 'class-validator';
+} from "class-validator";
+import { AccessEnumType } from "src/user/dto";
 
 @ArgsType()
-export class SignUpArgs {
+export class SignUpArgs implements Pick<User, "access"> {
   @Field()
   @IsString()
   fullName: string;
@@ -27,8 +30,15 @@ export class SignUpArgs {
   @Field({
     nullable: true,
   })
-  @IsPhoneNumber('AO')
+  @IsPhoneNumber("AO")
   phone?: string;
+
+  @Field(() => AccessEnumType, {
+    nullable: true,
+    defaultValue: "SELLER",
+  })
+  @IsEnum(["SELLER", "OWNER", "MANAGER"])
+  access: keyof typeof AccessEnumType;
 
   @Field()
   @IsStrongPassword()

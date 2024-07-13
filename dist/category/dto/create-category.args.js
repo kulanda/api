@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCategoryArgs = exports.CategoryEnumType = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
 var CategoryEnumType;
 (function (CategoryEnumType) {
@@ -40,7 +39,7 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)(() => CategoryEnumType),
     (0, class_validator_1.IsEnum)(['PRODUCT', 'SERVICE']),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], CreateCategoryArgs.prototype, "type", void 0);
 exports.CreateCategoryArgs = CreateCategoryArgs = __decorate([
     (0, graphql_1.ArgsType)()

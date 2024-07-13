@@ -8,28 +8,28 @@ import { randomUUID } from "crypto";
 export class TenantService {
   constructor(private prismaService: PrismaService) {}
   async createTenant(credentials: CreateTenantArgs) {
-    const { company, name } = credentials;
+    const { company, username } = credentials;
 
     const client = await this.prismaService.getClient(null, true);
 
     try {
+      const hash = `k_tnt_${randomUUID()}`;
+
+      await this.buildSchema(client, {
+        hash,
+        company,
+        username,
+      });
+
       const res = await client.tenant.create({
         data: {
-          name,
+          username,
           Company: {
             create: {
               ...company,
             },
           },
         },
-      });
-
-      const hash = `k_tnt_${randomUUID()}`;
-
-      await this.buildSchema(client, {
-        hash,
-        company,
-        name,
       });
 
       return {
@@ -47,7 +47,7 @@ export class TenantService {
     const target_schema = credentials.company.name;
     const source_schema = "public";
 
-    const role = credentials.name;
+    const role = credentials.username;
     const password = credentials.hash;
     try {
       const m = await client.$transaction([
@@ -89,9 +89,13 @@ export class TenantService {
 
       for (const table of tables) {
         if (
-          !["_prisma_migrations", "companies", "CAEs", "tenants"].includes(
-            table.tablename
-          )
+          ![
+            "_prisma_migrations",
+            "companies",
+            "CAEs",
+            "tenants",
+            "sectors",
+          ].includes(table.tablename)
         ) {
           await client
             .$executeRawUnsafe(

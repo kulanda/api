@@ -15,6 +15,7 @@ export class GqlAuthGuard implements CanActivate {
     const { req } = ctx.getContext();
 
     const client = await this.prismaService.getClient(req);
+    
     const authHeader = req.headers.authorization;
     if (!authHeader) return false;
 
