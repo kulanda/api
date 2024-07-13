@@ -10,29 +10,30 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
       datasourceUrl: config.get("DATABASE_URL"),
     });
   }
-  async getClient(
-    request?: Request,
-    manster: boolean = false
-  ): Promise<PrismaClient> {
+  async getClient(request?: Request, intern?: boolean): Promise<PrismaClient> {
     const tenant = this.extractTenantFromRequest(request);
-    let databaseUrl = "";
-    if (!tenant?.id || (!tenant?.key && manster !== false))
-      databaseUrl = this.config.get("DATABASE_URL");
-    else
-      databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
 
-    let client = this.clients[tenant?.id ?? "manster"];
+    const cacheKey = `${tenant?.id}:${tenant?.key}`;
 
-    if (!client) {
+    let client = this.clients[cacheKey];
+
+    const url =
+      tenant?.id || tenant?.key
+        ? `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`
+        : intern
+          ? this.config.get("DATABASE_URL")
+          : null;
+
+    if (!client && url) {
       client = new PrismaClient({
         datasources: {
           db: {
-            url: databaseUrl,
+            url,
           },
         },
       });
 
-      this.clients[tenant?.id ?? "manster"] = client;
+      this.clients[cacheKey] = client;
     }
 
     return client;

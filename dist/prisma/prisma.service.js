@@ -21,23 +21,24 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         this.config = config;
         this.clients = {};
     }
-    async getClient(request, manster = false) {
+    async getClient(request, intern) {
         const tenant = this.extractTenantFromRequest(request);
-        let databaseUrl = "";
-        if (!tenant?.id || (!tenant?.key && manster !== false))
-            databaseUrl = this.config.get("DATABASE_URL");
-        else
-            databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
-        let client = this.clients[tenant?.id ?? "manster"];
-        if (!client) {
+        const cacheKey = `${tenant?.id}:${tenant?.key}`;
+        let client = this.clients[cacheKey];
+        const url = tenant?.id || tenant?.key
+            ? `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`
+            : intern
+                ? this.config.get("DATABASE_URL")
+                : null;
+        if (!client && url) {
             client = new client_1.PrismaClient({
                 datasources: {
                     db: {
-                        url: databaseUrl,
+                        url,
                     },
                 },
             });
-            this.clients[tenant?.id ?? "manster"] = client;
+            this.clients[cacheKey] = client;
         }
         return client;
     }

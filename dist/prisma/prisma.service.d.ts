@@ -6,7 +6,7 @@ export declare class PrismaService extends PrismaClient implements OnModuleDestr
     private config;
     private clients;
     constructor(config: ConfigService);
-    getClient(request?: Request, manster?: boolean): Promise<PrismaClient>;
+    getClient(request?: Request, intern?: boolean): Promise<PrismaClient>;
     private extractTenantFromRequest;
     onModuleDestroy(): Promise<void>;
 }

@@ -1,9 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateTenantArgs } from "./dto";
-import * as argon from "argon2";
 import { PrismaClient } from "@prisma/client";
-import { randomUUID } from "crypto";
 @Injectable()
 export class TenantService {
   constructor(private prismaService: PrismaService) {}
@@ -11,7 +9,7 @@ export class TenantService {
     const client = await this.prismaService.getClient(null, true);
 
     try {
-      const hash = `k_tnt_${randomUUID()}`;
+      const hash = `k_tnt_${this.generateApiKey(8)}`;
 
       await this.buildSchema(client, {
         hash,
@@ -104,5 +102,16 @@ export class TenantService {
     } finally {
       await client.$disconnect();
     }
+  }
+
+  private generateApiKey(length = 32) {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let apiKey = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      apiKey += characters[randomIndex];
+    }
+    return apiKey;
   }
 }
