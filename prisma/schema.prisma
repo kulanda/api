@@ -2,14 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["base", "public"]
 }
 
 model Tenant {
@@ -22,7 +20,6 @@ model Tenant {
   Company   Company[]
 
   @@map("tenants")
-  @@schema("base")
 }
 
 model User {
@@ -45,7 +42,6 @@ model User {
   Sale      Sale[]
 
   @@map("users")
-  @@schema("public")
 }
 
 enum Access {
@@ -53,7 +49,6 @@ enum Access {
   OWNER
   MANAGER
 
-  @@schema("public")
 }
 
 model Company {
@@ -76,7 +71,6 @@ model Company {
   store     Store[]
 
   @@map("companies")
-  @@schema("base")
 }
 
 model Store {
@@ -96,7 +90,6 @@ model Store {
   User      User[]
 
   @@map("stores")
-  @@schema("public")
 }
 
 model Category {
@@ -113,14 +106,11 @@ model Category {
   Charge    Charge[]
 
   @@map("categories")
-  @@schema("public")
 }
 
 enum CategoryType {
   PRODUCT
   SERVICE
-
-  @@schema("public")
 }
 
 model Product {
@@ -145,7 +135,6 @@ model Product {
   Charge    Charge[]
 
   @@map("products")
-  @@schema("public")
 }
 
 model Service {
@@ -168,7 +157,6 @@ model Service {
   Charge    Charge[]
 
   @@map("services")
-  @@schema("public")
 }
 
 model Sale {
@@ -190,7 +178,6 @@ model Sale {
   Order     Order[]
 
   @@map("sales")
-  @@schema("public")
 }
 
 model Order {
@@ -209,7 +196,6 @@ model Order {
   updatedAt DateTime @updatedAt
 
   @@map("orders")
-  @@schema("public")
 }
 
 model Sector {
@@ -222,7 +208,6 @@ model Sector {
   CAE       CAE[]
 
   @@map("sectors")
-  @@schema("base")
 }
 
 model CAE {
@@ -239,7 +224,6 @@ model CAE {
   Company   Company[]
 
   @@map("CAEs")
-  @@schema("base")
 }
 
 model Charge {
@@ -263,13 +247,10 @@ model Charge {
   updatedAt DateTime @updatedAt
 
   @@map("charges")
-  @@schema("public")
 }
 
 enum ChargeType {
   TAX
   FEE
   DISCOUNT
-
-  @@schema("public")
 }

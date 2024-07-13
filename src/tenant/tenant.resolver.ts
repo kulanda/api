@@ -21,9 +21,8 @@ export class TenantResolver {
   @Query(() => String)
   async test(@Context("req") req) {
     const client: PrismaClient = req.client;
-
-
-    console.log(await client.$queryRaw`select * from kubata.users`);
+    
+    console.log(await client.user.findMany());
     
     return "ola";
   }

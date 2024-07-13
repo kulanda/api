@@ -62,36 +62,45 @@ export class TenantService {
           `
         ),
         client.$executeRawUnsafe(`
-          GRANT USAGE ON SCHEMA base TO ${role};
+          GRANT USAGE ON SCHEMA public TO ${role};
         `),
         client.$executeRawUnsafe(`
           GRANT USAGE ON SCHEMA ${target_schema} TO ${role};
         `),
         client.$executeRawUnsafe(`
-          ALTER DEFAULT PRIVILEGES IN SCHEMA base GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${role};
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${role};
         `),
         client.$executeRawUnsafe(`
           GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA ${target_schema} TO ${role};
         `),
         client.$executeRawUnsafe(`
-          GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA base TO ${role};
+          GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO ${role};
         `),
         client.$executeRawUnsafe(`
           ALTER DEFAULT PRIVILEGES IN SCHEMA ${target_schema} GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${role};
         `),
         client.$executeRawUnsafe(`
-          ALTER DEFAULT PRIVILEGES IN SCHEMA base GRANT SELECT, INSERT, UPDATE ON TABLES TO ${role};
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE ON TABLES TO ${role};
         `),
         client.$queryRaw`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname=${source_schema};`,
-      ])
+      ]);
 
-      const tables = m[m.length - 1] as  { tablename: string }[]
+      const tables = m[m.length - 1] as { tablename: string }[];
 
       for (const table of tables) {
-        await client.$executeRawUnsafe(
-          `CREATE TABLE ${target_schema}.${table.tablename} (LIKE ${source_schema}.${table.tablename} INCLUDING ALL);`
-        );
-      } 
+        if (
+          !["_prisma_migrations", "companies", "CAEs", "tenants"].includes(
+            table.tablename
+          )
+        ) {
+          await client
+            .$executeRawUnsafe(
+              `CREATE TABLE ${target_schema}.${table.tablename} (LIKE ${source_schema}.${table.tablename} INCLUDING ALL);`
+            )
+            .then((res) => console.log(res))
+            .catch((error) => console.log(error));
+        }
+      }
     } catch (error) {
       console.error(error);
     } finally {

@@ -13,19 +13,22 @@ exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const client_1 = require("@prisma/client");
-let PrismaService = class PrismaService {
-    constructor(configService) {
-        this.configService = configService;
+let PrismaService = class PrismaService extends client_1.PrismaClient {
+    constructor(config) {
+        super({
+            datasourceUrl: config.get("DATABASE_URL")
+        });
+        this.config = config;
         this.clients = {};
     }
-    async getClient(request, intern = false) {
+    async getClient(request, manster = false) {
         const tenant = this.extractTenantFromRequest(request);
         let databaseUrl = "";
-        if (!tenant?.id || (!tenant?.key && intern !== false))
-            databaseUrl = this.configService.get("DATABASE_URL");
+        if (!tenant?.id || (!tenant?.key && manster !== false))
+            databaseUrl = this.config.get("DATABASE_URL");
         else
             databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
-        let client = this.clients[tenant?.id ?? "intern"];
+        let client = this.clients[tenant?.id ?? "manster"];
         if (!client) {
             client = new client_1.PrismaClient({
                 datasources: {
@@ -34,7 +37,7 @@ let PrismaService = class PrismaService {
                     },
                 },
             });
-            this.clients[tenant?.id ?? "intern"] = client;
+            this.clients[tenant?.id ?? "manster"] = client;
         }
         return client;
     }

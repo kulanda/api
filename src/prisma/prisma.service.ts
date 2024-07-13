@@ -2,23 +2,26 @@ import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
 import { Request } from "express";
-
 @Injectable()
-export class PrismaService implements OnModuleDestroy {
+export class PrismaService extends PrismaClient implements OnModuleDestroy {
   private clients: { [key: string]: PrismaClient } = {};
-  constructor(private configService: ConfigService) {}
+  constructor(private config: ConfigService) {
+    super({
+      datasourceUrl: config.get("DATABASE_URL")
+    });
+  }
   async getClient(
     request?: Request,
-    intern: boolean = false
+    manster: boolean = false
   ): Promise<PrismaClient> {
     const tenant = this.extractTenantFromRequest(request);
     let databaseUrl = "";
-    if (!tenant?.id || (!tenant?.key && intern !== false))
-      databaseUrl = this.configService.get("DATABASE_URL");
+    if (!tenant?.id || (!tenant?.key && manster !== false))
+      databaseUrl = this.config.get("DATABASE_URL");
     else
       databaseUrl = `postgresql://${tenant?.id}:${tenant?.key}@localhost:5434/kulanda?schema=${tenant?.id}`;
 
-    let client = this.clients[tenant?.id ?? "intern"];
+    let client = this.clients[tenant?.id ?? "manster"];
 
     if (!client) {
       client = new PrismaClient({
@@ -29,7 +32,7 @@ export class PrismaService implements OnModuleDestroy {
         },
       });
 
-      this.clients[tenant?.id ?? "intern"] = client;
+      this.clients[tenant?.id ?? "manster"] = client;
     }
 
     return client;
