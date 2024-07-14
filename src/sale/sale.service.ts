@@ -9,12 +9,19 @@ export class SaleService {
     sellerId: string,
     { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs
   ): Promise<Omit<SaleType, "order">> {
+    const lastSale = await prisma.sale.findFirst({
+      orderBy: {
+        code: "desc",
+      },
+    });
+
     return await prisma.sale.create({
       data: {
         cash,
         bankCard,
         change,
         totalPrice,
+        code: (lastSale.code ?? 0) + 1,
         seller: {
           connect: {
             id: sellerId,

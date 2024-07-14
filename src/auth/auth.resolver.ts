@@ -15,12 +15,4 @@ export class AuthResolver {
   signIn(@Context("req") req, @Args() data: SignInArgs) {
     return this.authService.signIn(req.client, data);
   }
-
-  @Mutation(() => AuthTokenType)
-  signInWithPhoneNumber(
-    @Context("req") req,
-    @Args() data: SignInWithPhoneArgs
-  ) {
-    return this.authService.signInWithPhone(req.client, data);
-  }
 }

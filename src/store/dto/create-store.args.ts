@@ -1,10 +1,10 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { Store } from '@prisma/client';
-import { IsString } from 'class-validator';
+import { ArgsType, Field, ID } from "@nestjs/graphql";
+import { Store } from "@prisma/client";
+import { IsString } from "class-validator";
 
 @ArgsType()
 export class CreateStoreArgs
-  implements Omit<Store, 'id' | 'createdAt' | 'updatedAt' | 'companyId'>
+  implements Omit<Store, "id" | "createdAt" | "updatedAt" | "companyId">
 {
   @Field(() => String)
   @IsString()
@@ -17,8 +17,4 @@ export class CreateStoreArgs
   @Field(() => String)
   @IsString()
   phone: string;
-
-  @Field(() => ID)
-  @IsString()
-  companyId: string;
 }

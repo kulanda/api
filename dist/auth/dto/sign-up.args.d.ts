@@ -6,5 +6,6 @@ export declare class SignUpArgs implements Pick<User, "access"> {
     email: string;
     phone?: string;
     access: keyof typeof AccessEnumType;
+    storeId: string;
     password: string;
 }

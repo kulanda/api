@@ -30,7 +30,8 @@ export class CompanyResolver {
     nullable: true,
   })
   async getCompany(@Context("req") req) {
-    return this.companyService.getCompany(req);
+    console.log(req.tenantId)
+    return this.companyService.getCompany(req.tenantId);
   }
   @ResolveField(() => [StoreType])
   async stores(@Context("req") req, @Parent() company: CompanyType) {

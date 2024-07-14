@@ -16,7 +16,6 @@ exports.AuthResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const auth_service_1 = require("./auth.service");
 const dto_1 = require("./dto");
-const sign_in_with_phone_args_1 = require("./dto/sign-in-with-phone.args");
 let AuthResolver = class AuthResolver {
     constructor(authService) {
         this.authService = authService;
@@ -26,9 +25,6 @@ let AuthResolver = class AuthResolver {
     }
     signIn(req, data) {
         return this.authService.signIn(req.client, data);
-    }
-    signInWithPhoneNumber(req, data) {
-        return this.authService.signInWithPhone(req.client, data);
     }
 };
 exports.AuthResolver = AuthResolver;
@@ -48,14 +44,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.SignInArgs]),
     __metadata("design:returntype", void 0)
 ], AuthResolver.prototype, "signIn", null);
-__decorate([
-    (0, graphql_1.Mutation)(() => dto_1.AuthTokenType),
-    __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, sign_in_with_phone_args_1.SignInWithPhoneArgs]),
-    __metadata("design:returntype", void 0)
-], AuthResolver.prototype, "signInWithPhoneNumber", null);
 exports.AuthResolver = AuthResolver = __decorate([
     (0, graphql_1.Resolver)(),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

@@ -32,11 +32,11 @@ let StoreResolver = class StoreResolver {
         this.userService = userService;
         this.saleService = saleService;
     }
-    async createStore(req, tenantId, data) {
-        return this.storeService.createStore(req.client, tenantId, data);
+    async createStore(req, data) {
+        return this.storeService.createStore(req.client, req.companyId, data);
     }
-    async getStores(req, companyId) {
-        return this.storeService.getStores(req.client, companyId);
+    async getStores(req) {
+        return this.storeService.getStores(req.client, req.companyId);
     }
     async getStore(req, id) {
         return this.storeService.getStore(req.client, id);
@@ -58,18 +58,16 @@ exports.StoreResolver = StoreResolver;
 __decorate([
     (0, graphql_1.Mutation)(() => dto_1.StoreType),
     __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)("tenantId")),
-    __param(2, (0, graphql_1.Args)()),
+    __param(1, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, dto_1.CreateStoreArgs]),
+    __metadata("design:paramtypes", [Object, dto_1.CreateStoreArgs]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "createStore", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.StoreType]),
     __param(0, (0, graphql_1.Context)("req")),
-    __param(1, (0, graphql_1.Args)("companyId", { type: () => graphql_1.ID })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "getStores", null);
 __decorate([

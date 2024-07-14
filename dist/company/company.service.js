@@ -16,13 +16,11 @@ let CompanyService = class CompanyService {
     constructor(prismaService) {
         this.prismaService = prismaService;
     }
-    async getCompany(req) {
+    async getCompany(tenantId) {
         const rootClient = await this.prismaService.getClient(null, true);
         return await rootClient.company.findFirst({
             where: {
-                tenant: {
-                    username: req.headers["x-tenant-username"],
-                },
+                tenantId,
             },
         });
     }

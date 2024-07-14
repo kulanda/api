@@ -25,17 +25,13 @@ export class AuthService {
           username: dto.username,
           phone: dto.phone,
           access: dto.access,
+          storeId: dto.storeId,
           hash,
         },
-      })
+      });
 
       return this.signToken(user.id, user.email);
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === "P2002") {
-          throw new ForbiddenException("Credentias taken");
-        }
-      }
       throw error;
     }
   }
@@ -44,24 +40,6 @@ export class AuthService {
     const user = await prisma.user.findUnique({
       where: {
         email: dto.email,
-      },
-    });
-
-    if (!user) throw new ForbiddenException("Credrentials incorrect");
-
-    const pwMacthes = await argon.verify(user.hash, dto.password);
-
-    if (!pwMacthes) throw new ForbiddenException("Credrentials incorrect");
-    return this.signToken(user.id, user.email);
-  }
-
-  async signInWithPhone(
-    prisma: PrismaClient,
-    dto: SignInWithPhoneArgs
-  ): Promise<AuthTokenType> {
-    const user = await prisma.user.findUnique({
-      where: {
-        phone: dto.phone,
       },
     });
 

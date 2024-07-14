@@ -164,7 +164,7 @@ model Service {
 model Sale {
   id String @id @default(uuid())
 
-  code Int? @unique @default(autoincrement())
+  code Int @unique
 
   change   Decimal? @default(0)
   cash     Decimal?

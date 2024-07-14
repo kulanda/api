@@ -9,18 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreService = void 0;
 const common_1 = require("@nestjs/common");
 let StoreService = class StoreService {
-    async createStore(prisma, tenantId, dto) {
+    async createStore(prisma, companyId, dto) {
         return await prisma.store.create({
             data: {
                 address: dto.address,
                 designation: dto.designation,
                 phone: dto.phone,
-                company: {
-                    connect: {
-                        id: dto.companyId,
-                        tenantId,
-                    },
-                },
+                companyId,
             },
         });
     }
@@ -81,8 +76,21 @@ let StoreService = class StoreService {
             }
         }
         const where = {
-            seller: {
-                storeId: id,
+            Order: {
+                some: {
+                    OR: [
+                        {
+                            product: {
+                                storeId: id,
+                            },
+                        },
+                        {
+                            service: {
+                                storeId: id,
+                            },
+                        },
+                    ],
+                },
             },
             sellerId: options.sellerId,
             createdAt: dateFilter,

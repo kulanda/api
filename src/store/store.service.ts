@@ -7,7 +7,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 export class StoreService {
   async createStore(
     prisma: PrismaClient,
-    tenantId: string,
+    companyId: string,
     dto: CreateStoreArgs
   ): Promise<StoreType> {
     return await prisma.store.create({
@@ -15,12 +15,7 @@ export class StoreService {
         address: dto.address,
         designation: dto.designation,
         phone: dto.phone,
-        company: {
-          connect: {
-            id: dto.companyId,
-            tenantId,
-          },
-        },
+        companyId,
       },
     });
   }
@@ -100,8 +95,21 @@ export class StoreService {
     }
 
     const where: Prisma.SaleWhereInput = {
-      seller: {
-        storeId: id,
+      Order: {
+        some: {
+          OR: [
+            {
+              product: {
+                storeId: id,
+              },
+            },
+            {
+              service: {
+                storeId: id,
+              },
+            },
+          ],
+        },
       },
       sellerId: options.sellerId,
       createdAt: dateFilter,

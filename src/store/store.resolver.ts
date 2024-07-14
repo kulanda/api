@@ -33,18 +33,15 @@ export class StoreResolver {
   @Mutation(() => StoreType)
   async createStore(
     @Context("req") req,
-    @Args("tenantId")
-    tenantId: string,
     @Args() data: CreateStoreArgs
   ) {
-    return this.storeService.createStore(req.client, tenantId, data);
+    return this.storeService.createStore(req.client, req.companyId, data);
   }
   @Query(() => [StoreType])
   async getStores(
     @Context("req") req,
-    @Args("companyId", { type: () => ID }) companyId: string
   ) {
-    return this.storeService.getStores(req.client, companyId);
+    return this.storeService.getStores(req.client, req.companyId);
   }
   @Query(() => StoreType, {
     nullable: true,

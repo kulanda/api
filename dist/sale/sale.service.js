@@ -10,12 +10,18 @@ exports.SaleService = void 0;
 const common_1 = require("@nestjs/common");
 let SaleService = class SaleService {
     async createSale(prisma, sellerId, { orders, bankCard, cash, change, totalPrice }) {
+        const lastSale = await prisma.sale.findFirst({
+            orderBy: {
+                code: "desc",
+            },
+        });
         return await prisma.sale.create({
             data: {
                 cash,
                 bankCard,
                 change,
                 totalPrice,
+                code: (lastSale.code ?? 0) + 1,
                 seller: {
                     connect: {
                         id: sellerId,
