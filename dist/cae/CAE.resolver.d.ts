@@ -7,7 +7,7 @@ export declare class CaeResolver {
     private sectorService;
     constructor(cAEService: CaeService, sectorService: SectorService);
     createCAE(data: CreateCAEArgs): Promise<CAEType>;
-    getCategories(req: any): Promise<CAEType[]>;
+    getCAEs(): Promise<CAEType[]>;
     getCAE(id: string): Promise<CAEType>;
     sector(cae: CAEType): Promise<SectorType>;
 }

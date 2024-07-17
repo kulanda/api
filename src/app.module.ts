@@ -16,6 +16,7 @@ import { SectorModule } from './sector/sector.module';
 import { CaeModule } from './cae/cae.module';
 import { TenantMiddleware } from './tenant.middleware';
 import { TenantModule } from './tenant/tenant.module';
+import { ChargeModule } from './charge/charge.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TenantModule } from './tenant/tenant.module';
     SectorModule,
     CaeModule,
     TenantModule,
+    ChargeModule,
   ],
 })
 export class AppModule {

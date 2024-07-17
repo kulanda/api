@@ -18,11 +18,9 @@ const graphql_1 = require("@nestjs/graphql");
 const decorator_1 = require("../auth/decorator");
 const guard_1 = require("../auth/guard");
 const dto_1 = require("./dto");
-const company_service_1 = require("../company/company.service");
 const user_service_1 = require("./user.service");
 let UserResolver = class UserResolver {
-    constructor(companyService, userService) {
-        this.companyService = companyService;
+    constructor(userService) {
         this.userService = userService;
     }
     async user(req, user) {
@@ -30,6 +28,9 @@ let UserResolver = class UserResolver {
     }
     async getUser(req, id) {
         return this.userService.getUser(req.client, id);
+    }
+    async getUsers(req, storeId) {
+        return this.userService.getUsers(req.client, storeId);
     }
 };
 exports.UserResolver = UserResolver;
@@ -49,10 +50,17 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "getUser", null);
+__decorate([
+    (0, graphql_1.Query)(() => [dto_1.UserType]),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)("storeId", { type: () => graphql_1.ID, nullable: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "getUsers", null);
 exports.UserResolver = UserResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.UserType),
-    __metadata("design:paramtypes", [company_service_1.CompanyService,
-        user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserResolver);
 //# sourceMappingURL=user.resolver.js.map

@@ -29,6 +29,11 @@ __decorate([
     __metadata("design:type", client_1.Prisma.Decimal)
 ], SaleType.prototype, "change", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], SaleType.prototype, "code", void 0);
+__decorate([
     (0, graphql_1.Field)(() => Number, {
         nullable: true,
     }),

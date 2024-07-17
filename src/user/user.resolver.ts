@@ -19,10 +19,7 @@ import { UserService } from "./user.service";
 @UseGuards(GqlAuthGuard)
 @Resolver(() => UserType)
 export class UserResolver {
-  constructor(
-    private companyService: CompanyService,
-    private userService: UserService
-  ) {}
+  constructor(private userService: UserService) {}
 
   @Query(() => UserType)
   async user(@Context("req") req, @GetUser() user) {
@@ -34,5 +31,12 @@ export class UserResolver {
     @Args("id", { type: () => ID }) id: string
   ) {
     return this.userService.getUser(req.client, id);
+  }
+  @Query(() => [UserType])
+  async getUsers(
+    @Context("req") req,
+    @Args("storeId", { type: () => ID, nullable: true }) storeId: string
+  ) {
+    return this.userService.getUsers(req.client, storeId);
   }
 }

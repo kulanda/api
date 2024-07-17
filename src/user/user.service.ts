@@ -16,6 +16,13 @@ export class UserService {
       },
     });
   }
+  async getUsers(prisma: PrismaClient, storeId: string) {
+    return await prisma.user.findMany({
+      where: {
+        storeId,
+      },
+    });
+  }
   async getUsersByStory(
     prisma: PrismaClient,
     storeId: string

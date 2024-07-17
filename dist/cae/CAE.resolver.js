@@ -26,14 +26,13 @@ let CaeResolver = class CaeResolver {
     async createCAE(data) {
         return this.cAEService.createCAE(data);
     }
-    async getCategories(req) {
-        return this.cAEService.getCategories(req.client);
+    async getCAEs() {
+        return this.cAEService.getCAEs();
     }
     async getCAE(id) {
         return this.cAEService.getCAE(id);
     }
     async sector(cae) {
-        console.log(cae);
         return this.sectorService.getSector(cae.sectorId);
     }
 };
@@ -47,11 +46,10 @@ __decorate([
 ], CaeResolver.prototype, "createCAE", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CAEType]),
-    __param(0, (0, graphql_1.Context)("req")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], CaeResolver.prototype, "getCategories", null);
+], CaeResolver.prototype, "getCAEs", null);
 __decorate([
     (0, graphql_1.Query)(() => dto_1.CAEType, {
         nullable: true,

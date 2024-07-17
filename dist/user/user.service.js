@@ -16,6 +16,13 @@ let UserService = class UserService {
             },
         });
     }
+    async getUsers(prisma, storeId) {
+        return await prisma.user.findMany({
+            where: {
+                storeId,
+            },
+        });
+    }
     async getUsersByStory(prisma, storeId) {
         return await prisma.user.findMany({
             where: {

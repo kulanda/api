@@ -24,8 +24,8 @@ export class CaeResolver {
     return this.cAEService.createCAE(data);
   }
   @Query(() => [CAEType])
-  async getCategories(@Context("req") req) {
-    return this.cAEService.getCategories(req.client);
+  async getCAEs() {
+    return this.cAEService.getCAEs();
   }
   @Query(() => CAEType, {
     nullable: true,
@@ -35,7 +35,6 @@ export class CaeResolver {
   }
   @ResolveField(() => SectorType)
   async sector(@Parent() cae: CAEType) {
-    console.log(cae)
     return this.sectorService.getSector(cae.sectorId);
   }
 }

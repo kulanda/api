@@ -25,6 +25,7 @@ const sector_module_1 = require("./sector/sector.module");
 const cae_module_1 = require("./cae/cae.module");
 const tenant_middleware_1 = require("./tenant.middleware");
 const tenant_module_1 = require("./tenant/tenant.module");
+const charge_module_1 = require("./charge/charge.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -57,6 +58,7 @@ exports.AppModule = AppModule = __decorate([
             sector_module_1.SectorModule,
             cae_module_1.CaeModule,
             tenant_module_1.TenantModule,
+            charge_module_1.ChargeModule,
         ],
     })
 ], AppModule);

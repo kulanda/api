@@ -29,7 +29,6 @@ let CompanyResolver = class CompanyResolver {
         this.caeService = caeService;
     }
     async getCompany(req) {
-        console.log(req.tenantId);
         return this.companyService.getCompany(req.tenantId);
     }
     async stores(req, company) {

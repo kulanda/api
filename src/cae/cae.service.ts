@@ -14,8 +14,9 @@ export class CaeService {
       },
     });
   }
-  async getCategories(prisma: PrismaClient): Promise<CAEType[]> {
-    return await prisma.cAE.findMany();
+  async getCAEs(): Promise<CAEType[]> {
+    const rootClient = await this.prismaService.getClient(null, true);
+    return await rootClient.cAE.findMany();
   }
   async getCAE(id: string): Promise<CAEType> {
     const rootClient = await this.prismaService.getClient(null, true);

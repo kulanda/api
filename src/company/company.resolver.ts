@@ -30,7 +30,6 @@ export class CompanyResolver {
     nullable: true,
   })
   async getCompany(@Context("req") req) {
-    console.log(req.tenantId)
     return this.companyService.getCompany(req.tenantId);
   }
   @ResolveField(() => [StoreType])

@@ -55,6 +55,7 @@ type OrderType {
 type SaleType {
   id: ID!
   change: Float
+  code: Float!
   cash: Float
   bankCard: Float
   totalPrice: Float
@@ -148,14 +149,37 @@ type TenantCredentialsType {
   access_key: String!
 }
 
+type ChargeType {
+  id: ID!
+  name: String!
+  acronym: String!
+  percentage: Float!
+  type: ChargeEnumType!
+  categoryId: ID
+  serviceId: ID
+  productId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: ProductType
+  service: ServiceType
+  category: CategoryType
+}
+
+enum ChargeEnumType {
+  TAX
+  FEE
+  DISCOUNT
+}
+
 type Query {
   user: UserType!
   getUser(id: ID!): UserType!
+  getUsers(storeId: ID): [UserType!]!
   getCompany: CompanyType
   getStores: [StoreType!]!
   getStore(id: ID!): StoreType
   getStoreReport(id: ID!, options: ReportStoreOptionsInput): ReportStoreType
-  getCategories: [CAEType!]!
+  getCategories: [CategoryType!]!
   getCategory(id: ID!): CategoryType
   getCategoriesByStore(storeId: ID!): [CategoryType!]
   getProducts(storeId: ID!, filter: FilterProductInput): [ProductType!]!
@@ -168,12 +192,16 @@ type Query {
   getOrder(id: ID!): OrderType
   getSectors: [SectorType!]!
   getSector(id: ID!): SectorType
+  getCAEs: [CAEType!]!
   getCAE(id: ID!): CAEType
+  getCharges: [ChargeType!]!
+  getCharge(id: ID!): ChargeType
+  getChargesByStore(storeId: ID!): [ChargeType!]
 }
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-14T08:16:16.037Z"
+  from: DateTime = "2024-07-17T14:26:36.300Z"
   sellerId: ID
 }
 
@@ -220,6 +248,7 @@ type Mutation {
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
   createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!): TenantCredentialsType!
+  createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
 }
 
 input CreateOrderSaleInput {
