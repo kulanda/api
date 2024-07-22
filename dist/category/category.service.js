@@ -9,10 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryService = void 0;
 const common_1 = require("@nestjs/common");
 let CategoryService = class CategoryService {
-    async createCategory(prisma, dto) {
+    async createCategory(prisma, { charges, ...dto }) {
         return await prisma.category.create({
             data: {
                 ...dto,
+                Charge: {
+                    connect: charges.map((id) => ({
+                        id,
+                    })),
+                },
             },
         });
     }

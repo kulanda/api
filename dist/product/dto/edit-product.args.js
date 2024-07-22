@@ -73,6 +73,15 @@ __decorate([
     __metadata("design:type", String)
 ], EditProductArgs.prototype, "categoryId", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => [graphql_1.ID], {
+        nullable: true,
+        defaultValue: []
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], EditProductArgs.prototype, "charges", void 0);
+__decorate([
     (0, graphql_1.Field)(() => graphql_1.ID, {
         nullable: true,
     }),

@@ -1,6 +1,7 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import { Prisma, Product } from '@prisma/client';
 import {
+  IsArray,
   IsDate,
   IsNumber,
   IsOptional,
@@ -48,6 +49,14 @@ export class CreateProductArgs
   @Field(() => ID)
   @IsUUID()
   categoryId: string;
+
+  @Field(() => [ID!]!, {
+    nullable: true,
+    defaultValue: []
+  })
+  @IsArray()
+  @IsOptional()
+  charges: string[];
 
   @Field(() => ID)
   @IsUUID()

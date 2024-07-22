@@ -21,7 +21,7 @@ let SaleService = class SaleService {
                 bankCard,
                 change,
                 totalPrice,
-                code: (lastSale.code ?? 0) + 1,
+                code: typeof lastSale?.code === "number" ? lastSale?.code + 1 : 1,
                 seller: {
                     connect: {
                         id: sellerId,

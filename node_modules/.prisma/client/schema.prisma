@@ -90,6 +90,8 @@ model Store {
   Product   Product[]
   Service   Service[]
   User      User[]
+  Client    Client[]
+  Charge    Charge[]
 
   @@map("stores")
 }
@@ -106,11 +108,14 @@ model Category {
   description String?
   type        String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Product   Product[]
-  Service   Service[]
-  Charge    Charge[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Product             Product[]
+  Service             Service[]
+  Charge              Charge[]
+  ChargesOnCategories ChargesOnCategories[]
+  ChargesOnProducts   ChargesOnProducts[]
+  ChargesOnServices   ChargesOnServices[]
 
   @@map("categories")
 }
@@ -224,6 +229,7 @@ model CAE {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Company   Company[]
+  Client    Client[]
 
   @@map("CAEs")
 }
@@ -242,17 +248,93 @@ model Charge {
   percentage Decimal
   type       String
 
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  storeId             String
+  store               Store                 @relation(fields: [storeId], references: [id])
+  ChargesOnCategories ChargesOnCategories[]
+  ChargesOnProducts   ChargesOnProducts[]
+  ChargesOnServices   ChargesOnServices[]
+  Category            Category?             @relation(fields: [categoryId], references: [id])
+  categoryId          String?
+  Product             Product?              @relation(fields: [productId], references: [id])
+  productId           String?
+  Service             Service?              @relation(fields: [serviceId], references: [id])
+  serviceId           String?
+
+  @@map("charges")
+}
+
+model ChargesOnCategories {
+  id String @id @default(uuid())
+
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  serviceId String?
-  service   Service? @relation(fields: [serviceId], references: [id])
-
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id])
+  chargeId String?
+  charge   Charge? @relation(fields: [chargeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("charges")
+  @@map("charges_on_categories")
+}
+
+model ChargesOnProducts {
+  id String @id @default(uuid())
+
+  productId String?
+  product   Category? @relation(fields: [productId], references: [id])
+
+  chargeId String?
+  charge   Charge? @relation(fields: [chargeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("charges_on_products")
+}
+
+model ChargesOnServices {
+  id String @id @default(uuid())
+
+  serviceId String?
+  service   Category? @relation(fields: [serviceId], references: [id])
+
+  chargeId String?
+  charge   Charge? @relation(fields: [chargeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("charges_on_services")
+}
+
+model Client {
+  id String @id @default(uuid())
+
+  fullName String
+
+  nif     String? @unique
+  phone   String  @unique
+  email   String? @unique
+  address String
+
+  type String
+
+  storeId String?
+  store   Store?  @relation(fields: [storeId], references: [id])
+
+  caeId String?
+  cae   CAE?    @relation(fields: [caeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("clients")
+}
+
+enum ClientType {
+  INDIVIDUAL
+  LEGAL
 }

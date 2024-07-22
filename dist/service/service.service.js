@@ -9,10 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceService = void 0;
 const common_1 = require("@nestjs/common");
 let ServiceService = class ServiceService {
-    async createService(prisma, { categoryId, storeId, ...dto }) {
+    async createService(prisma, { categoryId, storeId, charges, ...dto }) {
         return await prisma.service.create({
             data: {
                 ...dto,
+                Charge: {
+                    connect: charges.map((id) => ({
+                        id,
+                    })),
+                },
                 store: {
                     connect: {
                         id: storeId,
@@ -26,10 +31,15 @@ let ServiceService = class ServiceService {
             },
         });
     }
-    async editService(prisma, id, dto) {
+    async editService(prisma, id, { charges, ...dto }) {
         return await prisma.service.update({
             data: {
                 ...dto,
+                Charge: {
+                    connect: charges.map((id) => ({
+                        id,
+                    })),
+                },
             },
             where: {
                 id,

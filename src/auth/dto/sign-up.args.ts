@@ -31,7 +31,7 @@ export class SignUpArgs implements Pick<User, "access"> {
   @Field({
     nullable: true,
   })
-  @IsPhoneNumber("AO")
+  @IsPhoneNumber()
   phone?: string;
 
   @Field(() => AccessEnumType, {

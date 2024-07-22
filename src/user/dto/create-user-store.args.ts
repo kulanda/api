@@ -32,7 +32,7 @@ export class CreateUserStoreArgs
   @Field({
     nullable: true,
   })
-  @IsPhoneNumber('AO')
+  @IsPhoneNumber()
   phone: string;
 
   @Field(() => ID)

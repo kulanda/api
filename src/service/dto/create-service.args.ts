@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Prisma, Service } from '@prisma/client';
-import { IsNumber, IsOptional, IsString, IsUUID, IsUrl } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, IsUUID, IsUrl } from 'class-validator';
 
 @ArgsType()
 export class CreateServiceArgs
@@ -31,6 +31,14 @@ export class CreateServiceArgs
   @Field(() => ID)
   @IsUUID()
   categoryId: string;
+
+  @Field(() => [ID!]!, {
+    nullable: true,
+    defaultValue: []
+  })
+  @IsArray()
+  @IsOptional()
+  charges: string[];
 
   @Field(() => ID)
   @IsUUID()

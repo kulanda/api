@@ -36,6 +36,13 @@ export class ChargeType implements Charge {
   })
   @IsUUID()
   @IsOptional()
+  storeId: string;
+
+  @Field(() => ID, {
+    nullable: true,
+  })
+  @IsUUID()
+  @IsOptional()
   categoryId: string;
 
   @Field(() => ID, {

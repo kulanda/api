@@ -37,7 +37,7 @@ __decorate([
     (0, graphql_1.Field)({
         nullable: true,
     }),
-    (0, class_validator_1.IsPhoneNumber)('AO'),
+    (0, class_validator_1.IsPhoneNumber)(),
     __metadata("design:type", String)
 ], CreateUserStoreArgs.prototype, "phone", void 0);
 __decorate([

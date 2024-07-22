@@ -17,6 +17,7 @@ import { CaeModule } from './cae/cae.module';
 import { TenantMiddleware } from './tenant.middleware';
 import { TenantModule } from './tenant/tenant.module';
 import { ChargeModule } from './charge/charge.module';
+import { ClientModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ChargeModule } from './charge/charge.module';
     CaeModule,
     TenantModule,
     ChargeModule,
+    ClientModule,
   ],
 })
 export class AppModule {

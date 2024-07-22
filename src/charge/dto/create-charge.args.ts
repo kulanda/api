@@ -40,6 +40,11 @@ export class CreateChargeArgs
   @IsEnum(["TAX", "FEE", "DISCOUNT"])
   type: string;
 
+  @Field(() => ID)
+  @IsUUID()
+  @IsOptional()
+  storeId: string;
+
   @Field(() => ID, {
     nullable: true,
   })

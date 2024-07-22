@@ -7,5 +7,6 @@ export declare class CreateProductArgs implements Omit<Product, 'id' | 'createdA
     stock: number;
     expiresOn: Date;
     categoryId: string;
+    charges: string[];
     storeId: string;
 }

@@ -48,6 +48,15 @@ __decorate([
     __metadata("design:type", String)
 ], CreateServiceArgs.prototype, "categoryId", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => [graphql_1.ID], {
+        nullable: true,
+        defaultValue: []
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateServiceArgs.prototype, "charges", void 0);
+__decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)

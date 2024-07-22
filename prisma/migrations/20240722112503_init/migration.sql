@@ -7,6 +7,9 @@ CREATE TYPE "CategoryType" AS ENUM ('PRODUCT', 'SERVICE');
 -- CreateEnum
 CREATE TYPE "ChargeType" AS ENUM ('TAX', 'FEE', 'DISCOUNT');
 
+-- CreateEnum
+CREATE TYPE "ClientType" AS ENUM ('INDIVIDUAL', 'LEGAL');
+
 -- CreateTable
 CREATE TABLE "tenants" (
     "id" TEXT NOT NULL,
@@ -111,7 +114,7 @@ CREATE TABLE "services" (
 -- CreateTable
 CREATE TABLE "sales" (
     "id" TEXT NOT NULL,
-    "code" SERIAL,
+    "code" INTEGER NOT NULL,
     "change" DECIMAL(65,30) DEFAULT 0,
     "cash" DECIMAL(65,30),
     "bankCard" DECIMAL(65,30),
@@ -164,13 +167,64 @@ CREATE TABLE "charges" (
     "acronym" TEXT NOT NULL,
     "percentage" DECIMAL(65,30) NOT NULL,
     "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "storeId" TEXT NOT NULL,
     "categoryId" TEXT,
-    "serviceId" TEXT,
     "productId" TEXT,
+    "serviceId" TEXT,
+
+    CONSTRAINT "charges_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "charges_on_categories" (
+    "id" TEXT NOT NULL,
+    "categoryId" TEXT,
+    "chargeId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "charges_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "charges_on_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "charges_on_products" (
+    "id" TEXT NOT NULL,
+    "productId" TEXT,
+    "chargeId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "charges_on_products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "charges_on_services" (
+    "id" TEXT NOT NULL,
+    "serviceId" TEXT,
+    "chargeId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "charges_on_services_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "clients" (
+    "id" TEXT NOT NULL,
+    "fullName" TEXT NOT NULL,
+    "nif" TEXT,
+    "phone" TEXT NOT NULL,
+    "email" TEXT,
+    "address" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "storeId" TEXT,
+    "caeId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "clients_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -196,6 +250,15 @@ CREATE UNIQUE INDEX "companies_nif_key" ON "companies"("nif");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "sales_code_key" ON "sales"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "clients_nif_key" ON "clients"("nif");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "clients_phone_key" ON "clients"("phone");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "clients_email_key" ON "clients"("email");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -237,10 +300,37 @@ ALTER TABLE "orders" ADD CONSTRAINT "orders_serviceId_fkey" FOREIGN KEY ("servic
 ALTER TABLE "CAEs" ADD CONSTRAINT "CAEs_sectorId_fkey" FOREIGN KEY ("sectorId") REFERENCES "sectors"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "charges" ADD CONSTRAINT "charges_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "charges" ADD CONSTRAINT "charges_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges" ADD CONSTRAINT "charges_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "charges" ADD CONSTRAINT "charges_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "services"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "charges" ADD CONSTRAINT "charges_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "charges_on_categories" ADD CONSTRAINT "charges_on_categories_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges_on_categories" ADD CONSTRAINT "charges_on_categories_chargeId_fkey" FOREIGN KEY ("chargeId") REFERENCES "charges"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges_on_products" ADD CONSTRAINT "charges_on_products_productId_fkey" FOREIGN KEY ("productId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges_on_products" ADD CONSTRAINT "charges_on_products_chargeId_fkey" FOREIGN KEY ("chargeId") REFERENCES "charges"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges_on_services" ADD CONSTRAINT "charges_on_services_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "charges_on_services" ADD CONSTRAINT "charges_on_services_chargeId_fkey" FOREIGN KEY ("chargeId") REFERENCES "charges"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "clients" ADD CONSTRAINT "clients_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "clients" ADD CONSTRAINT "clients_caeId_fkey" FOREIGN KEY ("caeId") REFERENCES "CAEs"("id") ON DELETE SET NULL ON UPDATE CASCADE;

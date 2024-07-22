@@ -30,32 +30,7 @@ export class ChargeService {
   ): Promise<ChargeType[]> {
     return await prisma.charge.findMany({
       where: {
-        OR: [
-          {
-            category: {
-              Service: {
-                every: {
-                  storeId,
-                },
-              },
-              Product: {
-                every: {
-                  storeId,
-                },
-              },
-            },
-          },
-          {
-            service: {
-              storeId,
-            },
-          },
-          {
-            product: {
-              storeId,
-            },
-          },
-        ],
+        storeId,
       },
     });
   }

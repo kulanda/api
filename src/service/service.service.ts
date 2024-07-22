@@ -7,11 +7,16 @@ import { Prisma, PrismaClient } from "@prisma/client";
 export class ServiceService {
   async createService(
     prisma: PrismaClient,
-    { categoryId, storeId, ...dto }: CreateServiceArgs
+    { categoryId, storeId, charges, ...dto }: CreateServiceArgs
   ): Promise<ServiceType> {
     return await prisma.service.create({
       data: {
         ...dto,
+        Charge: {
+          connect: charges.map((id) => ({
+            id,
+          })),
+        },
         store: {
           connect: {
             id: storeId,
@@ -28,11 +33,16 @@ export class ServiceService {
   async editService(
     prisma: PrismaClient,
     id: string,
-    dto: EditServiceArgs
+    { charges, ...dto }: EditServiceArgs
   ): Promise<ServiceType> {
     return await prisma.service.update({
       data: {
         ...dto,
+        Charge: {
+          connect: charges.map((id) => ({
+            id,
+          })),
+        },
       },
       where: {
         id,

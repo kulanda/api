@@ -155,20 +155,37 @@ type ChargeType {
   acronym: String!
   percentage: Float!
   type: ChargeEnumType!
+  storeId: ID
   categoryId: ID
   serviceId: ID
   productId: ID
   createdAt: DateTime!
   updatedAt: DateTime!
-  product: ProductType
-  service: ServiceType
-  category: CategoryType
 }
 
 enum ChargeEnumType {
   TAX
   FEE
   DISCOUNT
+}
+
+type ClientType {
+  id: ID!
+  fullName: String!
+  nif: String
+  phone: String!
+  email: String
+  address: String!
+  type: ClientEnumType
+  caeId: ID
+  storeId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ClientEnumType {
+  INDIVIDUAL
+  LEGAL
 }
 
 type Query {
@@ -197,11 +214,14 @@ type Query {
   getCharges: [ChargeType!]!
   getCharge(id: ID!): ChargeType
   getChargesByStore(storeId: ID!): [ChargeType!]
+  getClients: [ClientType!]!
+  getClient(id: ID!): ClientType
+  getClientsByStore(storeId: ID!): [ClientType!]
 }
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-17T14:26:36.300Z"
+  from: DateTime = "2024-07-22T11:39:45.511Z"
   sellerId: ID
 }
 
@@ -238,17 +258,18 @@ type Mutation {
   signUp(fullName: String!, username: String, email: String!, phone: String, access: AccessEnumType = SELLER, storeId: ID!, password: String!): AuthTokenType!
   signIn(email: String!, password: String!): AuthTokenType!
   createStore(address: String!, designation: String!, phone: String!): StoreType!
-  createCategory(name: String!, description: String, type: CategoryEnumType!): CategoryType!
-  createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, storeId: ID!): ProductType!
-  editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, storeId: ID): ProductType!
-  createService(name: String!, description: String, image: String, price: Float!, categoryId: ID!, storeId: ID!): ServiceType!
-  editService(id: ID!, name: String, description: String, image: String, price: Float, categoryId: ID, storeId: ID): ServiceType!
+  createCategory(name: String!, description: String, type: CategoryEnumType!, charges: [ID!] = []): CategoryType!
+  createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ProductType!
+  editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], storeId: ID): ProductType!
+  createService(name: String!, description: String, image: String, price: Float!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
+  editService(id: ID!, name: String, description: String, image: String, price: Float, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
   createSale(change: Float, cash: Float, bankCard: Float, totalPrice: Float, orders: [CreateOrderSaleInput!]!): SaleType!
   createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
   createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!): TenantCredentialsType!
-  createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
+  createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, storeId: ID!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
+  createClient(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: ClientEnumType = INDIVIDUAL, caeId: ID, storeId: ID): ClientType!
 }
 
 input CreateOrderSaleInput {

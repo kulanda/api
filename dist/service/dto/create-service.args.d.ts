@@ -5,5 +5,6 @@ export declare class CreateServiceArgs implements Omit<Service, 'id' | 'createdA
     image: string;
     price: Prisma.Decimal;
     categoryId: string;
+    charges: string[];
     storeId: string;
 }

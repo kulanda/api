@@ -18,7 +18,7 @@ var CategoryEnumType;
     CategoryEnumType["SERVICE"] = "SERVICE";
 })(CategoryEnumType || (exports.CategoryEnumType = CategoryEnumType = {}));
 (0, graphql_1.registerEnumType)(CategoryEnumType, {
-    name: 'CategoryEnumType',
+    name: "CategoryEnumType",
 });
 let CreateCategoryArgs = class CreateCategoryArgs {
 };
@@ -38,9 +38,18 @@ __decorate([
 ], CreateCategoryArgs.prototype, "description", void 0);
 __decorate([
     (0, graphql_1.Field)(() => CategoryEnumType),
-    (0, class_validator_1.IsEnum)(['PRODUCT', 'SERVICE']),
+    (0, class_validator_1.IsEnum)(["PRODUCT", "SERVICE"]),
     __metadata("design:type", Object)
 ], CreateCategoryArgs.prototype, "type", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [graphql_1.ID], {
+        nullable: true,
+        defaultValue: []
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateCategoryArgs.prototype, "charges", void 0);
 exports.CreateCategoryArgs = CreateCategoryArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], CreateCategoryArgs);

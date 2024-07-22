@@ -1,7 +1,7 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Category } from '@prisma/client';
-import { IsOptional, IsString } from 'class-validator';
-import { CategoryEnumType } from './create-category.args';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Category } from "@prisma/client";
+import { IsArray, IsOptional, IsString, IsUUID } from "class-validator";
+import { CategoryEnumType } from "./create-category.args";
 
 @ObjectType()
 export class CategoryType implements Category {

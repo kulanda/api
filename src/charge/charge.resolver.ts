@@ -24,9 +24,6 @@ import { CategoryType } from "src/category/dto";
 export class ChargeResolver {
   constructor(
     private chargeService: ChargeService,
-    private productService: ProductService,
-    private serviceService: ServiceService,
-    private categoryService: CategoryService
   ) {}
   @Mutation(() => ChargeType)
   async createCharge(@Context("req") req, @Args() data: CreateChargeArgs) {
@@ -53,23 +50,5 @@ export class ChargeResolver {
     @Args("storeId", { type: () => ID }) storeId: string
   ) {
     return this.chargeService.getChargesByStore(req.client, storeId);
-  }
-  @ResolveField(() => ProductType, {
-    nullable: true,
-  })
-  async product(@Context("req") req, @Parent() charge: ChargeType) {
-    return this.productService.getProduct(req.client, charge.categoryId);
-  }
-  @ResolveField(() => ServiceType, {
-    nullable: true,
-  })
-  async service(@Context("req") req, @Parent() charge: ChargeType) {
-    return this.serviceService.getService(req.client, charge.serviceId);
-  }
-  @ResolveField(() => CategoryType, {
-    nullable: true,
-  })
-  async category(@Context("req") req, @Parent() charge: ChargeType) {
-    return this.categoryService.getCategory(req.client, charge.categoryId);
   }
 }
