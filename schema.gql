@@ -109,6 +109,7 @@ type ProductType {
   createdAt: DateTime!
   updatedAt: DateTime!
   category: CategoryType!
+  charges: [ChargeType!]!
 }
 
 type CategoryType {
@@ -118,35 +119,12 @@ type CategoryType {
   type: CategoryEnumType!
   createdAt: DateTime!
   updatedAt: DateTime!
+  charges: [ChargeType!]!
 }
 
 enum CategoryEnumType {
   PRODUCT
   SERVICE
-}
-
-type ServiceType {
-  id: ID!
-  name: String!
-  description: String
-  image: String
-  price: Float!
-  categoryId: ID!
-  storeId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  category: CategoryType!
-}
-
-type SectorType {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type TenantCredentialsType {
-  access_key: String!
 }
 
 type ChargeType {
@@ -167,6 +145,31 @@ enum ChargeEnumType {
   TAX
   FEE
   DISCOUNT
+}
+
+type ServiceType {
+  id: ID!
+  name: String!
+  description: String
+  image: String
+  price: Float!
+  categoryId: ID!
+  storeId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: CategoryType!
+  charges: [ChargeType!]!
+}
+
+type SectorType {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TenantCredentialsType {
+  access_key: String!
 }
 
 type ClientType {
@@ -221,7 +224,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-22T11:39:45.511Z"
+  from: DateTime = "2024-07-23T05:46:59.865Z"
   sellerId: ID
 }
 

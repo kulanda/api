@@ -21,10 +21,13 @@ const decorator_1 = require("../auth/decorator");
 const product_service_1 = require("./product.service");
 const category_service_1 = require("../category/category.service");
 const dto_2 = require("../category/dto");
+const dto_3 = require("../charge/dto");
+const charge_service_1 = require("../charge/charge.service");
 let ProductResolver = class ProductResolver {
-    constructor(productService, categoryService) {
+    constructor(productService, categoryService, chargeService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.chargeService = chargeService;
     }
     async createProduct(req, _, data) {
         return this.productService.createProduct(req.client, data);
@@ -40,6 +43,11 @@ let ProductResolver = class ProductResolver {
     }
     async category(req, product) {
         return this.categoryService.getCategory(req.client, product.categoryId);
+    }
+    async charges(req, product) {
+        return this.chargeService.getCharges(req.client, {
+            productId: product.id,
+        });
     }
 };
 exports.ProductResolver = ProductResolver;
@@ -93,10 +101,19 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.ProductType]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "category", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => [dto_3.ChargeType]),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.ProductType]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "charges", null);
 exports.ProductResolver = ProductResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.ProductType),
     __metadata("design:paramtypes", [product_service_1.ProductService,
-        category_service_1.CategoryService])
+        category_service_1.CategoryService,
+        charge_service_1.ChargeService])
 ], ProductResolver);
 //# sourceMappingURL=product.resolver.js.map

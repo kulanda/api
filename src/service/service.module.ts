@@ -5,6 +5,7 @@ import { ServiceResolver } from './service.resolver';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 import { CategoryService } from 'src/category/category.service';
+import { ChargeService } from 'src/charge/charge.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -14,6 +15,7 @@ import { CategoryService } from 'src/category/category.service';
     AuthService,
     CategoryService,
     ServiceResolver,
+    ChargeService
   ],
 })
 export class ServiceModule {}

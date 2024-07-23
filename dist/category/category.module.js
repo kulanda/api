@@ -14,6 +14,7 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const auth_service_1 = require("../auth/auth.service");
 const jwt_1 = require("@nestjs/jwt");
 const service_service_1 = require("../service/service.service");
+const charge_service_1 = require("../charge/charge.service");
 let CategoryModule = class CategoryModule {
 };
 exports.CategoryModule = CategoryModule;
@@ -26,6 +27,7 @@ exports.CategoryModule = CategoryModule = __decorate([
             prisma_service_1.PrismaService,
             auth_service_1.AuthService,
             service_service_1.ServiceService,
+            charge_service_1.ChargeService
         ],
     })
 ], CategoryModule);

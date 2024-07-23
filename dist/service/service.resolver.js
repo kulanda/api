@@ -22,10 +22,13 @@ const service_service_1 = require("./service.service");
 const category_service_1 = require("../category/category.service");
 const dto_2 = require("../category/dto");
 const filter_service_input_1 = require("./dto/filter-service.input");
+const dto_3 = require("../charge/dto");
+const charge_service_1 = require("../charge/charge.service");
 let ServiceResolver = class ServiceResolver {
-    constructor(serviceService, categoryService) {
+    constructor(serviceService, categoryService, chargeService) {
         this.serviceService = serviceService;
         this.categoryService = categoryService;
+        this.chargeService = chargeService;
     }
     async createService(req, _, data) {
         return this.serviceService.createService(req.client, data);
@@ -41,6 +44,11 @@ let ServiceResolver = class ServiceResolver {
     }
     async category(req, service) {
         return this.categoryService.getCategory(req.client, service.categoryId);
+    }
+    async charges(req, service) {
+        return this.chargeService.getCharges(req.client, {
+            serviceId: service.id,
+        });
     }
 };
 exports.ServiceResolver = ServiceResolver;
@@ -94,10 +102,19 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.ServiceType]),
     __metadata("design:returntype", Promise)
 ], ServiceResolver.prototype, "category", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => [dto_3.ChargeType]),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.ServiceType]),
+    __metadata("design:returntype", Promise)
+], ServiceResolver.prototype, "charges", null);
 exports.ServiceResolver = ServiceResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.ServiceType),
     __metadata("design:paramtypes", [service_service_1.ServiceService,
-        category_service_1.CategoryService])
+        category_service_1.CategoryService,
+        charge_service_1.ChargeService])
 ], ServiceResolver);
 //# sourceMappingURL=service.resolver.js.map

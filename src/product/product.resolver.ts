@@ -20,13 +20,16 @@ import { GetUser } from "src/auth/decorator";
 import { ProductService } from "./product.service";
 import { CategoryService } from "src/category/category.service";
 import { CategoryType } from "src/category/dto";
+import { ChargeType } from "src/charge/dto";
+import { ChargeService } from "src/charge/charge.service";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => ProductType)
 export class ProductResolver {
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private chargeService: ChargeService
   ) {}
   @Mutation(() => ProductType)
   async createProduct(
@@ -72,5 +75,11 @@ export class ProductResolver {
   @ResolveField(() => CategoryType)
   async category(@Context("req") req, @Parent() product: ProductType) {
     return this.categoryService.getCategory(req.client, product.categoryId);
+  }
+  @ResolveField(() => [ChargeType])
+  async charges(@Context("req") req, @Parent() product: ProductType) {
+    return this.chargeService.getCharges(req.client, {
+      productId: product.id,
+    });
   }
 }

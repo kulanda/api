@@ -14,6 +14,7 @@ const service_resolver_1 = require("./service.resolver");
 const prisma_service_1 = require("../prisma/prisma.service");
 const auth_service_1 = require("../auth/auth.service");
 const category_service_1 = require("../category/category.service");
+const charge_service_1 = require("../charge/charge.service");
 let ServiceModule = class ServiceModule {
 };
 exports.ServiceModule = ServiceModule;
@@ -26,6 +27,7 @@ exports.ServiceModule = ServiceModule = __decorate([
             auth_service_1.AuthService,
             category_service_1.CategoryService,
             service_resolver_1.ServiceResolver,
+            charge_service_1.ChargeService
         ],
     })
 ], ServiceModule);

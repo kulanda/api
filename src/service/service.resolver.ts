@@ -16,13 +16,16 @@ import { ServiceService } from "./service.service";
 import { CategoryService } from "src/category/category.service";
 import { CategoryType } from "src/category/dto";
 import { FilterServiceInput } from "./dto/filter-service.input";
+import { ChargeType } from "src/charge/dto";
+import { ChargeService } from "src/charge/charge.service";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => ServiceType)
 export class ServiceResolver {
   constructor(
     private serviceService: ServiceService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private chargeService: ChargeService
   ) {}
   @Mutation(() => ServiceType)
   async createService(
@@ -68,5 +71,11 @@ export class ServiceResolver {
   @ResolveField(() => CategoryType)
   async category(@Context("req") req, @Parent() service: ServiceType) {
     return this.categoryService.getCategory(req.client, service.categoryId);
+  }
+  @ResolveField(() => [ChargeType])
+  async charges(@Context("req") req, @Parent() service: ServiceType) {
+    return this.chargeService.getCharges(req.client, {
+      serviceId: service.id,
+    });
   }
 }

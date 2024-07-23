@@ -18,9 +18,12 @@ const dto_1 = require("./dto");
 const category_service_1 = require("./category.service");
 const common_1 = require("@nestjs/common");
 const guard_1 = require("../auth/guard");
+const dto_2 = require("../charge/dto");
+const charge_service_1 = require("../charge/charge.service");
 let CategoryResolver = class CategoryResolver {
-    constructor(categoryService) {
+    constructor(categoryService, chargeService) {
         this.categoryService = categoryService;
+        this.chargeService = chargeService;
     }
     async createCategory(req, data) {
         return this.categoryService.createCategory(req.client, data);
@@ -33,6 +36,11 @@ let CategoryResolver = class CategoryResolver {
     }
     async getCategoriesByStore(req, storeId) {
         return this.categoryService.getCategoriesByStore(req.client, storeId);
+    }
+    async charges(req, category) {
+        return this.chargeService.getCharges(req.client, {
+            categoryId: category.id,
+        });
     }
 };
 exports.CategoryResolver = CategoryResolver;
@@ -71,9 +79,18 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "getCategoriesByStore", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => [dto_2.ChargeType]),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.CategoryType]),
+    __metadata("design:returntype", Promise)
+], CategoryResolver.prototype, "charges", null);
 exports.CategoryResolver = CategoryResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.CategoryType),
-    __metadata("design:paramtypes", [category_service_1.CategoryService])
+    __metadata("design:paramtypes", [category_service_1.CategoryService,
+        charge_service_1.ChargeService])
 ], CategoryResolver);
 //# sourceMappingURL=category.resolver.js.map

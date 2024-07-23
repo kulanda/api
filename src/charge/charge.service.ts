@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { ChargeType, CreateChargeArgs } from "./dto";
 
 @Injectable()
@@ -14,8 +14,13 @@ export class ChargeService {
       },
     });
   }
-  async getCharges(prisma: PrismaClient): Promise<ChargeType[]> {
-    return await prisma.charge.findMany();
+  async getCharges(
+    prisma: PrismaClient,
+    filter?: Prisma.ChargeWhereInput
+  ): Promise<ChargeType[]> {
+    return await prisma.charge.findMany({
+      where: filter,
+    });
   }
   async getCharge(prisma: PrismaClient, id: string): Promise<ChargeType> {
     return await prisma.charge.findUnique({
