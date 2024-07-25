@@ -20,7 +20,6 @@ export class CreateServiceArgs
   @Field(() => String, {
     nullable: true,
   })
-  @IsUrl()
   @IsOptional()
   image: string;
 

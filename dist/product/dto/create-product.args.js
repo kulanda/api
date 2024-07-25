@@ -33,7 +33,6 @@ __decorate([
     (0, graphql_1.Field)(() => String, {
         nullable: true,
     }),
-    (0, class_validator_1.IsUrl)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateProductArgs.prototype, "image", void 0);

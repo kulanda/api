@@ -23,7 +23,6 @@ export class EditServiceArgs
   @Field(() => String, {
     nullable: true,
   })
-  @IsUrl()
   @IsOptional()
   image: string;
 

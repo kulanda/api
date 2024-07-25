@@ -224,7 +224,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-23T05:46:59.865Z"
+  from: DateTime = "2024-07-24T18:44:59.486Z"
   sellerId: ID
 }
 

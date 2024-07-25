@@ -31,7 +31,6 @@ export class EditProductArgs
   @Field(() => String, {
     nullable: true,
   })
-  @IsUrl()
   @IsOptional()
   image: string;
 

@@ -28,7 +28,6 @@ export class CreateProductArgs
   @Field(() => String, {
     nullable: true,
   })
-  @IsUrl()
   @IsOptional()
   image: string;
 
