@@ -26,6 +26,7 @@ import { ClientModule } from "./client/client.module";
       autoSchemaFile: "schema.gql",
       context: ({ req }) => ({ req }),
       csrfPrevention: false,
+      playground: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
