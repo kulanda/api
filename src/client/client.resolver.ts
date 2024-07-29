@@ -3,6 +3,7 @@ import { Args, Context, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GqlAuthGuard } from "src/auth/guard";
 import { ClientType, CreateClientArgs } from "./dto";
 import { ClientService } from "./client.service";
+import { FilterClientInput } from "./dto/filter-client.input";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => ClientType)
@@ -13,8 +14,12 @@ export class ClientResolver {
     return this.clientService.createClient(req.client, data);
   }
   @Query(() => [ClientType])
-  async getClients(@Context("req") req) {
-    return this.clientService.getClients(req.client);
+  async getClients(
+    @Context("req") req,
+    @Args("filter", { type: () => FilterClientInput, nullable: true })
+    filter: FilterClientInput
+  ) {
+    return this.clientService.getClients(req.client, filter);
   }
   @Query(() => ClientType, {
     nullable: true,

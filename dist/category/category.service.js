@@ -21,6 +21,21 @@ let CategoryService = class CategoryService {
             },
         });
     }
+    async editCategory(prisma, { charges, ...dto }) {
+        return await prisma.category.update({
+            where: {
+                id: dto.id,
+            },
+            data: {
+                ...dto,
+                Charge: {
+                    connect: charges.map((id) => ({
+                        id,
+                    })),
+                },
+            },
+        });
+    }
     async getCategories(prisma) {
         return await prisma.category.findMany();
     }

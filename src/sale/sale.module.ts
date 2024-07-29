@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
-import { SaleService } from './sale.service';
-import { SaleResolver } from './sale.resolver';
-import { JwtModule } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthService } from 'src/auth/auth.service';
-import { UserService } from 'src/user/user.service';
-import { OrderService } from 'src/order/order.service';
+import { Module } from "@nestjs/common";
+import { SaleService } from "./sale.service";
+import { SaleResolver } from "./sale.resolver";
+import { JwtModule } from "@nestjs/jwt";
+import { PrismaService } from "src/prisma/prisma.service";
+import { AuthService } from "src/auth/auth.service";
+import { UserService } from "src/user/user.service";
+import { OrderService } from "src/order/order.service";
+import { ClientService } from "src/client/client.service";
 
 @Module({
   imports: [JwtModule.register({})],
@@ -16,6 +17,7 @@ import { OrderService } from 'src/order/order.service';
     AuthService,
     UserService,
     OrderService,
+    ClientService,
   ],
 })
 export class SaleModule {}

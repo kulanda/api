@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Access" AS ENUM ('SELLER', 'OWNER', 'MANAGER');
+CREATE TYPE "Access" AS ENUM ('SELLER', 'OWNER', 'MANAGER', 'PARTNER', 'STUDENT');
 
 -- CreateEnum
 CREATE TYPE "CategoryType" AS ENUM ('PRODUCT', 'SERVICE');
@@ -17,6 +17,8 @@ CREATE TABLE "tenants" (
     "username" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "email" TEXT,
+    "partnerId" TEXT,
+    "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -60,6 +62,7 @@ CREATE TABLE "stores" (
     "address" TEXT NOT NULL,
     "designation" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
+    "globalSale" BOOLEAN,
     "companyId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -120,6 +123,7 @@ CREATE TABLE "sales" (
     "bankCard" DECIMAL(65,30),
     "totalPrice" DECIMAL(65,30) NOT NULL,
     "sellerId" TEXT NOT NULL,
+    "clientId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -261,6 +265,9 @@ CREATE UNIQUE INDEX "clients_phone_key" ON "clients"("phone");
 CREATE UNIQUE INDEX "clients_email_key" ON "clients"("email");
 
 -- AddForeignKey
+ALTER TABLE "tenants" ADD CONSTRAINT "tenants_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -286,6 +293,9 @@ ALTER TABLE "services" ADD CONSTRAINT "services_storeId_fkey" FOREIGN KEY ("stor
 
 -- AddForeignKey
 ALTER TABLE "sales" ADD CONSTRAINT "sales_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "sales" ADD CONSTRAINT "sales_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "orders" ADD CONSTRAINT "orders_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "sales"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

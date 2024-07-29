@@ -23,11 +23,14 @@ const order_service_1 = require("../order/order.service");
 const dto_2 = require("../user/dto");
 const dto_3 = require("../order/dto");
 const decorator_1 = require("../auth/decorator");
+const dto_4 = require("../client/dto");
+const client_service_1 = require("../client/client.service");
 let SaleResolver = class SaleResolver {
-    constructor(saleService, orderService, sellerService) {
+    constructor(saleService, orderService, sellerService, clientService) {
         this.saleService = saleService;
         this.orderService = orderService;
         this.sellerService = sellerService;
+        this.clientService = clientService;
     }
     async createSale(req, sellerId, data) {
         return this.saleService.createSale(req.client, sellerId, data);
@@ -43,6 +46,9 @@ let SaleResolver = class SaleResolver {
     }
     async seller(req, sale) {
         return this.sellerService.getUser(req.client, sale.sellerId);
+    }
+    async client(req, sale) {
+        return this.clientService.getClient(req.client, sale.clientId);
     }
 };
 exports.SaleResolver = SaleResolver;
@@ -91,11 +97,22 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.SaleType]),
     __metadata("design:returntype", Promise)
 ], SaleResolver.prototype, "seller", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => dto_4.ClientType, {
+        nullable: true,
+    }),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.SaleType]),
+    __metadata("design:returntype", Promise)
+], SaleResolver.prototype, "client", null);
 exports.SaleResolver = SaleResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.SaleType),
     __metadata("design:paramtypes", [sale_service_1.SaleService,
         order_service_1.OrderService,
-        user_service_1.UserService])
+        user_service_1.UserService,
+        client_service_1.ClientService])
 ], SaleResolver);
 //# sourceMappingURL=sale.resolver.js.map

@@ -8,7 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { CategoryType, CreateCategoryArgs } from "./dto";
+import { CategoryType, CreateCategoryArgs, EditCategoryArgs } from "./dto";
 import { CategoryService } from "./category.service";
 import { UseGuards } from "@nestjs/common";
 import { GqlAuthGuard } from "src/auth/guard";
@@ -25,6 +25,10 @@ export class CategoryResolver {
   @Mutation(() => CategoryType)
   async createCategory(@Context("req") req, @Args() data: CreateCategoryArgs) {
     return this.categoryService.createCategory(req.client, data);
+  }
+  @Mutation(() => CategoryType)
+  async editCategory(@Context("req") req, @Args() data: EditCategoryArgs) {
+    return this.categoryService.editCategory(req.client, data);
   }
   @Query(() => [CategoryType])
   async getCategories(@Context("req") req) {

@@ -16,4 +16,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./create-category.args"), exports);
 __exportStar(require("./category.type"), exports);
+__exportStar(require("./edit-category.args"), exports);
 //# sourceMappingURL=index.js.map

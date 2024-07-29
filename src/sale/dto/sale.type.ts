@@ -41,6 +41,10 @@ export class SaleType implements Omit<Sale, "SaleId" | "order"> {
   @IsUUID()
   sellerId: string;
 
+  @Field(() => ID)
+  @IsUUID()
+  clientId: string;
+
   @Field(() => Date)
   createdAt: Date;
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CategoryType, CreateCategoryArgs } from "./dto";
+import { CategoryType, CreateCategoryArgs, EditCategoryArgs } from "./dto";
 import { PrismaClient } from "@prisma/client";
 
 @Injectable()
@@ -9,6 +9,24 @@ export class CategoryService {
     { charges, ...dto }: CreateCategoryArgs
   ): Promise<CategoryType> {
     return await prisma.category.create({
+      data: {
+        ...dto,
+        Charge: {
+          connect: charges.map((id) => ({
+            id,
+          })),
+        },
+      },
+    });
+  }
+  async editCategory(
+    prisma: PrismaClient,
+    { charges, ...dto }: EditCategoryArgs
+  ): Promise<CategoryType> {
+    return await prisma.category.update({
+      where: {
+        id: dto.id,
+      },
       data: {
         ...dto,
         Charge: {

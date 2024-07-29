@@ -54,6 +54,14 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], CreateSaleArgs.prototype, "orders", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], CreateSaleArgs.prototype, "clientId", void 0);
 exports.CreateSaleArgs = CreateSaleArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], CreateSaleArgs);

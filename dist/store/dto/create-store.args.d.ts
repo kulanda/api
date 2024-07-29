@@ -3,4 +3,5 @@ export declare class CreateStoreArgs implements Omit<Store, "id" | "createdAt" |
     address: string;
     designation: string;
     phone: string;
+    globalSale: boolean;
 }

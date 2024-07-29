@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SaleService = void 0;
 const common_1 = require("@nestjs/common");
 let SaleService = class SaleService {
-    async createSale(prisma, sellerId, { orders, bankCard, cash, change, totalPrice }) {
+    async createSale(prisma, sellerId, { orders, bankCard, cash, change, totalPrice, clientId, ...args }) {
         const lastSale = await prisma.sale.findFirst({
             orderBy: {
                 code: "desc",
@@ -22,6 +22,12 @@ let SaleService = class SaleService {
                 change,
                 totalPrice,
                 code: typeof lastSale?.code === "number" ? lastSale?.code + 1 : 1,
+                ...args,
+                client: {
+                    connect: {
+                        id: clientId,
+                    },
+                },
                 seller: {
                     connect: {
                         id: sellerId,

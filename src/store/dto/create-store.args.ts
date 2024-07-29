@@ -1,6 +1,6 @@
 import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Store } from "@prisma/client";
-import { IsString } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 @ArgsType()
 export class CreateStoreArgs
@@ -17,4 +17,11 @@ export class CreateStoreArgs
   @Field(() => String)
   @IsString()
   phone: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  globalSale: boolean;
 }

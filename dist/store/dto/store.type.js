@@ -35,6 +35,14 @@ __decorate([
     __metadata("design:type", String)
 ], StoreType.prototype, "phone", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => String, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], StoreType.prototype, "globalSale", void 0);
+__decorate([
     (0, graphql_1.Field)(() => Date),
     __metadata("design:type", Date)
 ], StoreType.prototype, "createdAt", void 0);

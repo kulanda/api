@@ -28,6 +28,9 @@ let CategoryResolver = class CategoryResolver {
     async createCategory(req, data) {
         return this.categoryService.createCategory(req.client, data);
     }
+    async editCategory(req, data) {
+        return this.categoryService.editCategory(req.client, data);
+    }
     async getCategories(req) {
         return this.categoryService.getCategories(req.client);
     }
@@ -52,6 +55,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.CreateCategoryArgs]),
     __metadata("design:returntype", Promise)
 ], CategoryResolver.prototype, "createCategory", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => dto_1.CategoryType),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Args)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.EditCategoryArgs]),
+    __metadata("design:returntype", Promise)
+], CategoryResolver.prototype, "editCategory", null);
 __decorate([
     (0, graphql_1.Query)(() => [dto_1.CategoryType]),
     __param(0, (0, graphql_1.Context)("req")),

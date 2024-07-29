@@ -15,6 +15,7 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const auth_service_1 = require("../auth/auth.service");
 const user_service_1 = require("../user/user.service");
 const order_service_1 = require("../order/order.service");
+const client_service_1 = require("../client/client.service");
 let SaleModule = class SaleModule {
 };
 exports.SaleModule = SaleModule;
@@ -28,6 +29,7 @@ exports.SaleModule = SaleModule = __decorate([
             auth_service_1.AuthService,
             user_service_1.UserService,
             order_service_1.OrderService,
+            client_service_1.ClientService,
         ],
     })
 ], SaleModule);

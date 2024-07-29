@@ -18,6 +18,11 @@ model Tenant {
   phone    String  @unique
   email    String? @unique
 
+  partnerId String?
+  partner   User?   @relation(fields: [partnerId], references: [id])
+
+  expiresAt DateTime?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Company   Company[]
@@ -29,6 +34,8 @@ enum Access {
   SELLER
   OWNER
   MANAGER
+  PARTNER
+  STUDENT
 }
 
 model User {
@@ -49,6 +56,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Sale      Sale[]
+  Tenant    Tenant[]
 
   @@map("users")
 }
@@ -81,6 +89,7 @@ model Store {
   address     String
   designation String
   phone       String
+  globalSale  Boolean?
 
   companyId String
   company   Company @relation(fields: [companyId], references: [id])
@@ -179,6 +188,9 @@ model Sale {
 
   sellerId String
   seller   User   @relation(fields: [sellerId], references: [id])
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -330,6 +342,7 @@ model Client {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Sale      Sale[]
 
   @@map("clients")
 }

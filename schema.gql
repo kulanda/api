@@ -34,6 +34,7 @@ type StoreType {
   address: String!
   designation: String!
   phone: String!
+  globalSale: String
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [ProductType!]!
@@ -60,10 +61,12 @@ type SaleType {
   bankCard: Float
   totalPrice: Float
   sellerId: ID!
+  clientId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   orders: [OrderType!]!
   seller: UserType
+  client: ClientType
 }
 
 type ReportStoreType {
@@ -161,17 +164,6 @@ type ServiceType {
   charges: [ChargeType!]!
 }
 
-type SectorType {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type TenantCredentialsType {
-  access_key: String!
-}
-
 type ClientType {
   id: ID!
   fullName: String!
@@ -189,6 +181,17 @@ type ClientType {
 enum ClientEnumType {
   INDIVIDUAL
   LEGAL
+}
+
+type SectorType {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TenantCredentialsType {
+  access_key: String!
 }
 
 type Query {
@@ -217,14 +220,14 @@ type Query {
   getCharges: [ChargeType!]!
   getCharge(id: ID!): ChargeType
   getChargesByStore(storeId: ID!): [ChargeType!]
-  getClients: [ClientType!]!
+  getClients(filter: FilterClientInput): [ClientType!]!
   getClient(id: ID!): ClientType
   getClientsByStore(storeId: ID!): [ClientType!]
 }
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-07-24T18:44:59.486Z"
+  from: DateTime = "2024-07-29T06:12:51.371Z"
   sellerId: ID
 }
 
@@ -257,20 +260,34 @@ input FilterServicePaginateInput {
   limit: Float = 30
 }
 
+input FilterClientInput {
+  storeId: String
+  fullName: String
+  email: String
+  phone: String
+  paginate: FilterClientPaginateInput
+}
+
+input FilterClientPaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
 type Mutation {
   signUp(fullName: String!, username: String, email: String!, phone: String, access: AccessEnumType = SELLER, storeId: ID!, password: String!): AuthTokenType!
   signIn(email: String!, password: String!): AuthTokenType!
-  createStore(address: String!, designation: String!, phone: String!): StoreType!
+  createStore(address: String!, designation: String!, phone: String!, globalSale: String): StoreType!
   createCategory(name: String!, description: String, type: CategoryEnumType!, charges: [ID!] = []): CategoryType!
+  editCategory(id: String!, name: String, description: String, type: CategoryEnumType, charges: [ID!]): CategoryType!
   createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ProductType!
   editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], storeId: ID): ProductType!
   createService(name: String!, description: String, image: String, price: Float!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
   editService(id: ID!, name: String, description: String, image: String, price: Float, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
-  createSale(change: Float, cash: Float, bankCard: Float, totalPrice: Float, orders: [CreateOrderSaleInput!]!): SaleType!
+  createSale(change: Float, cash: Float, bankCard: Float, totalPrice: Float, orders: [CreateOrderSaleInput!]!, clientId: ID): SaleType!
   createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
-  createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!): TenantCredentialsType!
+  createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!, partnerId: ID, expiresAt: DateTime): TenantCredentialsType!
   createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, storeId: ID!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
   createClient(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: ClientEnumType = INDIVIDUAL, caeId: ID, storeId: ID): ClientType!
 }

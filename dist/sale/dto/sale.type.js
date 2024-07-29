@@ -62,6 +62,11 @@ __decorate([
     __metadata("design:type", String)
 ], SaleType.prototype, "sellerId", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID),
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], SaleType.prototype, "clientId", void 0);
+__decorate([
     (0, graphql_1.Field)(() => Date),
     __metadata("design:type", Date)
 ], SaleType.prototype, "createdAt", void 0);

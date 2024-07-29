@@ -1,9 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Store } from '@prisma/client';
-import { IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 @ObjectType()
 export class StoreType implements Omit<Store, 'companyId'> {
+  
   @Field(() => ID)
   id: string;
 
@@ -18,6 +19,13 @@ export class StoreType implements Omit<Store, 'companyId'> {
   @Field(() => String)
   @IsString()
   phone: string;
+
+  @Field(() => String,{
+    nullable: true
+  })
+  @IsOptional()
+  @IsBoolean()
+  globalSale: boolean;
 
   @Field(() => Date)
   createdAt: Date;

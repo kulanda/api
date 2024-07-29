@@ -7,6 +7,7 @@ export declare class SaleType implements Omit<Sale, "SaleId" | "order"> {
     bankCard: Prisma.Decimal;
     totalPrice: Prisma.Decimal;
     sellerId: string;
+    clientId: string;
     createdAt: Date;
     updatedAt: Date;
 }

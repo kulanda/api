@@ -4,6 +4,7 @@ export declare class StoreType implements Omit<Store, 'companyId'> {
     address: string;
     designation: string;
     phone: string;
+    globalSale: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -1,11 +1,14 @@
-import { ArgsType, Field } from "@nestjs/graphql";
+import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Tenant } from "@prisma/client";
 import {
+  IsDate,
   IsEmail,
   IsNotEmpty,
   IsObject,
+  IsOptional,
   IsPhoneNumber,
   IsString,
+  IsUUID,
   Matches,
   MaxLength,
   MinLength,
@@ -37,8 +40,8 @@ export class CreateTenantArgs
   @IsPhoneNumber("AO")
   phone: string;
 
-  @Field(() => String,{
-    nullable: true
+  @Field(() => String, {
+    nullable: true,
   })
   @IsEmail()
   email: string;
@@ -46,4 +49,18 @@ export class CreateTenantArgs
   @Field(() => CreateCompanyInput)
   @IsObject()
   company: CreateCompanyInput;
+
+  @Field(() => ID, {
+    nullable: true,
+  })
+  @IsOptional()
+  @IsUUID()
+  partnerId: string;
+
+  @Field(() => Date, {
+    nullable: true,
+  })
+  @IsDate()
+  @IsOptional()
+  expiresAt: Date;
 }

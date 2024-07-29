@@ -7,7 +7,15 @@ export class SaleService {
   async createSale(
     prisma: PrismaClient,
     sellerId: string,
-    { orders, bankCard, cash, change, totalPrice }: CreateSaleArgs
+    {
+      orders,
+      bankCard,
+      cash,
+      change,
+      totalPrice,
+      clientId,
+      ...args
+    }: CreateSaleArgs
   ): Promise<Omit<SaleType, "order">> {
     const lastSale = await prisma.sale.findFirst({
       orderBy: {
@@ -22,6 +30,12 @@ export class SaleService {
         change,
         totalPrice,
         code: typeof lastSale?.code === "number" ? lastSale?.code + 1 : 1,
+        ...args,
+        client: {
+          connect: {
+            id: clientId,
+          },
+        },
         seller: {
           connect: {
             id: sellerId,

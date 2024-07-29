@@ -18,6 +18,12 @@ export class TenantType implements Tenant {
   @Field(() => String)
   email: string;
 
+  @Field(() => ID)
+  partnerId: string;
+
+  @Field(() => Date)
+  expiresAt: Date;
+
   @Field(() => Date)
   createdAt: Date;
 

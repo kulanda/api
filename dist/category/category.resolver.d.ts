@@ -1,4 +1,4 @@
-import { CategoryType, CreateCategoryArgs } from "./dto";
+import { CategoryType, CreateCategoryArgs, EditCategoryArgs } from "./dto";
 import { CategoryService } from "./category.service";
 import { ChargeType } from "src/charge/dto";
 import { ChargeService } from "src/charge/charge.service";
@@ -7,6 +7,7 @@ export declare class CategoryResolver {
     private chargeService;
     constructor(categoryService: CategoryService, chargeService: ChargeService);
     createCategory(req: any, data: CreateCategoryArgs): Promise<CategoryType>;
+    editCategory(req: any, data: EditCategoryArgs): Promise<CategoryType>;
     getCategories(req: any): Promise<CategoryType[]>;
     getCategory(req: any, id: string): Promise<CategoryType>;
     getCategoriesByStore(req: any, storeId: string): Promise<CategoryType[]>;

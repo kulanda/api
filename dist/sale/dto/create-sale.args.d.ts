@@ -6,4 +6,5 @@ export declare class CreateSaleArgs implements Omit<Sale, 'id' | 'createdAt' | '
     bankCard: Prisma.Decimal;
     totalPrice: Prisma.Decimal;
     orders: OrderType[];
+    clientId: string;
 }

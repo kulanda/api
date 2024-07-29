@@ -30,6 +30,14 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateStoreArgs.prototype, "phone", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateStoreArgs.prototype, "globalSale", void 0);
 exports.CreateStoreArgs = CreateStoreArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], CreateStoreArgs);

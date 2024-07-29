@@ -1,6 +1,6 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Prisma, Sale } from '@prisma/client';
-import { IsArray, IsNumber, IsOptional } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { CreateOrderSaleInput, OrderType } from 'src/order/dto';
 
 @ArgsType()
@@ -8,6 +8,7 @@ export class CreateSaleArgs
   implements
     Omit<Sale, 'id' | 'createdAt' | 'updatedAt' | 'sellerId' | 'totalPrice' | 'code'>
 {
+  
   @Field(() => Number, {
     nullable: true,
   })
@@ -37,4 +38,11 @@ export class CreateSaleArgs
   @IsOptional()
   @IsArray()
   orders: OrderType[];
+
+  @Field(() => ID,{
+    nullable: true
+  })
+  @IsOptional()
+  @IsUUID()
+  clientId: string;
 }
