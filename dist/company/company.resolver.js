@@ -21,7 +21,7 @@ const company_service_1 = require("./company.service");
 const dto_2 = require("../store/dto");
 const store_service_1 = require("../store/store.service");
 const dto_3 = require("../cae/dto");
-const CAE_service_1 = require("../cae/CAE.service");
+const cae_service_1 = require("../cae/cae.service");
 let CompanyResolver = class CompanyResolver {
     constructor(companyService, storeService, caeService) {
         this.companyService = companyService;
@@ -68,6 +68,6 @@ exports.CompanyResolver = CompanyResolver = __decorate([
     (0, graphql_1.Resolver)(() => dto_1.CompanyType),
     __metadata("design:paramtypes", [company_service_1.CompanyService,
         store_service_1.StoreService,
-        CAE_service_1.CaeService])
+        cae_service_1.CaeService])
 ], CompanyResolver);
 //# sourceMappingURL=company.resolver.js.map

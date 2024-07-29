@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CaeResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const dto_1 = require("./dto");
-const CAE_service_1 = require("./CAE.service");
+const cae_service_1 = require("./cae.service");
 const dto_2 = require("../sector/dto");
 const sector_service_1 = require("../sector/sector.service");
 let CaeResolver = class CaeResolver {
@@ -68,7 +68,7 @@ __decorate([
 ], CaeResolver.prototype, "sector", null);
 exports.CaeResolver = CaeResolver = __decorate([
     (0, graphql_1.Resolver)(() => dto_1.CAEType),
-    __metadata("design:paramtypes", [CAE_service_1.CaeService,
+    __metadata("design:paramtypes", [cae_service_1.CaeService,
         sector_service_1.SectorService])
 ], CaeResolver);
-//# sourceMappingURL=CAE.resolver.js.map
+//# sourceMappingURL=cae.resolver.js.map
