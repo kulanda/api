@@ -42,6 +42,7 @@ exports.AppModule = AppModule = __decorate([
                 driver: apollo_1.ApolloDriver,
                 autoSchemaFile: "schema.gql",
                 context: ({ req }) => ({ req }),
+                csrfPrevention: false
             }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
