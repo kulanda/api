@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { CaeService } from "./CAE.service";
-import { CaeResolver } from "./CAE.resolver";
+import { CaeService } from "./cae.service";
+import { CaeResolver } from "./cae.resolver";
 import { PrismaService } from "src/prisma/prisma.service";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthService } from "src/auth/auth.service";
