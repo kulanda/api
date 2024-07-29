@@ -2,12 +2,15 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 
-import * as cookieParser from 'cookie-parser';
-import * as csurf from 'csurf';
+import * as cookieParser from "cookie-parser";
+import * as csurf from "csurf";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: true,
+    cors: {
+      origin: "*",
+      credentials: true,
+    },
   });
 
   app.use(cookieParser()); // Para analisar os cookies
