@@ -14,7 +14,7 @@ const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../prisma/prisma.service");
 const auth_service_1 = require("../auth/auth.service");
 const store_service_1 = require("../store/store.service");
-const CAE_service_1 = require("../cae/CAE.service");
+const cae_service_1 = require("../cae/cae.service");
 let CompanyModule = class CompanyModule {
 };
 exports.CompanyModule = CompanyModule;
@@ -27,7 +27,7 @@ exports.CompanyModule = CompanyModule = __decorate([
             prisma_service_1.PrismaService,
             auth_service_1.AuthService,
             store_service_1.StoreService,
-            CAE_service_1.CaeService,
+            cae_service_1.CaeService,
         ],
     })
 ], CompanyModule);

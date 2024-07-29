@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CaeModule = void 0;
 const common_1 = require("@nestjs/common");
-const CAE_service_1 = require("./CAE.service");
-const CAE_resolver_1 = require("./CAE.resolver");
+const cae_service_1 = require("./cae.service");
+const cae_resolver_1 = require("./cae.resolver");
 const prisma_service_1 = require("../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const auth_service_1 = require("../auth/auth.service");
@@ -21,8 +21,8 @@ exports.CaeModule = CaeModule = __decorate([
     (0, common_1.Module)({
         imports: [jwt_1.JwtModule.register({})],
         providers: [
-            CAE_service_1.CaeService,
-            CAE_resolver_1.CaeResolver,
+            cae_service_1.CaeService,
+            cae_resolver_1.CaeResolver,
             prisma_service_1.PrismaService,
             auth_service_1.AuthService,
             sector_service_1.SectorService,

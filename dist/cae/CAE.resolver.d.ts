@@ -1,5 +1,5 @@
 import { CAEType, CreateCAEArgs } from "./dto";
-import { CaeService } from "./CAE.service";
+import { CaeService } from "./cae.service";
 import { SectorType } from "src/sector/dto";
 import { SectorService } from "src/sector/sector.service";
 export declare class CaeResolver {
