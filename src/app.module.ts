@@ -25,8 +25,6 @@ import { ClientModule } from "./client/client.module";
       driver: ApolloDriver,
       autoSchemaFile: "schema.gql",
       context: ({ req }) => ({ req }),
-      csrfPrevention: true,
-      playground: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -31,7 +31,7 @@ let AppModule = class AppModule {
     configure(consumer) {
         consumer
             .apply(tenant_middleware_1.TenantMiddleware)
-            .forRoutes({ path: '*', method: common_1.RequestMethod.ALL });
+            .forRoutes({ path: "*", method: common_1.RequestMethod.ALL });
     }
 };
 exports.AppModule = AppModule;
@@ -40,8 +40,8 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             graphql_1.GraphQLModule.forRoot({
                 driver: apollo_1.ApolloDriver,
-                autoSchemaFile: 'schema.gql',
-                context: ({ req }) => ({ req })
+                autoSchemaFile: "schema.gql",
+                context: ({ req }) => ({ req }),
             }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
