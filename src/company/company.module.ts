@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 import { StoreService } from 'src/store/store.service';
-import { CaeService } from 'src/cae/CAE.service';
+import { CaeService } from 'src/cae/cae.service';
 
 @Module({
   imports: [JwtModule.register({})],

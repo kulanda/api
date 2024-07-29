@@ -16,7 +16,7 @@ import { CompanyService } from "./company.service";
 import { StoreType } from "src/store/dto";
 import { StoreService } from "src/store/store.service";
 import { CAEType } from "src/cae/dto";
-import { CaeService } from "src/cae/CAE.service";
+import { CaeService } from "src/cae/cae.service";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => CompanyType)
