@@ -9,7 +9,7 @@ export class TenantMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const rootClient = await this.prisma.getClient(null, true);
 
-    if (req.headers["x-tenant-username"] && req.headers["x-tenant-key"]) {
+    if (req?.headers?.["x-tenant-username"] && req?.headers?.["x-tenant-key"]) {
       const company = await rootClient.company.findFirst({
         where: {
           tenant: {
