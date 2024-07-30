@@ -32,7 +32,6 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         const url = tenant?.id || tenant?.key
             ? `postgresql://${tenant?.id}:${tenant?.key}@${host}/kulanda?schema=${tenant?.id}`
             : this.config.get("DATABASE_URL");
-        console.log(url);
         if (!client && url) {
             client = new client_1.PrismaClient({
                 datasources: {
