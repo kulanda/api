@@ -29,11 +29,13 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
           ? this.config.get("DATABASE_URL")
           : null;
 
+    console.log(url, host);
+
     if (!client && url) {
       client = new PrismaClient({
         datasources: {
           db: {
-            url,
+            url: this.config.get("DATABASE_URL"),
           },
         },
       });
