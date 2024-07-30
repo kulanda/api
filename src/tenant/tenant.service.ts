@@ -53,7 +53,7 @@ export class TenantService {
         ),
         client.$executeRawUnsafe(
           `
-          CREATE SCHEMA IF NOT EXISTS ${target_schema} AUTHORIZATION ${role};
+          CREATE SCHEMA IF NOT EXISTS ${target_schema};
           `
         ),
         client.$executeRawUnsafe(`
