@@ -8,11 +8,8 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { GetUser } from "src/auth/decorator";
-import { GqlAuthGuard } from "src/auth/guard";
 import { CreateStoreArgs, ReportStoreType, StoreType } from "./dto";
 import { StoreService } from "./store.service";
-import { UseGuards } from "@nestjs/common";
 import { ProductType } from "src/product/dto";
 import { ProductService } from "src/product/product.service";
 import { UserService } from "src/user/user.service";
@@ -21,7 +18,6 @@ import { SaleType } from "src/sale/dto";
 import { SaleService } from "src/sale/sale.service";
 import { ReportStoreOptionsInput } from "./dto/report-store-options.input";
 
-@UseGuards(GqlAuthGuard)
 @Resolver(() => StoreType)
 export class StoreResolver {
   constructor(

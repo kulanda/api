@@ -14,10 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const guard_1 = require("../auth/guard");
 const dto_1 = require("./dto");
 const store_service_1 = require("./store.service");
-const common_1 = require("@nestjs/common");
 const dto_2 = require("../product/dto");
 const product_service_1 = require("../product/product.service");
 const user_service_1 = require("../user/user.service");
@@ -116,7 +114,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StoreResolver.prototype, "sales", null);
 exports.StoreResolver = StoreResolver = __decorate([
-    (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.StoreType),
     __metadata("design:paramtypes", [store_service_1.StoreService,
         product_service_1.ProductService,
