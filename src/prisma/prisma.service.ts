@@ -25,17 +25,15 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
     const url =
       tenant?.id || tenant?.key
         ? `postgresql://${tenant?.id}:${tenant?.key}@${host}/kulanda?schema=${tenant?.id}`
-        : intern
-          ? this.config.get("DATABASE_URL")
-          : null;
+        : this.config.get("DATABASE_URL");
 
-    console.log(url, host);
+        console.log(url)
 
     if (!client && url) {
       client = new PrismaClient({
         datasources: {
           db: {
-            url: this.config.get("DATABASE_URL"),
+            url,
           },
         },
       });
