@@ -53,10 +53,11 @@ model User {
   storeId String?
   store   Store?  @relation(fields: [storeId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   Sale      Sale[]
   Tenant    Tenant[]
+  AuditLog  AuditLog[]
 
   @@map("users")
 }
@@ -79,6 +80,8 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   store     Store[]
+
+  saftExportDate DateTime?
 
   @@map("companies")
 }
@@ -192,9 +195,12 @@ model Sale {
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Order     Order[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Order      Order[]
+  Invoice    Invoice[]
+  Receipt    Receipt[]
+  CreditNote CreditNote[]
 
   @@map("sales")
 }
@@ -340,9 +346,12 @@ model Client {
   caeId String?
   cae   CAE?    @relation(fields: [caeId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Sale      Sale[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Sale       Sale[]
+  Invoice    Invoice[]
+  Receipt    Receipt[]
+  CreditNote CreditNote[]
 
   @@map("clients")
 }
@@ -350,4 +359,70 @@ model Client {
 enum ClientType {
   INDIVIDUAL
   LEGAL
+}
+
+model Invoice {
+  id String @id @default(uuid())
+
+  number String  @unique
+  amount Decimal
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  digitalSignature String?
+  Client           Client?  @relation(fields: [clientId], references: [id])
+  clientId         String?
+
+  @@map("invoices")
+}
+
+model Receipt {
+  id String @id @default(uuid())
+
+  number String  @unique
+  amount Decimal
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  digitalSignature String?
+  Client           Client?  @relation(fields: [clientId], references: [id])
+  clientId         String?
+
+  @@map("receipts")
+}
+
+model CreditNote {
+  id String @id @default(uuid())
+
+  number String  @unique
+  amount Decimal
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  digitalSignature String?
+  Client           Client?  @relation(fields: [clientId], references: [id])
+  clientId         String?
+
+  @@map("credit_notes")
+}
+
+model AuditLog {
+  id String @id @default(uuid())
+
+  action String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  timestamp DateTime @default(now())
+
+  @@map("audit_logs")
 }
