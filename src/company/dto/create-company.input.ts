@@ -4,7 +4,7 @@ import { IsOptional, IsString, IsUUID, IsUrl } from "class-validator";
 
 @InputType()
 export class CreateCompanyInput
-  implements Omit<Company, "id" | "tenantId" | "createdAt" | "updatedAt">
+  implements Omit<Company, "id" | "saftExportDate" | "tenantId" | "createdAt" | "updatedAt">
 {
   @Field(() => String)
   @IsString()

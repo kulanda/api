@@ -1,5 +1,5 @@
 import { Company } from "@prisma/client";
-export declare class CreateCompanyArgs implements Omit<Company, "id" | "createdAt" | "updatedAt"> {
+export declare class CreateCompanyArgs implements Omit<Company, "id" | "saftExportDate" | "createdAt" | "updatedAt"> {
     tenantId: string;
     nif: string;
     name: string;

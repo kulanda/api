@@ -18,6 +18,8 @@ import { TenantMiddleware } from "./tenant.middleware";
 import { TenantModule } from "./tenant/tenant.module";
 import { ChargeModule } from "./charge/charge.module";
 import { ClientModule } from "./client/client.module";
+import { JwtService } from "@nestjs/jwt";
+import { AuthService } from "./auth/auth.service";
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { ClientModule } from "./client/client.module";
     ChargeModule,
     ClientModule,
   ],
+  providers: [AuthService, JwtService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

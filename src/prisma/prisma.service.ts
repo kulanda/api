@@ -1,7 +1,6 @@
 import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
-import { Request } from "express";
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleDestroy {
   private clients: { [key: string]: PrismaClient } = {};
@@ -10,7 +9,7 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
       datasourceUrl: config.get("DATABASE_URL"),
     });
   }
-  async getClient(request?: Request, intern?: boolean): Promise<PrismaClient> {
+  async getClient(request?: any, intern?: boolean): Promise<PrismaClient> {
     const tenant = this.extractTenantFromRequest(request);
 
     const cacheKey = `${tenant?.id}:${tenant?.key}`;
@@ -38,6 +37,43 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
 
       this.clients[cacheKey] = client;
     }
+
+    client.$use(async (params, next) => {
+      if (
+        params.model !== "AuditLog" &&
+        [
+          "create",
+          "createMany",
+          "createManyAndReturn",
+          "update",
+          "updateMany",
+          "delete",
+          "deleteMany",
+        ].includes(params.action) &&
+        request?.userId
+      ) {
+        // Primeiro, executa a ação
+        const result = await next(params)
+
+        // Depois de executar a ação, registra o log
+        await client.auditLog.create({
+          data: {
+            user: {
+              connect: {
+                id: request?.userId,
+              },
+            },
+            entity: params.model,
+            args: JSON.stringify(params.args),
+            action: params.action.toLowerCase(),
+          },
+        });
+
+        return result;
+      } else {
+        return next(params);
+      }
+    });
 
     return client;
   }

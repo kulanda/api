@@ -27,6 +27,8 @@ const tenant_middleware_1 = require("./tenant.middleware");
 const tenant_module_1 = require("./tenant/tenant.module");
 const charge_module_1 = require("./charge/charge.module");
 const client_module_1 = require("./client/client.module");
+const jwt_1 = require("@nestjs/jwt");
+const auth_service_1 = require("./auth/auth.service");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -65,6 +67,7 @@ exports.AppModule = AppModule = __decorate([
             charge_module_1.ChargeModule,
             client_module_1.ClientModule,
         ],
+        providers: [auth_service_1.AuthService, jwt_1.JwtService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

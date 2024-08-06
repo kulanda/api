@@ -84,6 +84,7 @@ type CompanyType {
   logo: String!
   caeId: ID!
   stores: [StoreType!]!
+  saftExportDate: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
   cae: CAEType!
@@ -227,7 +228,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-08-02T12:08:34.366Z"
+  from: DateTime = "2024-08-04T17:31:09.684Z"
   sellerId: ID
 }
 

@@ -5,7 +5,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { SignInWithPhoneArgs } from "./dto/sign-in-with-phone.args";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -30,7 +30,7 @@ export class AuthService {
         },
       });
 
-      return this.signToken(user.id, user.email);
+      return this.signToken(prisma, user.id, user.email);
     } catch (error) {
       throw error;
     }
@@ -48,10 +48,11 @@ export class AuthService {
     const pwMacthes = await argon.verify(user.hash, dto.password);
 
     if (!pwMacthes) throw new ForbiddenException("Credrentials incorrect");
-    return this.signToken(user.id, user.email);
+    return this.signToken(prisma, user.id, user.email);
   }
-
+  
   async signToken(
+    prisma: PrismaClient,
     userId: string,
     email: string
   ): Promise<{ access_token: string }> {
@@ -67,12 +68,24 @@ export class AuthService {
       secret: secret,
     });
 
+    await prisma.auditLog.create({
+      data: {
+        action: "login",
+        entity: "User",
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+
     return {
       access_token: token,
     };
   }
 
-  async validateToken(prisma: PrismaClient, token: string): Promise<any> {
+  async validateToken(prisma: PrismaClient, token: string) {
     try {
       const decoded = this.jwt.verify(token, {
         secret: this.config.get("JWT_SECRET"),

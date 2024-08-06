@@ -1,7 +1,6 @@
 import { Args, Context, Mutation, Resolver } from "@nestjs/graphql";
 import { AuthService } from "./auth.service";
 import { AuthTokenType, SignUpArgs, SignInArgs } from "./dto";
-import { SignInWithPhoneArgs } from "./dto/sign-in-with-phone.args";
 
 @Resolver()
 export class AuthResolver {

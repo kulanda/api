@@ -29,6 +29,9 @@ export class CompanyType implements Omit<Company, "userId" | "Store"> {
   stores?: StoreType[];
 
   @Field(() => Date)
+  saftExportDate: Date;
+
+  @Field(() => Date)
   createdAt: Date;
 
   @Field(() => Date)

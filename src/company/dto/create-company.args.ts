@@ -4,7 +4,7 @@ import { IsOptional, IsString, IsUUID, IsUrl } from "class-validator";
 
 @ArgsType()
 export class CreateCompanyArgs
-  implements Omit<Company, "id" | "createdAt" | "updatedAt">
+  implements Omit<Company, "id" | "saftExportDate" | "createdAt" | "updatedAt">
 {
   @Field(() => ID)
   @IsUUID()

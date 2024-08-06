@@ -33,7 +33,7 @@ let AuthService = class AuthService {
                     hash,
                 },
             });
-            return this.signToken(user.id, user.email);
+            return this.signToken(prisma, user.id, user.email);
         }
         catch (error) {
             throw error;
@@ -50,9 +50,9 @@ let AuthService = class AuthService {
         const pwMacthes = await argon.verify(user.hash, dto.password);
         if (!pwMacthes)
             throw new common_1.ForbiddenException("Credrentials incorrect");
-        return this.signToken(user.id, user.email);
+        return this.signToken(prisma, user.id, user.email);
     }
-    async signToken(userId, email) {
+    async signToken(prisma, userId, email) {
         const payload = {
             sub: userId,
             email,
@@ -61,6 +61,17 @@ let AuthService = class AuthService {
         const token = await this.jwt.signAsync(payload, {
             expiresIn: "1d",
             secret: secret,
+        });
+        await prisma.auditLog.create({
+            data: {
+                action: "login",
+                entity: "User",
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+            },
         });
         return {
             access_token: token,

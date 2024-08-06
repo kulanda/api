@@ -42,6 +42,37 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
             });
             this.clients[cacheKey] = client;
         }
+        client.$use(async (params, next) => {
+            if (params.model !== "AuditLog" &&
+                [
+                    "create",
+                    "createMany",
+                    "createManyAndReturn",
+                    "update",
+                    "updateMany",
+                    "delete",
+                    "deleteMany",
+                ].includes(params.action) &&
+                request?.userId) {
+                const result = await next(params);
+                await client.auditLog.create({
+                    data: {
+                        user: {
+                            connect: {
+                                id: request?.userId,
+                            },
+                        },
+                        entity: params.model,
+                        args: JSON.stringify(params.args),
+                        action: params.action.toLowerCase(),
+                    },
+                });
+                return result;
+            }
+            else {
+                return next(params);
+            }
+        });
         return client;
     }
     extractTenantFromRequest(request) {
