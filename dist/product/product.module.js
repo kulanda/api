@@ -15,6 +15,7 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const auth_service_1 = require("../auth/auth.service");
 const category_service_1 = require("../category/category.service");
 const charge_service_1 = require("../charge/charge.service");
+const suppliers_on_product_service_1 = require("../suppliersOnProduct/suppliers-on-product.service");
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
@@ -27,7 +28,8 @@ exports.ProductModule = ProductModule = __decorate([
             prisma_service_1.PrismaService,
             auth_service_1.AuthService,
             category_service_1.CategoryService,
-            charge_service_1.ChargeService
+            charge_service_1.ChargeService,
+            suppliers_on_product_service_1.SupplierOnProductService
         ],
     })
 ], ProductModule);

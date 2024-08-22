@@ -15,6 +15,7 @@ let StoreService = class StoreService {
                 address: dto.address,
                 designation: dto.designation,
                 phone: dto.phone,
+                saleType: dto.saleType,
                 companyId,
             },
         });
@@ -98,11 +99,8 @@ let StoreService = class StoreService {
         const sales = await prisma.sale.findMany({
             where,
         });
-        sales.forEach((sale) => (totalSalesBalance += Number(sale.totalPrice)));
         return {
-            totalSales: sales.length,
             sales,
-            totalSalesBalance: Number(Number(totalSalesBalance).toFixed(2)),
         };
     }
 };

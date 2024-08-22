@@ -27,6 +27,13 @@ const tenant_middleware_1 = require("./tenant.middleware");
 const tenant_module_1 = require("./tenant/tenant.module");
 const charge_module_1 = require("./charge/charge.module");
 const client_module_1 = require("./client/client.module");
+const invoice_module_1 = require("./invoice/invoice.module");
+const receipt_module_1 = require("./receipt/receipt.module");
+const credit_note_module_1 = require("./creditNote/credit-note.module");
+const supplier_module_1 = require("./supplier/supplier.module");
+const serve_static_1 = require("@nestjs/serve-static");
+const path_1 = require("path");
+const suppliers_on_product_module_1 = require("./suppliersOnProduct/suppliers-on-product.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -46,6 +53,10 @@ exports.AppModule = AppModule = __decorate([
                 playground: true,
                 introspection: true,
             }),
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, "..", "uploads"),
+                serveRoot: "/uploads/",
+            }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
@@ -64,6 +75,11 @@ exports.AppModule = AppModule = __decorate([
             tenant_module_1.TenantModule,
             charge_module_1.ChargeModule,
             client_module_1.ClientModule,
+            invoice_module_1.InvoiceModule,
+            receipt_module_1.ReceiptModule,
+            credit_note_module_1.CreditNoteModule,
+            supplier_module_1.SupplierModule,
+            suppliers_on_product_module_1.SupplierOnProductModule,
         ],
     })
 ], AppModule);

@@ -6,34 +6,8 @@ import { CreateOrderSaleInput, OrderType } from 'src/order/dto';
 @ArgsType()
 export class CreateSaleArgs
   implements
-    Omit<Sale, 'id' | 'createdAt' | 'updatedAt' | 'sellerId' | 'totalPrice' | 'code'>
+    Omit<Sale, 'id' | 'createdAt' | 'updatedAt' | 'sellerId'>
 {
-  
-  @Field(() => Number, {
-    nullable: true,
-  })
-  @IsNumber()
-  @IsOptional()
-  change: Prisma.Decimal;
-  @Field(() => Number, {
-    nullable: true,
-  })
-  @IsNumber()
-  @IsOptional()
-  cash: Prisma.Decimal;
-  @Field(() => Number, {
-    nullable: true,
-  })
-  @IsNumber()
-  @IsOptional()
-  bankCard: Prisma.Decimal;
-
-  @Field(() => Number, {
-    nullable: true,
-  })
-  @IsNumber()
-  totalPrice: Prisma.Decimal;
-
   @Field(() => [CreateOrderSaleInput])
   @IsOptional()
   @IsArray()

@@ -15,6 +15,7 @@ export class StoreService {
         address: dto.address,
         designation: dto.designation,
         phone: dto.phone,
+        saleType: dto.saleType,
         companyId,
       },
     });
@@ -119,12 +120,8 @@ export class StoreService {
       where,
     });
 
-    sales.forEach((sale) => (totalSalesBalance += Number(sale.totalPrice)));
-
     return {
-      totalSales: sales.length,
       sales,
-      totalSalesBalance: Number(Number(totalSalesBalance).toFixed(2)),
     };
   }
 }

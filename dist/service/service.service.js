@@ -8,10 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceService = void 0;
 const common_1 = require("@nestjs/common");
+const path_1 = require("path");
+const fs_1 = require("fs");
 let ServiceService = class ServiceService {
-    async createService(prisma, { categoryId, storeId, charges, ...dto }) {
+    async createService(prisma, tenantId, { categoryId, storeId, charges, ...dto }) {
+        const dirPath = (0, path_1.join)("uploads/images/" + tenantId);
+        const imageURL = `${dirPath}/${dto?.image?.filename}`;
+        if (!(0, fs_1.existsSync)(dirPath)) {
+            (0, fs_1.mkdirSync)(dirPath, { recursive: true });
+        }
+        dto?.image?.createReadStream?.()?.pipe?.((0, fs_1.createWriteStream)(imageURL));
         return await prisma.service.create({
             data: {
+                image: dto?.image ? imageURL : undefined,
                 ...dto,
                 Charge: {
                     connect: charges.map((id) => ({
@@ -31,9 +40,19 @@ let ServiceService = class ServiceService {
             },
         });
     }
-    async editService(prisma, id, { charges, ...dto }) {
+    async editService(prisma, tenantId, id, { charges, ...dto }) {
+        let imageURL = "";
+        if (dto?.image) {
+            const dirPath = (0, path_1.join)("uploads/images/" + tenantId);
+            imageURL = `${dirPath}/${dto?.image?.filename}`;
+            if (!(0, fs_1.existsSync)(dirPath)) {
+                (0, fs_1.mkdirSync)(dirPath, { recursive: true });
+            }
+            dto?.image?.createReadStream?.()?.pipe?.((0, fs_1.createWriteStream)(imageURL));
+        }
         return await prisma.service.update({
             data: {
+                image: dto?.image ? imageURL : undefined,
                 ...dto,
                 Charge: {
                     connect: charges.map((id) => ({

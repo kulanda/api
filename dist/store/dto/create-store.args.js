@@ -9,9 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateStoreArgs = void 0;
+exports.CreateStoreArgs = exports.StoreSaleEnumType = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
+var StoreSaleEnumType;
+(function (StoreSaleEnumType) {
+    StoreSaleEnumType["DEFAULT"] = "DEFAULT";
+    StoreSaleEnumType["PRODUCT"] = "PRODUCT";
+    StoreSaleEnumType["SERVICE"] = "SERVICE";
+})(StoreSaleEnumType || (exports.StoreSaleEnumType = StoreSaleEnumType = {}));
+(0, graphql_1.registerEnumType)(StoreSaleEnumType, {
+    name: "StoreSaleEnumType",
+});
 let CreateStoreArgs = class CreateStoreArgs {
 };
 exports.CreateStoreArgs = CreateStoreArgs;
@@ -38,6 +47,14 @@ __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], CreateStoreArgs.prototype, "globalSale", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => StoreSaleEnumType, {
+        nullable: true,
+        defaultValue: "DEFAULT",
+    }),
+    (0, class_validator_1.IsEnum)(["DEFAULT", "PRODUCT", "SERVICE"]),
+    __metadata("design:type", String)
+], CreateStoreArgs.prototype, "saleType", void 0);
 exports.CreateStoreArgs = CreateStoreArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], CreateStoreArgs);

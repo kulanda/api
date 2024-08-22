@@ -36,7 +36,7 @@ export class ServiceResolver {
     _: string,
     @Args() data: CreateServiceArgs
   ) {
-    return this.serviceService.createService(req.client, data);
+    return this.serviceService.createService(req.client, req.tenantId, data);
   }
   @Mutation(() => ServiceType)
   async editService(
@@ -48,7 +48,7 @@ export class ServiceResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args() data: EditServiceArgs
   ) {
-    return this.serviceService.editService(req.client, id, data);
+    return this.serviceService.editService(req.client, req.tenantId, id, data);
   }
   @Query(() => [ServiceType])
   async getServices(

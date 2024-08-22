@@ -9,6 +9,7 @@ export declare class CompanyType implements Omit<Company, "userId" | "Store"> {
     logo: string;
     caeId: string;
     stores?: StoreType[];
+    saftExportDate: Date;
     createdAt: Date;
     updatedAt: Date;
 }

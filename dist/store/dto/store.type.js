@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreType = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
+const create_store_args_1 = require("./create-store.args");
 let StoreType = class StoreType {
 };
 exports.StoreType = StoreType;
@@ -42,6 +43,14 @@ __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], StoreType.prototype, "globalSale", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => create_store_args_1.StoreSaleEnumType, {
+        nullable: true,
+        defaultValue: "DEFAULT",
+    }),
+    (0, class_validator_1.IsEnum)(["DEFAULT", "PRODUCT", "SERVICE"]),
+    __metadata("design:type", String)
+], StoreType.prototype, "saleType", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Date),
     __metadata("design:type", Date)

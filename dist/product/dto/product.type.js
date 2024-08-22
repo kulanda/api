@@ -47,13 +47,6 @@ __decorate([
     __metadata("design:type", client_1.Prisma.Decimal)
 ], ProductType.prototype, "price", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], ProductType.prototype, "stock", void 0);
-__decorate([
     (0, graphql_1.Field)(() => Date),
     (0, class_validator_1.IsDate)(),
     __metadata("design:type", Date)

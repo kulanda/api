@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 import { CategoryService } from 'src/category/category.service';
 import { ChargeService } from 'src/charge/charge.service';
+import { SupplierOnProductService } from 'src/suppliersOnProduct/suppliers-on-product.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -15,7 +16,8 @@ import { ChargeService } from 'src/charge/charge.service';
     PrismaService,
     AuthService,
     CategoryService,
-    ChargeService
+    ChargeService,
+    SupplierOnProductService
   ],
 })
 export class ProductModule {}

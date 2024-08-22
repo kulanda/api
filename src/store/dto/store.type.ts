@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Store } from '@prisma/client';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import { StoreSaleEnumType } from './create-store.args';
 
 @ObjectType()
 export class StoreType implements Omit<Store, 'companyId'> {
@@ -26,6 +27,13 @@ export class StoreType implements Omit<Store, 'companyId'> {
   @IsOptional()
   @IsBoolean()
   globalSale: boolean;
+
+  @Field(() => StoreSaleEnumType, {
+    nullable: true,
+    defaultValue: "DEFAULT",
+  })
+  @IsEnum(["DEFAULT", "PRODUCT", "SERVICE"])
+  saleType: string
 
   @Field(() => Date)
   createdAt: Date;

@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateTenantArgs } from "./dto";
 import { PrismaClient } from "@prisma/client";
+import { join } from "path";
+import { createWriteStream, existsSync, mkdirSync } from "fs";
 @Injectable()
 export class TenantService {
   constructor(private prismaService: PrismaService) {}
@@ -10,6 +12,18 @@ export class TenantService {
 
     try {
       const hash = `k_tnt_${this.generateApiKey(8)}`;
+
+      let logo = "";
+      if (company?.logo) {
+        const dirPath = join("uploads/images/" + dto.username);
+
+        logo = `${dirPath}/${company?.logo?.filename}`;
+
+        if (!existsSync(dirPath)) {
+          mkdirSync(dirPath, { recursive: true });
+        }
+        company?.logo?.createReadStream?.()?.pipe?.(createWriteStream(logo));
+      }
 
       await this.buildSchema(client, {
         hash,
@@ -22,6 +36,7 @@ export class TenantService {
             Company: {
               create: {
                 ...company,
+                logo,
               },
             },
           },
@@ -76,6 +91,12 @@ export class TenantService {
         `),
         client.$executeRawUnsafe(`
           ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE ON TABLES TO ${role};
+        `),
+        client.$executeRawUnsafe(`
+          GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO ${role};
+        `),
+        client.$executeRawUnsafe(`
+          GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA ${target_schema} TO ${role};
         `),
         client.$queryRaw`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname=${source_schema};`,
       ]);

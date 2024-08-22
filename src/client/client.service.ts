@@ -7,11 +7,17 @@ import { FilterClientInput } from "./dto/filter-client.input";
 export class ClientService {
   async createClient(
     prisma: PrismaClient,
-    dto: CreateClientArgs
+    { caeId, storeId, ...dto }: CreateClientArgs
   ): Promise<ClientType> {
     return await prisma.client.create({
       data: {
         ...dto,
+        caeId: caeId as never,
+        store: {
+          connect: {
+            id: storeId,
+          },
+        },
       },
     });
   }
@@ -19,7 +25,6 @@ export class ClientService {
     prisma: PrismaClient,
     filter?: FilterClientInput
   ): Promise<ClientType[]> {
-
     const where: Prisma.ClientScalarWhereInput = {
       storeId: filter.storeId,
       OR: [

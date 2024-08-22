@@ -1,6 +1,14 @@
 import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Company } from "@prisma/client";
-import { IsOptional, IsString, IsUUID, IsUrl } from "class-validator";
+import {
+  IsDate,
+  IsMultibyte,
+  IsOptional,
+  IsString,
+  IsUUID,
+  IsUrl,
+} from "class-validator";
+import { GraphQLUpload } from "graphql-upload-ts";
 
 @ArgsType()
 export class CreateCompanyArgs
@@ -22,15 +30,19 @@ export class CreateCompanyArgs
   @IsString()
   address: string;
 
-  @Field(() => String, {
+  @Field(() => GraphQLUpload, {
     nullable: true,
   })
-  @IsString()
-  @IsUrl()
-  @IsOptional()
-  logo: string;
+  @IsMultibyte()
+  logo: any;
 
   @Field(() => ID)
   @IsUUID()
   caeId: string;
+
+  @Field(() => Date, {
+    nullable: true,
+  })
+  @IsDate()
+  saftExportDate: Date;
 }

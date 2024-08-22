@@ -4,6 +4,7 @@ export declare class CreateCompanyArgs implements Omit<Company, "id" | "createdA
     nif: string;
     name: string;
     address: string;
-    logo: string;
+    logo: any;
     caeId: string;
+    saftExportDate: Date;
 }

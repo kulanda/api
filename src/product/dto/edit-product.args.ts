@@ -1,18 +1,21 @@
-import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
-import { Prisma, Product } from '@prisma/client';
+import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
+import { Prisma, Product } from "@prisma/client";
 import {
   IsArray,
   IsDate,
+  IsMultibyte,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
   IsUrl,
-} from 'class-validator';
+} from "class-validator";
+import { ProductSupplierInput } from "./product-supplier.input";
+import { GraphQLUpload } from "graphql-upload-ts";
 
 @ArgsType()
 export class EditProductArgs
-  implements Omit<Product, 'id' | 'createdAt' | 'updatedAt'>
+  implements Omit<Product, "id" | "createdAt" | "updatedAt">
 {
   @Field(() => String, {
     nullable: true,
@@ -28,25 +31,18 @@ export class EditProductArgs
   @IsOptional()
   description: string;
 
-  @Field(() => String, {
-    nullable: true,
+  @Field(() => GraphQLUpload,{
+    nullable: true
   })
-  @IsOptional()
-  image: string;
-
+  @IsMultibyte()
+  image: any;
+  
   @Field(() => Number, {
     nullable: true,
   })
   @IsNumber()
   @IsOptional()
   price: Prisma.Decimal;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @IsNumber()
-  @IsOptional()
-  stock: number;
 
   @Field(() => Date, {
     nullable: true,
@@ -62,14 +58,21 @@ export class EditProductArgs
   @IsOptional()
   categoryId: string;
 
-  
   @Field(() => [ID!]!, {
     nullable: true,
-    defaultValue: []
+    defaultValue: [],
   })
   @IsArray()
   @IsOptional()
   charges: string[];
+
+  @Field(() => [ProductSupplierInput!]!, {
+    nullable: true,
+    defaultValue: [],
+  })
+  @IsArray()
+  @IsOptional()
+  suppliers: ProductSupplierInput[];
 
   @Field(() => ID, {
     nullable: true,

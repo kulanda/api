@@ -18,6 +18,13 @@ import { TenantMiddleware } from "./tenant.middleware";
 import { TenantModule } from "./tenant/tenant.module";
 import { ChargeModule } from "./charge/charge.module";
 import { ClientModule } from "./client/client.module";
+import { InvoiceModule } from "./invoice/invoice.module";
+import { ReceiptModule } from "./receipt/receipt.module";
+import { CreditNoteModule } from "./creditNote/credit-note.module";
+import { SupplierModule } from "./supplier/supplier.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
+import { SupplierOnProductModule } from "./suppliersOnProduct/suppliers-on-product.module";
 
 @Module({
   imports: [
@@ -28,6 +35,10 @@ import { ClientModule } from "./client/client.module";
       csrfPrevention: false,
       playground: true,
       introspection: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "uploads"),
+      serveRoot: "/uploads/",
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -47,6 +58,11 @@ import { ClientModule } from "./client/client.module";
     TenantModule,
     ChargeModule,
     ClientModule,
+    InvoiceModule,
+    ReceiptModule,
+    CreditNoteModule,
+    SupplierModule,
+    SupplierOnProductModule,
   ],
 })
 export class AppModule {

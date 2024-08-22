@@ -2,9 +2,11 @@ import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
 import { Request } from "express";
+import * as fs from "fs";
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleDestroy {
   private clients: { [key: string]: PrismaClient } = {};
+  private message = "";
   constructor(private config: ConfigService) {
     super({
       datasourceUrl: config.get("DATABASE_URL"),
@@ -39,7 +41,31 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
       this.clients[cacheKey] = client;
     }
 
+    client.$use(async (params, next) => {
+      tenant?.id && this.logMessage(tenant.id, JSON.stringify(params));
+      return next(params);
+    });
+
     return client;
+  }
+
+  logMessage(tenantId: string, message: string) {
+    const logFilePath = `logs/${tenantId}.txt`;
+
+    /* if (this.message === message) return;
+    else
+      fs.appendFile(
+        logFilePath,
+        `${new Date().toISOString()} - ${message}\n`,
+        (err) => {
+          if (err) {
+            console.error("Erro ao escrever no arquivo de log:", err);
+          } else {
+            console.log("Log registrado com sucesso!");
+            this.message = message;
+          }
+        }
+      ); */
   }
 
   private extractTenantFromRequest(request: Request) {

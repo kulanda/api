@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCompanyArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
+const graphql_upload_ts_1 = require("graphql-upload-ts");
 let CreateCompanyArgs = class CreateCompanyArgs {
 };
 exports.CreateCompanyArgs = CreateCompanyArgs;
@@ -36,19 +37,24 @@ __decorate([
     __metadata("design:type", String)
 ], CreateCompanyArgs.prototype, "address", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, {
+    (0, graphql_1.Field)(() => graphql_upload_ts_1.GraphQLUpload, {
         nullable: true,
     }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsUrl)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
+    (0, class_validator_1.IsMultibyte)(),
+    __metadata("design:type", Object)
 ], CreateCompanyArgs.prototype, "logo", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
 ], CreateCompanyArgs.prototype, "caeId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Date, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsDate)(),
+    __metadata("design:type", Date)
+], CreateCompanyArgs.prototype, "saftExportDate", void 0);
 exports.CreateCompanyArgs = CreateCompanyArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], CreateCompanyArgs);

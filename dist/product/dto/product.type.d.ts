@@ -5,7 +5,6 @@ export declare class ProductType implements Product {
     description: string;
     image: string;
     price: Prisma.Decimal;
-    stock: number;
     expiresOn: Date;
     categoryId: string;
     storeId: string;

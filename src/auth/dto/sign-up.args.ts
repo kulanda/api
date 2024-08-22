@@ -41,7 +41,9 @@ export class SignUpArgs implements Pick<User, "access"> {
   @IsEnum(["SELLER", "OWNER", "MANAGER"])
   access: keyof typeof AccessEnumType;
 
-  @Field(() => ID)
+  @Field(() => ID, {
+    nullable: true,
+  })
   @IsUUID()
   @IsOptional()
   storeId: string;

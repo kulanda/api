@@ -22,6 +22,9 @@ import { CategoryService } from "src/category/category.service";
 import { CategoryType } from "src/category/dto";
 import { ChargeType } from "src/charge/dto";
 import { ChargeService } from "src/charge/charge.service";
+import { GraphQLUpload } from "graphql-upload-ts";
+import { SupplierOnProductService } from "src/suppliersOnProduct/suppliers-on-product.service";
+import { SupplierOnProductType } from "src/suppliersOnProduct/dto";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => ProductType)
@@ -29,7 +32,8 @@ export class ProductResolver {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private chargeService: ChargeService
+    private chargeService: ChargeService,
+    private supplierOnProductService: SupplierOnProductService
   ) {}
   @Mutation(() => ProductType)
   async createProduct(
@@ -38,9 +42,16 @@ export class ProductResolver {
       access: ["OWNER", "MANAGER"],
     })
     _: string,
+    @Args({ name: "image", type: () => GraphQLUpload, nullable: true })
+    image: any,
     @Args() data: CreateProductArgs
   ) {
-    return this.productService.createProduct(req.client, data);
+    return this.productService.createProduct(
+      req.client,
+      req.tenantId,
+      image,
+      data
+    );
   }
   @Mutation(() => ProductType)
   async editProduct(
@@ -52,7 +63,7 @@ export class ProductResolver {
     @Args("id", { type: () => ID }) id: string,
     @Args() data: EditProductArgs
   ) {
-    return this.productService.editProduct(req.client, id, data);
+    return this.productService.editProduct(req.client, req.tenantId, id, data);
   }
   @Query(() => [ProductType])
   async getProducts(
@@ -81,5 +92,12 @@ export class ProductResolver {
     return this.chargeService.getCharges(req.client, {
       productId: product.id,
     });
+  }
+  @ResolveField(() => [SupplierOnProductType])
+  async stock(@Context("req") req, @Parent() product: ProductType) {
+    return this.supplierOnProductService.getSupplierOnProductByProductId(
+      req.client,
+      product.id
+    );
   }
 }

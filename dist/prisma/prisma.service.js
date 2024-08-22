@@ -20,6 +20,7 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         });
         this.config = config;
         this.clients = {};
+        this.message = "";
     }
     async getClient(request, intern) {
         const tenant = this.extractTenantFromRequest(request);
@@ -42,7 +43,14 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
             });
             this.clients[cacheKey] = client;
         }
+        client.$use(async (params, next) => {
+            tenant?.id && this.logMessage(tenant.id, JSON.stringify(params));
+            return next(params);
+        });
         return client;
+    }
+    logMessage(tenantId, message) {
+        const logFilePath = `logs/${tenantId}.txt`;
     }
     extractTenantFromRequest(request) {
         if (!request)

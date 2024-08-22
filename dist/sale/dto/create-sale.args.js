@@ -11,43 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateSaleArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
 const dto_1 = require("../../order/dto");
 let CreateSaleArgs = class CreateSaleArgs {
 };
 exports.CreateSaleArgs = CreateSaleArgs;
-__decorate([
-    (0, graphql_1.Field)(() => Number, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", client_1.Prisma.Decimal)
-], CreateSaleArgs.prototype, "change", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", client_1.Prisma.Decimal)
-], CreateSaleArgs.prototype, "cash", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", client_1.Prisma.Decimal)
-], CreateSaleArgs.prototype, "bankCard", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => Number, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", client_1.Prisma.Decimal)
-], CreateSaleArgs.prototype, "totalPrice", void 0);
 __decorate([
     (0, graphql_1.Field)(() => [dto_1.CreateOrderSaleInput]),
     (0, class_validator_1.IsOptional)(),

@@ -35,11 +35,18 @@ type StoreType {
   designation: String!
   phone: String!
   globalSale: String
+  saleType: StoreSaleEnumType
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [ProductType!]!
   sellers: [UserType!]!
   sales: [SaleType!]!
+}
+
+enum StoreSaleEnumType {
+  DEFAULT
+  PRODUCT
+  SERVICE
 }
 
 type OrderType {
@@ -55,11 +62,6 @@ type OrderType {
 
 type SaleType {
   id: ID!
-  change: Float
-  code: Float!
-  cash: Float
-  bankCard: Float
-  totalPrice: Float
   sellerId: ID!
   clientId: ID!
   createdAt: DateTime!
@@ -70,9 +72,7 @@ type SaleType {
 }
 
 type ReportStoreType {
-  totalSales: Float
   sales: [SaleType!]
-  totalSalesBalance: Float
 }
 
 type CompanyType {
@@ -84,6 +84,7 @@ type CompanyType {
   logo: String!
   caeId: ID!
   stores: [StoreType!]!
+  saftExportDate: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
   cae: CAEType!
@@ -105,7 +106,6 @@ type ProductType {
   description: String
   image: String
   price: Float!
-  stock: Int
   expiresOn: DateTime!
   categoryId: ID!
   storeId: ID!
@@ -113,6 +113,7 @@ type ProductType {
   updatedAt: DateTime!
   category: CategoryType!
   charges: [ChargeType!]!
+  stock: [SupplierOnProductType!]!
 }
 
 type CategoryType {
@@ -148,6 +149,17 @@ enum ChargeEnumType {
   TAX
   FEE
   DISCOUNT
+}
+
+type SupplierOnProductType {
+  id: ID!
+  supplierId: ID!
+  productId: ID!
+  quantity: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: ProductType!
+  supplier: SupplierType!
 }
 
 type ServiceType {
@@ -194,6 +206,81 @@ type TenantCredentialsType {
   access_key: String!
 }
 
+type InvoiceType {
+  id: ID!
+  number: Int!
+  amount: Int!
+  saleId: ID!
+  digitalSignature: String!
+  status: InvoiceEnumType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sale: SaleType!
+}
+
+enum InvoiceEnumType {
+  DRAFT
+  ISSUED
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+type ReceiptType {
+  id: ID!
+  amount: Int!
+  number: Int!
+  digitalSignature: String!
+  invoiceId: ID!
+  status: ReceiptEnumType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  invoice: InvoiceType!
+}
+
+enum ReceiptEnumType {
+  ISSUED
+  PAID
+}
+
+type CreditNoteType {
+  id: ID!
+  number: Int!
+  amount: Int!
+  digitalSignature: String!
+  invoiceId: ID!
+  status: CreditNoteEnumType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  invoid: SaleType!
+}
+
+enum CreditNoteEnumType {
+  DRAFT
+  ISSUED
+  APPLIED
+  CANCELLED
+}
+
+type SupplierType {
+  id: ID!
+  fullName: String!
+  nif: String
+  phone: String!
+  email: String
+  address: String!
+  type: SupplierEnumType
+  storeId: ID
+  caeId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum SupplierEnumType {
+  INDIVIDUAL
+  LEGAL
+}
+
 type Query {
   user: UserType!
   getUser(id: ID!): UserType!
@@ -223,11 +310,23 @@ type Query {
   getClients(filter: FilterClientInput): [ClientType!]!
   getClient(id: ID!): ClientType
   getClientsByStore(storeId: ID!): [ClientType!]
+  getInvoices: [InvoiceType!]!
+  getInvoice(id: ID!): InvoiceType
+  sale: String
+  getReceipts: [ReceiptType!]!
+  getReceipt(id: ID!): ReceiptType
+  getCreditNotes: [CreditNoteType!]!
+  getCreditNote(id: ID!): CreditNoteType
+  getSuppliers(filter: FilterSupplierInput): [SupplierType!]!
+  getSupplier(id: ID!): SupplierType
+  getSuppliersByStore(storeId: ID!): [SupplierType!]
+  getSupplierOnProducts(filter: FilterSupplierOnProductInput): [SupplierOnProductType!]!
+  getSupplierOnProduct(id: ID!): SupplierOnProductType
 }
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-08-02T12:08:34.366Z"
+  from: DateTime = "2024-08-22T19:34:44.006Z"
   sellerId: ID
 }
 
@@ -273,23 +372,63 @@ input FilterClientPaginateInput {
   limit: Float = 30
 }
 
+input FilterSupplierInput {
+  storeId: String
+  fullName: String
+  email: String
+  phone: String
+  paginate: FilterSupplierPaginateInput
+}
+
+input FilterSupplierPaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
+input FilterSupplierOnProductInput {
+  productId: String
+  supplierId: String
+  paginate: FilterSupplierOnProductPaginateInput
+}
+
+input FilterSupplierOnProductPaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
 type Mutation {
-  signUp(fullName: String!, username: String, email: String!, phone: String, access: AccessEnumType = SELLER, storeId: ID!, password: String!): AuthTokenType!
+  signUp(fullName: String!, username: String, email: String!, phone: String, access: AccessEnumType = SELLER, storeId: ID, password: String!): AuthTokenType!
   signIn(email: String!, password: String!): AuthTokenType!
-  createStore(address: String!, designation: String!, phone: String!, globalSale: String): StoreType!
+  createStore(address: String!, designation: String!, phone: String!, globalSale: String, saleType: StoreSaleEnumType = DEFAULT): StoreType!
   createCategory(name: String!, description: String, type: CategoryEnumType!, charges: [ID!] = []): CategoryType!
   editCategory(id: String!, name: String, description: String, type: CategoryEnumType, charges: [ID!]): CategoryType!
-  createProduct(name: String!, description: String, image: String, price: Float!, stock: Int, expiresOn: DateTime!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ProductType!
-  editProduct(id: ID!, name: String, description: String, image: String, price: Float, stock: Int, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], storeId: ID): ProductType!
-  createService(name: String!, description: String, image: String, price: Float!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
-  editService(id: ID!, name: String, description: String, image: String, price: Float, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
-  createSale(change: Float, cash: Float, bankCard: Float, totalPrice: Float, orders: [CreateOrderSaleInput!]!, clientId: ID): SaleType!
+  createProduct(image: Upload, name: String!, description: String, price: Float!, expiresOn: DateTime!, categoryId: ID!, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID!): ProductType!
+  editProduct(id: ID!, name: String, description: String, image: Upload, price: Float, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID): ProductType!
+  createService(name: String!, description: String, price: Float!, image: Upload, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
+  editService(id: ID!, name: String, description: String, price: Float, image: Upload, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
+  createSale(orders: [CreateOrderSaleInput!]!, clientId: ID): SaleType!
   createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
   createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!, partnerId: ID, expiresAt: DateTime): TenantCredentialsType!
   createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, storeId: ID!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
   createClient(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: ClientEnumType = INDIVIDUAL, caeId: ID, storeId: ID): ClientType!
+  createInvoice(amount: Int!, saleId: ID!, digitalSignature: String!, status: InvoiceEnumType!): InvoiceType!
+  editInvoice(id: ID!, amount: Int, saleId: ID, status: InvoiceEnumType!): InvoiceType!
+  createReceipt(digitalSignature: String!, invoiceId: ID!, status: ReceiptEnumType! = ISSUED, payments: [ReceiptPaymentInput!]!): ReceiptType!
+  editReceipt(id: ID!, amount: Int!, digitalSignature: String!, invoiceId: ID!, status: ReceiptEnumType!): ReceiptType!
+  createCreditNote(amount: Int!, invoiceId: ID!, digitalSignature: String!, status: CreditNoteEnumType!): CreditNoteType!
+  editCreditNote(id: ID!, amount: Int, digitalSignature: String, invoiceId: ID, status: CreditNoteEnumType): CreditNoteType!
+  createSupplier(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: SupplierEnumType = INDIVIDUAL, storeId: ID, caeId: ID): SupplierType!
+  createSupplierOnProduct(supplierId: ID!, productId: ID!, quantity: Float!): SupplierOnProductType!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input ProductSupplierInput {
+  supplierId: ID!
+  quantity: Int!
 }
 
 input CreateOrderSaleInput {
@@ -301,6 +440,20 @@ input CreateCompanyInput {
   nif: String!
   name: String!
   address: String!
-  logo: String
+  logo: Upload
   caeId: ID!
+  saftExportDate: DateTime
+}
+
+input ReceiptPaymentInput {
+  type: ReceiptPaymentEnumType!
+  amount: Int!
+}
+
+enum ReceiptPaymentEnumType {
+  CASH
+  DEPOSIT
+  BANK_TRANSFER
+  CREDIT_CARD
+  MULTICAIXA_EXPRESS
 }

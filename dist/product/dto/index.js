@@ -18,4 +18,5 @@ __exportStar(require("./create-product.args"), exports);
 __exportStar(require("./edit-product.args"), exports);
 __exportStar(require("./product.type"), exports);
 __exportStar(require("./filter-product.input"), exports);
+__exportStar(require("./product-supplier.input"), exports);
 //# sourceMappingURL=index.js.map

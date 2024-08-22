@@ -29,12 +29,6 @@ export class ProductType implements Product {
   @IsNumber()
   price: Prisma.Decimal;
 
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @IsNumber()
-  stock: number;
-
   @Field(() => Date)
   @IsDate()
   expiresOn: Date;

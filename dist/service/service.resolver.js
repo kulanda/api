@@ -31,10 +31,10 @@ let ServiceResolver = class ServiceResolver {
         this.chargeService = chargeService;
     }
     async createService(req, _, data) {
-        return this.serviceService.createService(req.client, data);
+        return this.serviceService.createService(req.client, req.tenantId, data);
     }
     async editService(req, _, id, data) {
-        return this.serviceService.editService(req.client, id, data);
+        return this.serviceService.editService(req.client, req.tenantId, id, data);
     }
     async getServices(req, storeId, filter) {
         return this.serviceService.getServices(req.client, storeId, filter);

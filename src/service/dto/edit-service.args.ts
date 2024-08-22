@@ -1,6 +1,7 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Prisma, Service } from '@prisma/client';
-import { IsArray, IsNumber, IsOptional, IsString, IsUUID, IsUrl } from 'class-validator';
+import { IsArray, IsMultibyte, IsNumber, IsOptional, IsString, IsUUID, IsUrl } from 'class-validator';
+import { GraphQLUpload } from 'graphql-upload-ts';
 
 @ArgsType()
 export class EditServiceArgs
@@ -20,18 +21,18 @@ export class EditServiceArgs
   @IsOptional()
   description: string;
 
-  @Field(() => String, {
-    nullable: true,
-  })
-  @IsOptional()
-  image: string;
-
   @Field(() => Number, {
     nullable: true,
   })
   @IsNumber()
   @IsOptional()
   price: Prisma.Decimal;
+
+  @Field(() => GraphQLUpload,{
+    nullable: true
+  })
+  @IsMultibyte()
+  image: any;
 
   @Field(() => ID, {
     nullable: true,

@@ -50,7 +50,9 @@ __decorate([
     __metadata("design:type", Object)
 ], SignUpArgs.prototype, "access", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_1.ID),
+    (0, graphql_1.Field)(() => graphql_1.ID, {
+        nullable: true,
+    }),
     (0, class_validator_1.IsUUID)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)

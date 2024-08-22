@@ -48,6 +48,12 @@ __decorate([
     __metadata("design:type", Array)
 ], CompanyType.prototype, "stores", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => Date, {
+        nullable: true,
+    }),
+    __metadata("design:type", Date)
+], CompanyType.prototype, "saftExportDate", void 0);
+__decorate([
     (0, graphql_1.Field)(() => Date),
     __metadata("design:type", Date)
 ], CompanyType.prototype, "createdAt", void 0);

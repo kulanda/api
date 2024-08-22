@@ -8,10 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductService = void 0;
 const common_1 = require("@nestjs/common");
+const path_1 = require("path");
+const fs_1 = require("fs");
 let ProductService = class ProductService {
-    async createProduct(prisma, { categoryId, storeId, charges, ...dto }) {
+    async createProduct(prisma, tenantId, image, { categoryId, storeId, suppliers, charges, ...dto }) {
+        const dirPath = (0, path_1.join)("uploads/images/" + tenantId);
+        const imageURL = `${dirPath}/${image?.filename}`;
+        if (!(0, fs_1.existsSync)(dirPath)) {
+            (0, fs_1.mkdirSync)(dirPath, { recursive: true });
+        }
+        image && image?.createReadStream?.()?.pipe?.((0, fs_1.createWriteStream)(imageURL));
         return await prisma.product.create({
             data: {
+                image: image ? imageURL : undefined,
                 ...dto,
                 Charge: {
                     connect: charges.map((id) => ({
@@ -23,6 +32,9 @@ let ProductService = class ProductService {
                         id: storeId,
                     },
                 },
+                SupplierOnProduct: {
+                    create: suppliers.map((item) => item),
+                },
                 category: {
                     connect: {
                         id: categoryId,
@@ -31,9 +43,19 @@ let ProductService = class ProductService {
             },
         });
     }
-    async editProduct(prisma, id, { charges, ...dto }) {
+    async editProduct(prisma, tenantId, id, { charges, ...dto }) {
+        let imageURL = "";
+        if (dto?.image) {
+            const dirPath = (0, path_1.join)("uploads/images/" + tenantId);
+            imageURL = `${dirPath}/${dto?.image?.filename}`;
+            if (!(0, fs_1.existsSync)(dirPath)) {
+                (0, fs_1.mkdirSync)(dirPath, { recursive: true });
+            }
+            dto?.image?.createReadStream?.()?.pipe?.((0, fs_1.createWriteStream)(imageURL));
+        }
         return await prisma.product.update({
             data: {
+                image: dto?.image ? imageURL : undefined,
                 ...dto,
                 Charge: {
                     connect: charges.map((id) => ({

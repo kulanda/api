@@ -13,6 +13,7 @@ exports.CreateProductArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
+const product_supplier_input_1 = require("./product-supplier.input");
 let CreateProductArgs = class CreateProductArgs {
 };
 exports.CreateProductArgs = CreateProductArgs;
@@ -30,24 +31,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProductArgs.prototype, "description", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => String, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], CreateProductArgs.prototype, "image", void 0);
-__decorate([
     (0, graphql_1.Field)(() => Number),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", client_1.Prisma.Decimal)
 ], CreateProductArgs.prototype, "price", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateProductArgs.prototype, "stock", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Date),
     (0, class_validator_1.IsDate)(),
@@ -61,12 +48,21 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)(() => [graphql_1.ID], {
         nullable: true,
-        defaultValue: []
+        defaultValue: [],
     }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], CreateProductArgs.prototype, "charges", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [product_supplier_input_1.ProductSupplierInput], {
+        nullable: true,
+        defaultValue: [],
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateProductArgs.prototype, "suppliers", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsUUID)(),

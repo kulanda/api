@@ -6,15 +6,29 @@ import {
   ProductType,
 } from "./dto";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { join } from "path";
+import { createWriteStream, existsSync, mkdirSync } from "fs";
 
 @Injectable()
 export class ProductService {
   async createProduct(
     prisma: PrismaClient,
-    { categoryId, storeId, charges, ...dto }: CreateProductArgs
+    tenantId: string,
+    image: any,
+    { categoryId, storeId, suppliers, charges, ...dto }: CreateProductArgs
   ): Promise<ProductType> {
+    const dirPath = join("uploads/images/" + tenantId);
+    const imageURL = `${dirPath}/${image?.filename}`;
+
+    if (!existsSync(dirPath)) {
+      mkdirSync(dirPath, { recursive: true });
+    }
+
+    image && image?.createReadStream?.()?.pipe?.(createWriteStream(imageURL));
+
     return await prisma.product.create({
       data: {
+        image: image ? imageURL : undefined,
         ...dto,
         Charge: {
           connect: charges.map((id) => ({
@@ -26,6 +40,9 @@ export class ProductService {
             id: storeId,
           },
         },
+        SupplierOnProduct: {
+          create: suppliers.map((item) => item),
+        },
         category: {
           connect: {
             id: categoryId,
@@ -36,11 +53,24 @@ export class ProductService {
   }
   async editProduct(
     prisma: PrismaClient,
+    tenantId: string,
     id: string,
     { charges, ...dto }: EditProductArgs
   ): Promise<ProductType> {
+    let imageURL = "";
+    if (dto?.image) {
+      const dirPath = join("uploads/images/" + tenantId);
+
+      imageURL = `${dirPath}/${dto?.image?.filename}`;
+
+      if (!existsSync(dirPath)) {
+        mkdirSync(dirPath, { recursive: true });
+      }
+      dto?.image?.createReadStream?.()?.pipe?.(createWriteStream(imageURL));
+    }
     return await prisma.product.update({
       data: {
+        image: dto?.image ? imageURL : undefined,
         ...dto,
         Charge: {
           connect: charges.map((id) => ({

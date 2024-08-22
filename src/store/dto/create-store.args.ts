@@ -1,6 +1,16 @@
-import { ArgsType, Field, ID } from "@nestjs/graphql";
+import { ArgsType, Field, ID, registerEnumType } from "@nestjs/graphql";
 import { Store } from "@prisma/client";
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
+
+export enum StoreSaleEnumType {
+  DEFAULT = "DEFAULT",
+  PRODUCT = "PRODUCT",
+  SERVICE = "SERVICE",
+}
+
+registerEnumType(StoreSaleEnumType, {
+  name: "StoreSaleEnumType",
+});
 
 @ArgsType()
 export class CreateStoreArgs
@@ -24,4 +34,11 @@ export class CreateStoreArgs
   @IsOptional()
   @IsBoolean()
   globalSale: boolean;
+
+  @Field(() => StoreSaleEnumType, {
+    nullable: true,
+    defaultValue: "DEFAULT",
+  })
+  @IsEnum(["DEFAULT", "PRODUCT", "SERVICE"])
+  saleType: string
 }
