@@ -49,4 +49,13 @@ export class ReceiptService {
       },
     });
   }
+  async getReceiptBySaleId(prisma: PrismaClient, saleId: string) {
+    return await prisma.receipt.findFirst({
+      where: {
+        invoice: {
+          saleId,
+        },
+      },
+    });
+  }
 }

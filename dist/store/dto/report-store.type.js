@@ -23,6 +23,20 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], ReportStoreType.prototype, "sales", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ReportStoreType.prototype, "totalSales", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ReportStoreType.prototype, "totalSalesBalance", void 0);
 exports.ReportStoreType = ReportStoreType = __decorate([
     (0, graphql_1.ObjectType)()
 ], ReportStoreType);

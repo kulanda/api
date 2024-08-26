@@ -73,6 +73,8 @@ type SaleType {
 
 type ReportStoreType {
   sales: [SaleType!]
+  totalSales: Int
+  totalSalesBalance: Int
 }
 
 type CompanyType {
@@ -215,7 +217,8 @@ type InvoiceType {
   status: InvoiceEnumType!
   createdAt: DateTime!
   updatedAt: DateTime!
-  sale: SaleType!
+  sale: SaleType
+  receipt: ReceiptType
 }
 
 enum InvoiceEnumType {
@@ -312,7 +315,6 @@ type Query {
   getClientsByStore(storeId: ID!): [ClientType!]
   getInvoices: [InvoiceType!]!
   getInvoice(id: ID!): InvoiceType
-  sale: String
   getReceipts: [ReceiptType!]!
   getReceipt(id: ID!): ReceiptType
   getCreditNotes: [CreditNoteType!]!
@@ -326,7 +328,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-08-22T19:34:44.006Z"
+  from: DateTime = "2024-08-26T17:27:37.241Z"
   sellerId: ID
 }
 

@@ -12,12 +12,15 @@ import { InvoiceType, CreateInvoiceArgs, EditInvoiceArgs } from "./dto";
 import { InvoiceService } from "./invoice.service";
 import { SaleType } from "src/sale/dto";
 import { SaleService } from "src/sale/sale.service";
+import { ReceiptType } from "src/receipt/dto";
+import { ReceiptService } from "src/receipt/receipt.service";
 
 @Resolver(() => InvoiceType)
 export class InvoiceResolver {
   constructor(
     private invoiceService: InvoiceService,
-    private saleService: SaleService
+    private saleService: SaleService,
+    private receiptService: ReceiptService
   ) {}
   @Mutation(() => InvoiceType)
   async createInvoice(@Context("req") req, @Args() data: CreateInvoiceArgs) {
@@ -40,11 +43,16 @@ export class InvoiceResolver {
   ) {
     return this.invoiceService.getInvoice(req.client, id);
   }
-  @Query(() => String, {
+  @ResolveField(() => SaleType, {
     nullable: true,
   })
-  @ResolveField(() => SaleType)
   async sale(@Context("req") req, @Parent() sale: InvoiceType) {
     return this.saleService.getSale(req.client, sale.saleId);
+  }
+  @ResolveField(() => ReceiptType, {
+    nullable: true,
+  })
+  async receipt(@Context("req") req, @Parent() sale: InvoiceType) {
+    return this.receiptService.getReceiptBySaleId(req.client, sale.saleId);
   }
 }

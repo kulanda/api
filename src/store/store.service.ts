@@ -118,10 +118,29 @@ export class StoreService {
 
     const sales = await prisma.sale.findMany({
       where,
+      include: {
+        Order: {
+          include: {
+            product: true,
+            service: true,
+          },
+        },
+      },
+    });
+
+    sales.forEach(({ Order }) => {
+      Order.forEach(({ product, service }) => {
+        if (product)
+          totalSalesBalance = totalSalesBalance + Number(product.price);
+        if (service)
+          totalSalesBalance = totalSalesBalance + Number(service.price);
+      });
     });
 
     return {
-      sales,
+      sales: sales,
+      totalSales: sales.length,
+      totalSalesBalance,
     };
   }
 }
