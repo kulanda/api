@@ -30,6 +30,27 @@ let OrderService = class OrderService {
             },
         });
     }
+    async getOrdersBySaleId(prisma, saleId) {
+        return await prisma.order.findMany({
+            where: {
+                saleId
+            },
+        });
+    }
+    async getOrdersByCreditNoteId(prisma, creditNoteId) {
+        return await prisma.order.findMany({
+            where: {
+                creditNoteId
+            },
+        });
+    }
+    async getOrdersByDebitNoteId(prisma, debitNoteId) {
+        return await prisma.order.findMany({
+            where: {
+                debitNoteId
+            },
+        });
+    }
 };
 exports.OrderService = OrderService;
 exports.OrderService = OrderService = __decorate([

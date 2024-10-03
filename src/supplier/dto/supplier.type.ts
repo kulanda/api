@@ -19,8 +19,8 @@ export class SupplierType implements Supplier {
   @IsString()
   fullName: string;
 
-  @Field(() => String,{
-    nullable: true
+  @Field(() => String, {
+    nullable: true,
   })
   @IsString()
   @IsOptional()
@@ -30,8 +30,8 @@ export class SupplierType implements Supplier {
   @IsPhoneNumber()
   phone: string;
 
-  @Field(() => String,{
-    nullable: true
+  @Field(() => String, {
+    nullable: true,
   })
   @IsEmail()
   @IsOptional()
@@ -41,8 +41,8 @@ export class SupplierType implements Supplier {
   @IsString()
   address: string;
 
-  @Field(() => SupplierEnumType,{
-    nullable: true
+  @Field(() => SupplierEnumType, {
+    nullable: true,
   })
   @IsEnum(["INDIVIDUAL", "LEGAL"])
   type: string;

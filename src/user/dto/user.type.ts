@@ -1,18 +1,19 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { User } from '@prisma/client';
+import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { User } from "@prisma/client";
+import { IsEnum } from "class-validator";
 
 export enum AccessEnumType {
-  SELLER = 'SELLER',
-  OWNER = 'OWNER',
-  MANAGER = 'MANAGER',
+  SELLER = "SELLER",
+  OWNER = "OWNER",
+  MANAGER = "MANAGER",
 }
 
 registerEnumType(AccessEnumType, {
-  name: 'AccessEnumType',
+  name: "AccessEnumType",
 });
 
 @ObjectType()
-export class UserType implements Omit<User, 'hash' | 'companies'> {
+export class UserType implements Omit<User, "hash" | "companies"> {
   @Field(() => ID)
   id: string;
 
@@ -29,6 +30,7 @@ export class UserType implements Omit<User, 'hash' | 'companies'> {
   email: string;
 
   @Field(() => AccessEnumType)
+  @IsEnum(["SELLER", "OWNER", "MANAGER", "PARTNER", "STUDENT"])
   access: string;
 
   @Field(() => ID, {

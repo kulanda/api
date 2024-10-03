@@ -10,6 +10,18 @@ export class CreateOrderArgs
   @IsString()
   saleId: string;
 
+  @Field(() => ID,{
+    nullable: true
+  })
+  @IsString()
+  debitNoteId: string;
+
+  @Field(() => ID,{
+    nullable:  true
+  })
+  @IsString()
+  creditNoteId: string;
+
   @Field(() => ID, {
     nullable: true,
   })

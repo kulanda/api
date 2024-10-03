@@ -50,6 +50,19 @@ __decorate([
     __metadata("design:type", client_1.Prisma.Decimal)
 ], EditProductArgs.prototype, "price", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], EditProductArgs.prototype, "code", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], EditProductArgs.prototype, "withholding", void 0);
+__decorate([
     (0, graphql_1.Field)(() => Date, {
         nullable: true,
     }),

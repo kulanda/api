@@ -35,6 +35,7 @@ __decorate([
 ], CategoryType.prototype, "description", void 0);
 __decorate([
     (0, graphql_1.Field)(() => create_category_args_1.CategoryEnumType),
+    (0, class_validator_1.IsEnum)(["PRODUCT", "SERVICE"]),
     __metadata("design:type", String)
 ], CategoryType.prototype, "type", void 0);
 __decorate([

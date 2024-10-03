@@ -4,7 +4,8 @@ export declare class CreateProductArgs implements Omit<Product, "id" | "createdA
     name: string;
     description: string;
     price: Prisma.Decimal;
-    expiresOn: Date;
+    code: number;
+    withholding: boolean;
     categoryId: string;
     charges: string[];
     suppliers: ProductSupplierInput[];

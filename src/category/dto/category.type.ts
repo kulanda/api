@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Category } from "@prisma/client";
-import { IsArray, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import { CategoryEnumType } from "./create-category.args";
 
 @ObjectType()
@@ -20,6 +20,7 @@ export class CategoryType implements Category {
   description: string;
 
   @Field(() => CategoryEnumType)
+  @IsEnum(["PRODUCT", "SERVICE"])
   type: string;
 
   @Field(() => Date)

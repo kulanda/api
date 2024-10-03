@@ -6,6 +6,7 @@ import {
 import { CreateTenantArgs, TenantType } from "./dto";
 import { TenantService } from "./tenant.service";
 import { TenantCredentialsType } from "./dto/tenant-credentials.type";
+import { GraphQLUpload } from "graphql-upload-ts";
 
 @Resolver(() => TenantType)
 export class TenantResolver {
@@ -13,7 +14,8 @@ export class TenantResolver {
     private tenantService: TenantService,
   ) {}
   @Mutation(() => TenantCredentialsType)
-  async createTenant(@Args() data: CreateTenantArgs) {
-    return await this.tenantService.createTenant(data);
+  async createTenant(@Args({ name: 'logo', type: () => GraphQLUpload, nullable: true })
+  logo: any,@Args() data: CreateTenantArgs) {
+    return await this.tenantService.createTenant(logo, data);
   }
 }

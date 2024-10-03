@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserType = exports.AccessEnumType = void 0;
 const graphql_1 = require("@nestjs/graphql");
+const class_validator_1 = require("class-validator");
 var AccessEnumType;
 (function (AccessEnumType) {
     AccessEnumType["SELLER"] = "SELLER";
@@ -18,7 +19,7 @@ var AccessEnumType;
     AccessEnumType["MANAGER"] = "MANAGER";
 })(AccessEnumType || (exports.AccessEnumType = AccessEnumType = {}));
 (0, graphql_1.registerEnumType)(AccessEnumType, {
-    name: 'AccessEnumType',
+    name: "AccessEnumType",
 });
 let UserType = class UserType {
 };
@@ -45,6 +46,7 @@ __decorate([
 ], UserType.prototype, "email", void 0);
 __decorate([
     (0, graphql_1.Field)(() => AccessEnumType),
+    (0, class_validator_1.IsEnum)(["SELLER", "OWNER", "MANAGER", "PARTNER", "STUDENT"]),
     __metadata("design:type", String)
 ], UserType.prototype, "access", void 0);
 __decorate([

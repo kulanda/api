@@ -40,5 +40,5 @@ export class CreateStoreArgs
     defaultValue: "DEFAULT",
   })
   @IsEnum(["DEFAULT", "PRODUCT", "SERVICE"])
-  saleType: string
+  saleType: string;
 }

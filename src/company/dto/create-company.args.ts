@@ -2,13 +2,16 @@ import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Company } from "@prisma/client";
 import {
   IsDate,
+  IsEnum,
   IsMultibyte,
   IsOptional,
+  IsPhoneNumber,
   IsString,
   IsUUID,
   IsUrl,
 } from "class-validator";
 import { GraphQLUpload } from "graphql-upload-ts";
+import { VatRegimeEnumType } from "./company.type";
 
 @ArgsType()
 export class CreateCompanyArgs
@@ -29,6 +32,21 @@ export class CreateCompanyArgs
   @Field(() => String)
   @IsString()
   address: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @IsPhoneNumber()
+  fax: string;
+
+  @Field(() => VatRegimeEnumType)
+  @IsEnum([
+    "GENERAL_REGIME",
+    "EXCLUSION_REGIME",
+    "SIMPLIFIED_REGIME",
+  ])
+  vatRegime: string;
+  
 
   @Field(() => GraphQLUpload, {
     nullable: true,

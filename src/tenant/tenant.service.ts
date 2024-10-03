@@ -7,22 +7,22 @@ import { createWriteStream, existsSync, mkdirSync } from "fs";
 @Injectable()
 export class TenantService {
   constructor(private prismaService: PrismaService) {}
-  async createTenant({ company, ...dto }: CreateTenantArgs) {
+  async createTenant(logo: any, { company, ...dto }: CreateTenantArgs) {
     const client = await this.prismaService.getClient(null, true);
 
     try {
       const hash = `k_tnt_${this.generateApiKey(8)}`;
 
-      let logo = "";
-      if (company?.logo) {
+      let logoURL = "";
+      if (logo) {
         const dirPath = join("uploads/images/" + dto.username);
 
-        logo = `${dirPath}/${company?.logo?.filename}`;
+        logoURL = `${dirPath}/${logo?.filename}`;
 
         if (!existsSync(dirPath)) {
           mkdirSync(dirPath, { recursive: true });
         }
-        company?.logo?.createReadStream?.()?.pipe?.(createWriteStream(logo));
+        logo?.createReadStream?.()?.pipe?.(createWriteStream(logoURL));
       }
 
       await this.buildSchema(client, {
@@ -36,7 +36,7 @@ export class TenantService {
             Company: {
               create: {
                 ...company,
-                logo,
+                logo: logoURL,
               },
             },
           },
@@ -59,18 +59,25 @@ export class TenantService {
 
     const role = credentials.username;
     const password = credentials.hash;
+
     try {
+      // Verifica se o role já existe
+      const existingRole = await client.$queryRawUnsafe<any>(`
+        SELECT 1 FROM pg_roles WHERE rolname = '${role}';
+      `);
+
+      if (existingRole?.length > 0) {
+        throw new Error(`Role ${role} already exists`);
+      }
+
+      // Criação do role e schemas
       const m = await client.$transaction([
-        client.$executeRawUnsafe(
-          `
-          CREATE ROLE ${role} WITH LOGIN PASSWORD  '${password}';
-          `
-        ),
-        client.$executeRawUnsafe(
-          `
+        client.$executeRawUnsafe(`
+          CREATE ROLE ${role} WITH LOGIN PASSWORD '${password}';
+        `),
+        client.$executeRawUnsafe(`
           CREATE SCHEMA IF NOT EXISTS ${target_schema};
-          `
-        ),
+        `),
         client.$executeRawUnsafe(`
           GRANT USAGE ON SCHEMA public TO ${role};
         `),
@@ -98,6 +105,7 @@ export class TenantService {
         client.$executeRawUnsafe(`
           GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA ${target_schema} TO ${role};
         `),
+
         client.$queryRaw`SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname=${source_schema};`,
       ]);
 

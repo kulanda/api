@@ -22,6 +22,20 @@ __decorate([
 ], CreateOrderArgs.prototype, "saleId", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateOrderArgs.prototype, "debitNoteId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateOrderArgs.prototype, "creditNoteId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID, {
         nullable: true,
     }),
     (0, class_validator_1.IsString)(),

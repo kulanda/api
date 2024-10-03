@@ -19,8 +19,8 @@ export class ClientType implements Client {
   @IsString()
   fullName: string;
 
-  @Field(() => String,{
-    nullable: true
+  @Field(() => String, {
+    nullable: true,
   })
   @IsString()
   @IsOptional()
@@ -30,8 +30,8 @@ export class ClientType implements Client {
   @IsPhoneNumber()
   phone: string;
 
-  @Field(() => String,{
-    nullable: true
+  @Field(() => String, {
+    nullable: true,
   })
   @IsEmail()
   @IsOptional()
@@ -41,11 +41,11 @@ export class ClientType implements Client {
   @IsString()
   address: string;
 
-  @Field(() => ClientEnumType,{
-    nullable: true
+  @Field(() => ClientEnumType, {
+    nullable: true,
   })
   @IsEnum(["INDIVIDUAL", "LEGAL"])
-  type: string;
+  type: string
 
   @Field(() => ID, {
     nullable: true,

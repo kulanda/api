@@ -1,6 +1,13 @@
-import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
+import { ArgsType, Field, Float, ID, Int } from "@nestjs/graphql";
 import { CreditNote, Prisma } from "@prisma/client";
-import { IsEnum, IsNumber, IsUUID } from "class-validator";
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
 import { CreditNoteEnumType } from "./credit-note.type";
 
 @ArgsType()
@@ -11,11 +18,15 @@ export class EditCreditNoteArgs
   @IsUUID()
   id: string;
 
-  @Field(() => Int, {
+  @Field(() => Number, {
     nullable: true,
   })
   @IsNumber()
   amount: Prisma.Decimal;
+
+  @Field(() => Number)
+  @IsNumber()
+  change: Prisma.Decimal;
 
   @Field(() => String, {
     nullable: true,
@@ -34,4 +45,23 @@ export class EditCreditNoteArgs
   })
   @IsEnum(["DRAFT", "ISSUED", "APPLIED", "CANCELLED"])
   status: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  @Field(() => Number, {
+    nullable: true,
+  })
+  @IsNumber()
+  retention: Prisma.Decimal;
+
+  @Field(() => Date, {
+    nullable: true,
+  })
+  @IsDate()
+  dueDate: Date;
 }

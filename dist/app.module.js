@@ -34,6 +34,7 @@ const supplier_module_1 = require("./supplier/supplier.module");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const suppliers_on_product_module_1 = require("./suppliersOnProduct/suppliers-on-product.module");
+const debit_note_module_1 = require("./debitNote/debit-note.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -78,6 +79,7 @@ exports.AppModule = AppModule = __decorate([
             invoice_module_1.InvoiceModule,
             receipt_module_1.ReceiptModule,
             credit_note_module_1.CreditNoteModule,
+            debit_note_module_1.DebitNoteModule,
             supplier_module_1.SupplierModule,
             suppliers_on_product_module_1.SupplierOnProductModule,
         ],

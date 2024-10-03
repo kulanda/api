@@ -5,7 +5,6 @@ import { Request } from "express";
 export declare class PrismaService extends PrismaClient implements OnModuleDestroy {
     private config;
     private clients;
-    private message;
     constructor(config: ConfigService);
     getClient(request?: Request, intern?: boolean): Promise<PrismaClient>;
     logMessage(tenantId: string, message: string): void;

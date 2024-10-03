@@ -36,10 +36,18 @@ __decorate([
     __metadata("design:type", client_1.Prisma.Decimal)
 ], CreateProductArgs.prototype, "price", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => Date),
-    (0, class_validator_1.IsDate)(),
-    __metadata("design:type", Date)
-], CreateProductArgs.prototype, "expiresOn", void 0);
+    (0, graphql_1.Field)(() => graphql_1.Int, {
+        nullable: true
+    }),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreateProductArgs.prototype, "code", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Boolean),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateProductArgs.prototype, "withholding", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsUUID)(),

@@ -29,4 +29,25 @@ export class OrderService {
       },
     });
   }
+  async getOrdersBySaleId(prisma: PrismaClient, saleId: string) {
+    return await prisma.order.findMany({
+      where: {
+        saleId
+      },
+    });
+  }
+  async getOrdersByCreditNoteId(prisma: PrismaClient, creditNoteId: string) {
+    return await prisma.order.findMany({
+      where: {
+        creditNoteId
+      },
+    });
+  }
+  async getOrdersByDebitNoteId(prisma: PrismaClient, debitNoteId: string) {
+    return await prisma.order.findMany({
+      where: {
+        debitNoteId
+      },
+    });
+  }
 }

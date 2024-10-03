@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Receipt, Prisma } from "@prisma/client";
-import { IsEnum, IsNumber, IsString, IsUUID } from "class-validator";
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export enum ReceiptEnumType {
   ISSUED = "ISSUED",
@@ -17,13 +17,30 @@ export class ReceiptType implements Receipt {
   @IsUUID()
   id: string;
 
-  @Field(() => Int)
+  @Field(() => Number)
   @IsNumber()
   amount: Prisma.Decimal;
+
+  @Field(() => Number,{
+    nullable: true
+  })
+  @IsNumber()
+  change: Prisma.Decimal;
 
   @Field(() => Int)
   @IsNumber()
   number: number;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  @Field(() => Date)
+  @IsDate()
+  dueDate: Date;
 
   @Field(() => String)
   @IsString()
@@ -35,7 +52,7 @@ export class ReceiptType implements Receipt {
 
   @Field(() => ReceiptEnumType)
   @IsEnum(["ISSUED", "REVERSED"])
-  status: string;
+  status: string
 
   @Field(() => Date)
   createdAt: Date;

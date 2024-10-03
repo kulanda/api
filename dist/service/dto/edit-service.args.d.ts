@@ -1,9 +1,9 @@
-import { Prisma, Service } from '@prisma/client';
-export declare class EditServiceArgs implements Omit<Service, 'id' | 'createdAt' | 'updatedAt'> {
+import { Prisma, Service } from "@prisma/client";
+export declare class EditServiceArgs implements Omit<Service, "id" | "createdAt" | "updatedAt" | "image"> {
+    code: number;
     name: string;
     description: string;
     price: Prisma.Decimal;
-    image: any;
     categoryId: string;
     charges: string[];
     storeId: string;

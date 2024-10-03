@@ -1,10 +1,10 @@
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 export declare enum AccessEnumType {
     SELLER = "SELLER",
     OWNER = "OWNER",
     MANAGER = "MANAGER"
 }
-export declare class UserType implements Omit<User, 'hash' | 'companies'> {
+export declare class UserType implements Omit<User, "hash" | "companies"> {
     id: string;
     fullName: string;
     username: string;

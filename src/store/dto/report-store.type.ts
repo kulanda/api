@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 import { IsArray, IsNumber } from "class-validator";
 import { SaleType } from "src/sale/dto";
 
@@ -10,13 +10,13 @@ export class ReportStoreType {
   @IsArray()
   sales: SaleType[];
 
-  @Field(() => Int, {
+  @Field(() => Float, {
     nullable: true,
   })
   @IsNumber()
   totalSales: number
 
-  @Field(() => Int, {
+  @Field(() => Float, {
     nullable: true,
   })
   @IsNumber()

@@ -7,6 +7,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { ServiceService } from "src/service/service.service";
 import { SaleService } from "src/sale/sale.service";
 import { ReceiptService } from "src/receipt/receipt.service";
+import { CreditNoteService } from "src/creditNote/credit-note.service";
+import { DebitNoteService } from "src/debitNote/debit-note.service";
 
 @Module({
   imports: [JwtModule.register({})],
@@ -17,7 +19,9 @@ import { ReceiptService } from "src/receipt/receipt.service";
     AuthService,
     ServiceService,
     SaleService,
-    ReceiptService
+    ReceiptService,
+    CreditNoteService,
+    DebitNoteService,
   ],
 })
 export class InvoiceModule {}

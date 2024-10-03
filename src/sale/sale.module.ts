@@ -7,6 +7,7 @@ import { AuthService } from "src/auth/auth.service";
 import { UserService } from "src/user/user.service";
 import { OrderService } from "src/order/order.service";
 import { ClientService } from "src/client/client.service";
+import { InvoiceService } from "src/invoice/invoice.service";
 
 @Module({
   imports: [JwtModule.register({})],
@@ -18,6 +19,7 @@ import { ClientService } from "src/client/client.service";
     UserService,
     OrderService,
     ClientService,
+    InvoiceService
   ],
 })
 export class SaleModule {}

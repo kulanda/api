@@ -3,7 +3,6 @@ import { Tenant } from "@prisma/client";
 import {
   IsDate,
   IsEmail,
-  IsNotEmpty,
   IsObject,
   IsOptional,
   IsPhoneNumber,

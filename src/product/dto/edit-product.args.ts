@@ -2,6 +2,7 @@ import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
 import { Prisma, Product } from "@prisma/client";
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsMultibyte,
   IsNumber,
@@ -43,6 +44,17 @@ export class EditProductArgs
   @IsNumber()
   @IsOptional()
   price: Prisma.Decimal;
+
+  @Field(() => Int,{
+    nullable: true
+  })
+  @IsNumber()
+  @IsOptional()
+  code: number;
+
+  @Field(()=>Boolean)
+  @IsBoolean()
+  withholding: boolean;
 
   @Field(() => Date, {
     nullable: true,

@@ -9,20 +9,10 @@ import { createWriteStream, existsSync, mkdirSync } from "fs";
 export class ServiceService {
   async createService(
     prisma: PrismaClient,
-    tenantId: string,
     { categoryId, storeId, charges, ...dto }: CreateServiceArgs
   ): Promise<ServiceType> {
-    const dirPath = join("uploads/images/" + tenantId);
-
-    const imageURL = `${dirPath}/${dto?.image?.filename}`;
-
-    if (!existsSync(dirPath)) {
-      mkdirSync(dirPath, { recursive: true });
-    }
-    dto?.image?.createReadStream?.()?.pipe?.(createWriteStream(imageURL));
     return await prisma.service.create({
       data: {
-        image: dto?.image ? imageURL : undefined,
         ...dto,
         Charge: {
           connect: charges.map((id) => ({
@@ -44,24 +34,11 @@ export class ServiceService {
   }
   async editService(
     prisma: PrismaClient,
-    tenantId: string,
     id: string,
     { charges, ...dto }: EditServiceArgs
   ): Promise<ServiceType> {
-    let imageURL = "";
-    if (dto?.image) {
-      const dirPath = join("uploads/images/" + tenantId);
-
-      imageURL = `${dirPath}/${dto?.image?.filename}`;
-
-      if (!existsSync(dirPath)) {
-        mkdirSync(dirPath, { recursive: true });
-      }
-      dto?.image?.createReadStream?.()?.pipe?.(createWriteStream(imageURL));
-    }
     return await prisma.service.update({
       data: {
-        image: dto?.image ? imageURL : undefined,
         ...dto,
         Charge: {
           connect: charges.map((id) => ({

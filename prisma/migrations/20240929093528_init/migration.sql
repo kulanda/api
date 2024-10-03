@@ -2,10 +2,16 @@
 CREATE TYPE "Access" AS ENUM ('SELLER', 'OWNER', 'MANAGER', 'PARTNER', 'STUDENT');
 
 -- CreateEnum
+CREATE TYPE "VatRegimeType" AS ENUM ('GENERAL_REGIME', 'EXCLUSION_REGIME', 'SIMPLIFIED_REGIME');
+
+-- CreateEnum
 CREATE TYPE "StoreSaleType" AS ENUM ('DEFAULT', 'PRODUCT', 'SERVICE');
 
 -- CreateEnum
 CREATE TYPE "CategoryType" AS ENUM ('PRODUCT', 'SERVICE');
+
+-- CreateEnum
+CREATE TYPE "SupplierType" AS ENUM ('INDIVIDUAL', 'LEGAL');
 
 -- CreateEnum
 CREATE TYPE "ChargeType" AS ENUM ('TAX', 'FEE', 'DISCOUNT');
@@ -14,16 +20,19 @@ CREATE TYPE "ChargeType" AS ENUM ('TAX', 'FEE', 'DISCOUNT');
 CREATE TYPE "ClientType" AS ENUM ('INDIVIDUAL', 'LEGAL');
 
 -- CreateEnum
-CREATE TYPE "InvoiceType" AS ENUM ('DRAFT', 'ISSUED', 'PAID', 'OVERDUE', 'CANCELLED');
+CREATE TYPE "InvoiceStatusType" AS ENUM ('DRAFT', 'ISSUED', 'PAID', 'OVERDUE', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "ReceiptType" AS ENUM ('ISSUED', 'REVERSED');
+CREATE TYPE "ReceiptStatusType" AS ENUM ('ISSUED', 'REVERSED');
 
 -- CreateEnum
-CREATE TYPE "PyamentOnReceiptType" AS ENUM ('CASH', 'DEPOSIT', 'BANK_TRANSFER', 'CREDIT_CARD', 'MULTICAIXA_EXPRESS');
+CREATE TYPE "PaymentOnReceiptType" AS ENUM ('CASH', 'DEPOSIT', 'BANK_TRANSFER', 'CREDIT_CARD', 'MULTICAIXA_EXPRESS');
 
 -- CreateEnum
-CREATE TYPE "CreditNoteType" AS ENUM ('DRAFT', 'ISSUED', 'APPLIED', 'CANCELLED');
+CREATE TYPE "CreditNoteStatusType" AS ENUM ('DRAFT', 'ISSUED', 'APPLIED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "DebitNoteStatusType" AS ENUM ('DRAFT', 'ISSUED', 'APPLIED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "tenants" (
@@ -48,7 +57,7 @@ CREATE TABLE "users" (
     "phone" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
-    "access" TEXT,
+    "access" TEXT NOT NULL,
     "storeId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -63,6 +72,8 @@ CREATE TABLE "companies" (
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "logo" TEXT,
+    "fax" TEXT,
+    "vatRegime" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL,
     "caeId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -92,7 +103,7 @@ CREATE TABLE "categories" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "type" TEXT,
+    "type" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -102,11 +113,12 @@ CREATE TABLE "categories" (
 -- CreateTable
 CREATE TABLE "products" (
     "id" TEXT NOT NULL,
+    "code" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "image" TEXT,
     "price" DECIMAL(65,30) NOT NULL,
-    "expiresOn" TIMESTAMP(3),
+    "withholding" BOOLEAN NOT NULL,
     "categoryId" TEXT NOT NULL,
     "storeId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -147,6 +159,7 @@ CREATE TABLE "suppliers_on_product" (
 -- CreateTable
 CREATE TABLE "services" (
     "id" TEXT NOT NULL,
+    "code" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "image" TEXT,
@@ -173,7 +186,9 @@ CREATE TABLE "sales" (
 -- CreateTable
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
-    "saleId" TEXT NOT NULL,
+    "saleId" TEXT,
+    "debitNoteId" TEXT,
+    "creditNoteId" TEXT,
     "productId" TEXT,
     "serviceId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -276,8 +291,12 @@ CREATE TABLE "invoices" (
     "id" TEXT NOT NULL,
     "number" SERIAL NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
+    "change" DECIMAL(65,30) DEFAULT 0,
     "saleId" TEXT NOT NULL,
     "status" TEXT NOT NULL,
+    "dueDate" TIMESTAMP(3) NOT NULL,
+    "observation" TEXT,
+    "retention" DECIMAL(65,30),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "digitalSignature" TEXT,
@@ -290,8 +309,11 @@ CREATE TABLE "receipts" (
     "id" TEXT NOT NULL,
     "number" SERIAL NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
+    "change" DECIMAL(65,30) DEFAULT 0,
     "invoiceId" TEXT NOT NULL,
     "status" TEXT NOT NULL,
+    "dueDate" TIMESTAMP(3) NOT NULL,
+    "observation" TEXT,
     "digitalSignature" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -300,15 +322,17 @@ CREATE TABLE "receipts" (
 );
 
 -- CreateTable
-CREATE TABLE "payments_on_receipts" (
+CREATE TABLE "payments" (
     "id" TEXT NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
-    "receiptId" TEXT NOT NULL,
+    "receiptId" TEXT,
+    "creditNoteId" TEXT,
+    "debitNoteId" TEXT,
     "type" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "payments_on_receipts_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -316,13 +340,35 @@ CREATE TABLE "credit_notes" (
     "id" TEXT NOT NULL,
     "number" SERIAL NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
+    "change" DECIMAL(65,30) DEFAULT 0,
     "invoiceId" TEXT NOT NULL,
     "status" TEXT NOT NULL,
+    "dueDate" TIMESTAMP(3) NOT NULL,
+    "observation" TEXT,
+    "retention" DECIMAL(65,30),
     "digitalSignature" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "credit_notes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "debit_notes" (
+    "id" TEXT NOT NULL,
+    "number" SERIAL NOT NULL,
+    "amount" DECIMAL(65,30) NOT NULL,
+    "change" DECIMAL(65,30) DEFAULT 0,
+    "invoiceId" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "dueDate" TIMESTAMP(3) NOT NULL,
+    "observation" TEXT,
+    "retention" DECIMAL(65,30),
+    "digitalSignature" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "debit_notes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -347,6 +393,12 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "companies_nif_key" ON "companies"("nif");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "companies_fax_key" ON "companies"("fax");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_code_key" ON "products"("code");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "suppliers_nif_key" ON "suppliers"("nif");
 
 -- CreateIndex
@@ -354,6 +406,9 @@ CREATE UNIQUE INDEX "suppliers_phone_key" ON "suppliers"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "suppliers_email_key" ON "suppliers"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "services_code_key" ON "services"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "clients_nif_key" ON "clients"("nif");
@@ -372,6 +427,9 @@ CREATE UNIQUE INDEX "receipts_number_key" ON "receipts"("number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "credit_notes_number_key" ON "credit_notes"("number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "debit_notes_number_key" ON "debit_notes"("number");
 
 -- AddForeignKey
 ALTER TABLE "tenants" ADD CONSTRAINT "tenants_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -419,7 +477,13 @@ ALTER TABLE "sales" ADD CONSTRAINT "sales_sellerId_fkey" FOREIGN KEY ("sellerId"
 ALTER TABLE "sales" ADD CONSTRAINT "sales_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "orders" ADD CONSTRAINT "orders_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "sales"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "sales"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_debitNoteId_fkey" FOREIGN KEY ("debitNoteId") REFERENCES "debit_notes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_creditNoteId_fkey" FOREIGN KEY ("creditNoteId") REFERENCES "credit_notes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "orders" ADD CONSTRAINT "orders_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -473,7 +537,16 @@ ALTER TABLE "invoices" ADD CONSTRAINT "invoices_saleId_fkey" FOREIGN KEY ("saleI
 ALTER TABLE "receipts" ADD CONSTRAINT "receipts_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payments_on_receipts" ADD CONSTRAINT "payments_on_receipts_receiptId_fkey" FOREIGN KEY ("receiptId") REFERENCES "receipts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "payments" ADD CONSTRAINT "payments_receiptId_fkey" FOREIGN KEY ("receiptId") REFERENCES "receipts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_creditNoteId_fkey" FOREIGN KEY ("creditNoteId") REFERENCES "credit_notes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payments" ADD CONSTRAINT "payments_debitNoteId_fkey" FOREIGN KEY ("debitNoteId") REFERENCES "debit_notes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "credit_notes" ADD CONSTRAINT "credit_notes_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "debit_notes" ADD CONSTRAINT "debit_notes_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

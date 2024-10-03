@@ -25,12 +25,15 @@ const dto_3 = require("../order/dto");
 const decorator_1 = require("../auth/decorator");
 const dto_4 = require("../client/dto");
 const client_service_1 = require("../client/client.service");
+const invoice_service_1 = require("../invoice/invoice.service");
+const dto_5 = require("../invoice/dto");
 let SaleResolver = class SaleResolver {
-    constructor(saleService, orderService, sellerService, clientService) {
+    constructor(saleService, orderService, sellerService, clientService, invoiceService) {
         this.saleService = saleService;
         this.orderService = orderService;
         this.sellerService = sellerService;
         this.clientService = clientService;
+        this.invoiceService = invoiceService;
     }
     async createSale(req, sellerId, data) {
         return this.saleService.createSale(req.client, sellerId, data);
@@ -49,6 +52,9 @@ let SaleResolver = class SaleResolver {
     }
     async client(req, sale) {
         return this.clientService.getClient(req.client, sale.clientId);
+    }
+    async invoice(req, sale) {
+        return this.invoiceService.getInvoiceBySaleId(req.client, sale.id);
     }
 };
 exports.SaleResolver = SaleResolver;
@@ -107,12 +113,23 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.SaleType]),
     __metadata("design:returntype", Promise)
 ], SaleResolver.prototype, "client", null);
+__decorate([
+    (0, graphql_1.ResolveField)(() => dto_5.InvoiceType, {
+        nullable: true,
+    }),
+    __param(0, (0, graphql_1.Context)("req")),
+    __param(1, (0, graphql_1.Parent)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, dto_1.SaleType]),
+    __metadata("design:returntype", Promise)
+], SaleResolver.prototype, "invoice", null);
 exports.SaleResolver = SaleResolver = __decorate([
     (0, common_1.UseGuards)(guard_1.GqlAuthGuard),
     (0, graphql_1.Resolver)(() => dto_1.SaleType),
     __metadata("design:paramtypes", [sale_service_1.SaleService,
         order_service_1.OrderService,
         user_service_1.UserService,
-        client_service_1.ClientService])
+        client_service_1.ClientService,
+        invoice_service_1.InvoiceService])
 ], SaleResolver);
 //# sourceMappingURL=sale.resolver.js.map

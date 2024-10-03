@@ -9,9 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompanyType = void 0;
+exports.CompanyType = exports.VatRegimeEnumType = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const dto_1 = require("../../store/dto");
+var VatRegimeEnumType;
+(function (VatRegimeEnumType) {
+    VatRegimeEnumType["GENERAL_REGIME"] = "GENERAL_REGIME";
+    VatRegimeEnumType["EXCLUSION_REGIME"] = "EXCLUSION_REGIME";
+    VatRegimeEnumType["SIMPLIFIED_REGIME"] = "SIMPLIFIED_REGIME";
+})(VatRegimeEnumType || (exports.VatRegimeEnumType = VatRegimeEnumType = {}));
+(0, graphql_1.registerEnumType)(VatRegimeEnumType, {
+    name: "VatRegimeEnumType",
+});
 let CompanyType = class CompanyType {
 };
 exports.CompanyType = CompanyType;
@@ -35,6 +44,14 @@ __decorate([
     (0, graphql_1.Field)(() => String),
     __metadata("design:type", String)
 ], CompanyType.prototype, "address", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], CompanyType.prototype, "fax", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => VatRegimeEnumType),
+    __metadata("design:type", String)
+], CompanyType.prototype, "vatRegime", void 0);
 __decorate([
     (0, graphql_1.Field)(() => String),
     __metadata("design:type", String)

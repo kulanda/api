@@ -37,7 +37,7 @@ __decorate([
 ], StoreType.prototype, "phone", void 0);
 __decorate([
     (0, graphql_1.Field)(() => String, {
-        nullable: true
+        nullable: true,
     }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),

@@ -2,14 +2,36 @@ import { Injectable } from "@nestjs/common";
 import { CreateStoreArgs, ReportStoreType, StoreType } from "./dto";
 import { ReportStoreOptionsInput } from "./dto/report-store-options.input";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class StoreService {
+  constructor(private prismaService?: PrismaService){}
   async createStore(
     prisma: PrismaClient,
     companyId: string,
     dto: CreateStoreArgs
   ): Promise<StoreType> {
+    const company = await this.prismaService.company.findFirst({
+      where: {
+        id: companyId,
+      },
+    });
+
+    let Charge = undefined;
+
+    if (company.vatRegime === "GENERAL_REGIME")
+      Charge = {
+        create: [
+          {
+            name: "Imposto sobre o valor acrescentado",
+            acronym: "IVA",
+            percentage: 14,
+            type: "TAX",
+          },
+        ],
+      };
+
     return await prisma.store.create({
       data: {
         address: dto.address,
@@ -17,6 +39,7 @@ export class StoreService {
         phone: dto.phone,
         saleType: dto.saleType,
         companyId,
+        Charge: Charge,
       },
     });
   }

@@ -52,6 +52,8 @@ enum StoreSaleEnumType {
 type OrderType {
   id: ID!
   saleId: ID!
+  creditNoteId: ID!
+  debitNoteId: ID!
   productId: ID!
   serviceId: ID!
   createdAt: DateTime!
@@ -69,12 +71,13 @@ type SaleType {
   orders: [OrderType!]!
   seller: UserType
   client: ClientType
+  invoice: InvoiceType
 }
 
 type ReportStoreType {
   sales: [SaleType!]
-  totalSales: Int
-  totalSalesBalance: Int
+  totalSales: Float
+  totalSalesBalance: Float
 }
 
 type CompanyType {
@@ -83,6 +86,8 @@ type CompanyType {
   nif: String!
   name: String!
   address: String!
+  fax: String!
+  vatRegime: VatRegimeEnumType!
   logo: String!
   caeId: ID!
   stores: [StoreType!]!
@@ -90,6 +95,12 @@ type CompanyType {
   createdAt: DateTime!
   updatedAt: DateTime!
   cae: CAEType!
+}
+
+enum VatRegimeEnumType {
+  GENERAL_REGIME
+  EXCLUSION_REGIME
+  SIMPLIFIED_REGIME
 }
 
 type CAEType {
@@ -108,7 +119,8 @@ type ProductType {
   description: String
   image: String
   price: Float!
-  expiresOn: DateTime!
+  code: Int
+  withholding: Boolean!
   categoryId: ID!
   storeId: ID!
   createdAt: DateTime!
@@ -166,9 +178,9 @@ type SupplierOnProductType {
 
 type ServiceType {
   id: ID!
+  code: Float
   name: String!
   description: String
-  image: String
   price: Float!
   categoryId: ID!
   storeId: ID!
@@ -197,6 +209,33 @@ enum ClientEnumType {
   LEGAL
 }
 
+type InvoiceType {
+  id: ID!
+  number: Int!
+  change: Float
+  amount: Float!
+  saleId: ID!
+  observation: String
+  retention: Float
+  digitalSignature: String!
+  status: InvoiceEnumType!
+  dueDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sale: SaleType
+  receipt: [ReceiptType!]
+  creditNote: [CreditNoteType!]
+  debitNote: [DebitNoteType!]
+}
+
+enum InvoiceEnumType {
+  DRAFT
+  ISSUED
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
 type SectorType {
   id: ID!
   name: String!
@@ -208,31 +247,13 @@ type TenantCredentialsType {
   access_key: String!
 }
 
-type InvoiceType {
-  id: ID!
-  number: Int!
-  amount: Int!
-  saleId: ID!
-  digitalSignature: String!
-  status: InvoiceEnumType!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  sale: SaleType
-  receipt: ReceiptType
-}
-
-enum InvoiceEnumType {
-  DRAFT
-  ISSUED
-  PAID
-  OVERDUE
-  CANCELLED
-}
-
 type ReceiptType {
   id: ID!
-  amount: Int!
+  amount: Float!
+  change: Float
   number: Int!
+  observation: String
+  dueDate: DateTime!
   digitalSignature: String!
   invoiceId: ID!
   status: ReceiptEnumType!
@@ -248,17 +269,46 @@ enum ReceiptEnumType {
 
 type CreditNoteType {
   id: ID!
+  change: Float!
   number: Int!
-  amount: Int!
+  amount: Float!
   digitalSignature: String!
   invoiceId: ID!
   status: CreditNoteEnumType!
+  observation: String
+  retention: Float
+  dueDate: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
-  invoid: SaleType!
+  invoice: InvoiceType!
+  orders: [OrderType!]
 }
 
 enum CreditNoteEnumType {
+  DRAFT
+  ISSUED
+  APPLIED
+  CANCELLED
+}
+
+type DebitNoteType {
+  id: ID!
+  number: Int!
+  change: Float!
+  amount: Float!
+  digitalSignature: String!
+  invoiceId: ID!
+  status: DebitNoteEnumType!
+  observation: String
+  retention: Float
+  dueDate: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  invoice: InvoiceType!
+  orders: [OrderType!]
+}
+
+enum DebitNoteEnumType {
   DRAFT
   ISSUED
   APPLIED
@@ -313,12 +363,14 @@ type Query {
   getClients(filter: FilterClientInput): [ClientType!]!
   getClient(id: ID!): ClientType
   getClientsByStore(storeId: ID!): [ClientType!]
-  getInvoices: [InvoiceType!]!
+  getInvoices(filter: FilterInvoiceInput): [InvoiceType!]!
   getInvoice(id: ID!): InvoiceType
   getReceipts: [ReceiptType!]!
   getReceipt(id: ID!): ReceiptType
   getCreditNotes: [CreditNoteType!]!
   getCreditNote(id: ID!): CreditNoteType
+  getDebitNotes: [DebitNoteType!]!
+  getDebitNote(id: ID!): DebitNoteType
   getSuppliers(filter: FilterSupplierInput): [SupplierType!]!
   getSupplier(id: ID!): SupplierType
   getSuppliersByStore(storeId: ID!): [SupplierType!]
@@ -328,7 +380,7 @@ type Query {
 
 input ReportStoreOptionsInput {
   period: PeriodReportStoreOptionsEnumType
-  from: DateTime = "2024-08-26T17:27:37.241Z"
+  from: DateTime = "2024-10-03T07:28:28.920Z"
   sellerId: ID
 }
 
@@ -374,6 +426,22 @@ input FilterClientPaginateInput {
   limit: Float = 30
 }
 
+input FilterInvoiceInput {
+  number: Float
+  paginate: FilterInvoicePaginateInput
+  period: FilterInvoiceDateInput
+}
+
+input FilterInvoicePaginateInput {
+  page: Float = 1
+  limit: Float = 30
+}
+
+input FilterInvoiceDateInput {
+  start: DateTime
+  end: DateTime
+}
+
 input FilterSupplierInput {
   storeId: String
   fullName: String
@@ -404,23 +472,25 @@ type Mutation {
   createStore(address: String!, designation: String!, phone: String!, globalSale: String, saleType: StoreSaleEnumType = DEFAULT): StoreType!
   createCategory(name: String!, description: String, type: CategoryEnumType!, charges: [ID!] = []): CategoryType!
   editCategory(id: String!, name: String, description: String, type: CategoryEnumType, charges: [ID!]): CategoryType!
-  createProduct(image: Upload, name: String!, description: String, price: Float!, expiresOn: DateTime!, categoryId: ID!, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID!): ProductType!
-  editProduct(id: ID!, name: String, description: String, image: Upload, price: Float, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID): ProductType!
-  createService(name: String!, description: String, price: Float!, image: Upload, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
-  editService(id: ID!, name: String, description: String, price: Float, image: Upload, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
+  createProduct(image: Upload, name: String!, description: String, price: Float!, code: Int, withholding: Boolean!, categoryId: ID!, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID!): ProductType!
+  editProduct(id: ID!, name: String, description: String, image: Upload, price: Float, code: Int, withholding: Boolean!, expiresOn: DateTime, categoryId: ID, charges: [ID!] = [], suppliers: [ProductSupplierInput!] = [], storeId: ID): ProductType!
+  createService(code: Float, name: String!, description: String, price: Float!, categoryId: ID!, charges: [ID!] = [], storeId: ID!): ServiceType!
+  editService(id: ID!, code: Float, name: String, description: String, price: Float, categoryId: ID, charges: [ID!] = [], storeId: ID): ServiceType!
   createSale(orders: [CreateOrderSaleInput!]!, clientId: ID): SaleType!
-  createOrder(saleId: ID!, productId: ID, serviceId: ID): OrderType!
+  createOrder(saleId: ID!, debitNoteId: ID, creditNoteId: ID, productId: ID, serviceId: ID): OrderType!
   createSector(name: String!): SectorType!
   createCAE(name: String!, code: Int!, sectorId: ID!): CAEType!
-  createTenant(fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!, partnerId: ID, expiresAt: DateTime): TenantCredentialsType!
+  createTenant(logo: Upload, fullName: String!, username: String!, phone: String!, email: String, company: CreateCompanyInput!, partnerId: ID, expiresAt: DateTime): TenantCredentialsType!
   createCharge(name: String!, acronym: String!, percentage: Float!, type: ChargeEnumType!, storeId: ID!, categoryId: ID, serviceId: ID, productId: ID): ChargeType!
   createClient(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: ClientEnumType = INDIVIDUAL, caeId: ID, storeId: ID): ClientType!
-  createInvoice(amount: Int!, saleId: ID!, digitalSignature: String!, status: InvoiceEnumType!): InvoiceType!
-  editInvoice(id: ID!, amount: Int, saleId: ID, status: InvoiceEnumType!): InvoiceType!
-  createReceipt(digitalSignature: String!, invoiceId: ID!, status: ReceiptEnumType! = ISSUED, payments: [ReceiptPaymentInput!]!): ReceiptType!
-  editReceipt(id: ID!, amount: Int!, digitalSignature: String!, invoiceId: ID!, status: ReceiptEnumType!): ReceiptType!
-  createCreditNote(amount: Int!, invoiceId: ID!, digitalSignature: String!, status: CreditNoteEnumType!): CreditNoteType!
-  editCreditNote(id: ID!, amount: Int, digitalSignature: String, invoiceId: ID, status: CreditNoteEnumType): CreditNoteType!
+  createInvoice(amount: Float!, change: Float, saleId: ID!, observation: String, retention: Float, dueDate: DateTime!, status: InvoiceEnumType!): InvoiceType!
+  editInvoice(amount: Float, change: Float, saleId: ID, observation: String, retention: Float, status: InvoiceEnumType!, dueDate: DateTime!): InvoiceType!
+  createReceipt(digitalSignature: String, observation: String, dueDate: DateTime!, amount: Float!, change: Float, invoiceId: ID!, status: ReceiptEnumType! = ISSUED, payments: [ReceiptPaymentInput!]!): ReceiptType!
+  editReceipt(id: ID, amount: Float!, change: Float, observation: String, dueDate: DateTime!, digitalSignature: String, invoiceId: ID, status: ReceiptEnumType): ReceiptType!
+  createCreditNote(amount: Float!, change: Float, invoiceId: ID!, digitalSignature: String, status: CreditNoteEnumType! = ISSUED, observation: String, retention: Float, dueDate: DateTime!, payments: [CreditNotePaymentInput!]!, orders: [CreateOrderSaleInput!]!): CreditNoteType!
+  editCreditNote(id: ID!, amount: Float, change: Float!, digitalSignature: String, invoiceId: ID, status: CreditNoteEnumType, observation: String, retention: Float, dueDate: DateTime): CreditNoteType!
+  createDebitNote(change: Float!, amount: Float!, invoiceId: ID!, digitalSignature: String, status: DebitNoteEnumType! = ISSUED, observation: String, retention: Float, dueDate: DateTime!, payments: [DebitNotePaymentInput!]!, orders: [CreateOrderSaleInput!]!): DebitNoteType!
+  editDebitNote(id: ID!, change: Float, digitalSignature: String, invoiceId: ID, status: DebitNoteEnumType, observation: String, retention: Float, dueDate: DateTime): DebitNoteType!
   createSupplier(fullName: String!, nif: String, phone: String!, email: String, address: String!, type: SupplierEnumType = INDIVIDUAL, storeId: ID, caeId: ID): SupplierType!
   createSupplierOnProduct(supplierId: ID!, productId: ID!, quantity: Float!): SupplierOnProductType!
 }
@@ -439,10 +509,11 @@ input CreateOrderSaleInput {
 }
 
 input CreateCompanyInput {
+  fax: String
+  vatRegime: VatRegimeEnumType!
   nif: String!
   name: String!
   address: String!
-  logo: Upload
   caeId: ID!
   saftExportDate: DateTime
 }
@@ -457,5 +528,31 @@ enum ReceiptPaymentEnumType {
   DEPOSIT
   BANK_TRANSFER
   CREDIT_CARD
+  MULTICAIXA_EXPRESS
+}
+
+input CreditNotePaymentInput {
+  type: CreditNotePaymentEnumType!
+  amount: Int!
+}
+
+enum CreditNotePaymentEnumType {
+  CASH
+  DEPOSIT
+  BANK_TRANSFER
+  CREDIT_CARD
+  MULTICAIXA_EXPRESS
+}
+
+input DebitNotePaymentInput {
+  type: DebitNotePaymentEnumType!
+  amount: Int!
+}
+
+enum DebitNotePaymentEnumType {
+  CASH
+  DEPOSIT
+  BANK_TRANSFER
+  DEBIT_CARD
   MULTICAIXA_EXPRESS
 }

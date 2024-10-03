@@ -1,11 +1,18 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Prisma, Service } from '@prisma/client';
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Prisma, Service } from "@prisma/client";
+import { IsNumber, IsOptional, IsString, IsUrl } from "class-validator";
 
 @ObjectType()
-export class ServiceType implements Service {
+export class ServiceType implements Omit<Service, "image"> {
   @Field(() => ID)
   id: string;
+
+  @Field(() => Number, {
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  code: number;
 
   @Field(() => String)
   @IsOptional()
@@ -17,13 +24,6 @@ export class ServiceType implements Service {
   @IsOptional()
   @IsString()
   description: string;
-
-  @Field(() => String, {
-    nullable: true,
-  })
-  @IsUrl()
-  @IsOptional()
-  image: string;
 
   @Field(() => Number)
   @IsNumber()

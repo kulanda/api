@@ -25,6 +25,7 @@ import { SupplierModule } from "./supplier/supplier.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { SupplierOnProductModule } from "./suppliersOnProduct/suppliers-on-product.module";
+import { DebitNoteModule } from "./debitNote/debit-note.module";
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { SupplierOnProductModule } from "./suppliersOnProduct/suppliers-on-produ
     InvoiceModule,
     ReceiptModule,
     CreditNoteModule,
+    DebitNoteModule,
     SupplierModule,
     SupplierOnProductModule,
   ],

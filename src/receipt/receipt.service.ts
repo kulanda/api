@@ -8,23 +8,30 @@ export class ReceiptService {
     prisma: PrismaClient,
     { payments, ...dto }: CreateReceiptArgs
   ): Promise<ReceiptType> {
-    const invoice = await prisma.invoice.findUnique({
-      where: {
-        id: dto.invoiceId,
-      },
-    });
 
-    return await prisma.receipt.create({
+    const res = await prisma.receipt.create({
       data: {
         ...dto,
-        amount: invoice.amount,
-        PyamentOnReceipt: {
-          create: payments.map((payment) => ({
-            ...payment,
-          })),
+        Pyament: {
+          createMany: {
+            data: payments,
+          },
         },
       },
     });
+
+    if (res.id) {
+      await prisma.invoice.update({
+        where: {
+          id: dto.invoiceId,
+        },
+        data: {
+          status: "PAID",
+        },
+      });
+    }
+
+    return res;
   }
   async editReceipt(
     prisma: PrismaClient,
@@ -50,7 +57,7 @@ export class ReceiptService {
     });
   }
   async getReceiptBySaleId(prisma: PrismaClient, saleId: string) {
-    return await prisma.receipt.findFirst({
+    return await prisma.receipt.findMany({
       where: {
         invoice: {
           saleId,

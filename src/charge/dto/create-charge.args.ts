@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID, Int, registerEnumType } from "@nestjs/graphql";
-import { CAE, Charge } from "@prisma/client";
+import { ArgsType, Field, ID, registerEnumType } from "@nestjs/graphql";
+import { Charge } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import {
   IsEnum,
@@ -7,7 +7,6 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  MinLength,
 } from "class-validator";
 
 export enum ChargeEnumType {

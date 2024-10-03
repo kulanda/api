@@ -1,6 +1,6 @@
-import { Field, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, Float, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { CreditNote, Prisma } from "@prisma/client";
-import { IsEnum, IsNumber, IsUUID } from "class-validator";
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export enum CreditNoteEnumType {
   DRAFT = "DRAFT",
@@ -19,11 +19,15 @@ export class CreditNoteType implements CreditNote {
   @IsUUID()
   id: string;
 
+  @Field(() => Number)
+  @IsNumber()
+  change: Prisma.Decimal;
+
   @Field(() => Int)
   @IsNumber()
   number: number;
 
-  @Field(() => Int)
+  @Field(() => Number)
   @IsNumber()
   amount: Prisma.Decimal;
 
@@ -38,6 +42,23 @@ export class CreditNoteType implements CreditNote {
   @Field(() => CreditNoteEnumType)
   @IsEnum(["DRAFT", "ISSUED", "APPLIED", "CANCELLED"])
   status: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  @Field(() => Number, {
+    nullable: true,
+  })
+  @IsNumber()
+  retention: Prisma.Decimal;
+
+  @Field(() => Date)
+  @IsDate()
+  dueDate: Date;
 
   @Field(() => Date)
   createdAt: Date;

@@ -1,12 +1,24 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { Prisma, Service } from '@prisma/client';
-import { IsArray, IsMultibyte, IsNumber, IsOptional, IsString, IsUUID, IsUrl } from 'class-validator';
-import { GraphQLUpload } from 'graphql-upload-ts';
+import { ArgsType, Field, ID } from "@nestjs/graphql";
+import { Prisma, Service } from "@prisma/client";
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
 
 @ArgsType()
 export class EditServiceArgs
-  implements Omit<Service, 'id' | 'createdAt' | 'updatedAt'>
+  implements Omit<Service, "id" | "createdAt" | "updatedAt" | "image">
 {
+  @Field(() => Number, {
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  code: number;
+  
   @Field(() => String, {
     nullable: true,
   })
@@ -28,12 +40,6 @@ export class EditServiceArgs
   @IsOptional()
   price: Prisma.Decimal;
 
-  @Field(() => GraphQLUpload,{
-    nullable: true
-  })
-  @IsMultibyte()
-  image: any;
-
   @Field(() => ID, {
     nullable: true,
   })
@@ -43,7 +49,7 @@ export class EditServiceArgs
 
   @Field(() => [ID!]!, {
     nullable: true,
-    defaultValue: []
+    defaultValue: [],
   })
   @IsArray()
   @IsOptional()

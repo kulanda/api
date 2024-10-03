@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Prisma, Product } from '@prisma/client';
-import { IsDate, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 
 @ObjectType()
 export class ProductType implements Product {
@@ -29,9 +29,16 @@ export class ProductType implements Product {
   @IsNumber()
   price: Prisma.Decimal;
 
-  @Field(() => Date)
-  @IsDate()
-  expiresOn: Date;
+  @Field(() => Int,{
+    nullable: true
+  })
+  @IsNumber()
+  @IsOptional()
+  code: number;
+
+  @Field(()=>Boolean)
+  @IsBoolean()
+  withholding: boolean;
 
   @Field(() => ID)
   @IsString()

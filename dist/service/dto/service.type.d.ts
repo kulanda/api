@@ -1,9 +1,9 @@
-import { Prisma, Service } from '@prisma/client';
-export declare class ServiceType implements Service {
+import { Prisma, Service } from "@prisma/client";
+export declare class ServiceType implements Omit<Service, "image"> {
     id: string;
+    code: number;
     name: string;
     description: string;
-    image: string;
     price: Prisma.Decimal;
     categoryId: string;
     storeId: string;

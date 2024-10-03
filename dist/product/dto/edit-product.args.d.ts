@@ -5,6 +5,8 @@ export declare class EditProductArgs implements Omit<Product, "id" | "createdAt"
     description: string;
     image: any;
     price: Prisma.Decimal;
+    code: number;
+    withholding: boolean;
     expiresOn: Date;
     categoryId: string;
     charges: string[];

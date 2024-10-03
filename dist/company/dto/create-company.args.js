@@ -13,6 +13,7 @@ exports.CreateCompanyArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
 const graphql_upload_ts_1 = require("graphql-upload-ts");
+const company_type_1 = require("./company.type");
 let CreateCompanyArgs = class CreateCompanyArgs {
 };
 exports.CreateCompanyArgs = CreateCompanyArgs;
@@ -36,6 +37,22 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateCompanyArgs.prototype, "address", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => String, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsPhoneNumber)(),
+    __metadata("design:type", String)
+], CreateCompanyArgs.prototype, "fax", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => company_type_1.VatRegimeEnumType),
+    (0, class_validator_1.IsEnum)([
+        "GENERAL_REGIME",
+        "EXCLUSION_REGIME",
+        "SIMPLIFIED_REGIME",
+    ]),
+    __metadata("design:type", String)
+], CreateCompanyArgs.prototype, "vatRegime", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_upload_ts_1.GraphQLUpload, {
         nullable: true,

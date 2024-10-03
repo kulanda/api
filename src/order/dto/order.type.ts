@@ -15,6 +15,16 @@ export class OrderType implements Order {
   @Field(() => ID)
   @IsString()
   @IsUUID()
+  creditNoteId: string;
+
+  @Field(() => ID)
+  @IsString()
+  @IsUUID()
+  debitNoteId: string;
+
+  @Field(() => ID)
+  @IsString()
+  @IsUUID()
   productId: string;
 
   @Field(() => ID)

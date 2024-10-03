@@ -13,10 +13,17 @@ exports.CreateServiceArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
-const graphql_upload_ts_1 = require("graphql-upload-ts");
 let CreateServiceArgs = class CreateServiceArgs {
 };
 exports.CreateServiceArgs = CreateServiceArgs;
+__decorate([
+    (0, graphql_1.Field)(() => Number, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateServiceArgs.prototype, "code", void 0);
 __decorate([
     (0, graphql_1.Field)(() => String),
     (0, class_validator_1.IsOptional)(),
@@ -35,13 +42,6 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", client_1.Prisma.Decimal)
 ], CreateServiceArgs.prototype, "price", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_upload_ts_1.GraphQLUpload, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsMultibyte)(),
-    __metadata("design:type", Object)
-], CreateServiceArgs.prototype, "image", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsUUID)(),

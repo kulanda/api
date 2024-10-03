@@ -19,6 +19,8 @@ import { OrderType } from "src/order/dto";
 import { GetUser } from "src/auth/decorator";
 import { ClientType } from "src/client/dto";
 import { ClientService } from "src/client/client.service";
+import { InvoiceService } from "src/invoice/invoice.service";
+import { InvoiceType } from "src/invoice/dto";
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => SaleType)
@@ -27,7 +29,8 @@ export class SaleResolver {
     private saleService: SaleService,
     private orderService: OrderService,
     private sellerService: UserService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private invoiceService: InvoiceService
   ) {}
   @Mutation(() => SaleType)
   async createSale(
@@ -69,5 +72,11 @@ export class SaleResolver {
   })
   async client(@Context("req") req, @Parent() sale: SaleType) {
     return this.clientService.getClient(req.client, sale.clientId);
+  }
+  @ResolveField(() => InvoiceType, {
+    nullable: true,
+  })
+  async invoice(@Context("req") req, @Parent() sale: SaleType) {
+    return this.invoiceService.getInvoiceBySaleId(req.client, sale.id);
   }
 }

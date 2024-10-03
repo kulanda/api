@@ -21,6 +21,14 @@ __decorate([
     __metadata("design:type", String)
 ], ServiceType.prototype, "id", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => Number, {
+        nullable: true,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ServiceType.prototype, "code", void 0);
+__decorate([
     (0, graphql_1.Field)(() => String),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -33,14 +41,6 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ServiceType.prototype, "description", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => String, {
-        nullable: true,
-    }),
-    (0, class_validator_1.IsUrl)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], ServiceType.prototype, "image", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Number),
     (0, class_validator_1.IsNumber)(),
